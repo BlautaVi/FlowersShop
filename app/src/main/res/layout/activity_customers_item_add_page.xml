@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#E1F0FF"
+    tools:context=".Customers_item_Add_page">
+
+    <EditText
+        android:id="@+id/enter_price_c"
+        android:layout_width="236dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="@color/white"
+        android:ems="10"
+        android:fontFamily="@font/cormorant_sc_light"
+        android:inputType="number|numberDecimal"
+        android:text="Введіть ціну.."
+        android:textColor="#6D84F9"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/name_c_l"
+        app:layout_constraintTop_toBottomOf="@+id/enter_type_c" />
+
+    <TextView
+        android:id="@+id/price_c_l"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="30dp"
+        android:fontFamily="@font/cormorant_infant_light"
+        android:text="Ціна:"
+        android:textColor="#2138CD"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/type_c_l" />
+
+    <TextView
+        android:id="@+id/desc_c_l"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/cormorant_infant_light"
+        android:text="Опис:"
+        android:textColor="#2138CD"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/price_c_l" />
+
+    <TextView
+        android:id="@+id/type_c_l"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="30dp"
+        android:fontFamily="@font/cormorant_infant_light"
+        android:text="Вид:"
+        android:textColor="#2138CD"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/name_c_l" />
+
+    <EditText
+        android:id="@+id/enter_type_c"
+        android:layout_width="236dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="@color/white"
+        android:ems="10"
+        android:fontFamily="@font/cormorant_sc_light"
+        android:inputType="text"
+        android:text="Введіть вид.."
+        android:textColor="#6D84F9"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/name_c_l"
+        app:layout_constraintTop_toBottomOf="@+id/enter_name_c" />
+
+    <Button
+        android:id="@+id/All_cust_items_b"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="220dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="5dp"
+        android:backgroundTint="#6E85FB"
+        android:fontFamily="@font/cormorant_infant_light"
+        android:text="Всі"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toStartOf="@+id/button2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="69dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="10dp"
+        android:backgroundTint="#6E85FB"
+        android:fontFamily="@font/cormorant_sc_light"
+        android:text="А"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/All_cust_items_b"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/cust_img"
+        android:layout_width="206dp"
+        android:layout_height="190dp"
+        android:layout_marginStart="68dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="68dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/All_cust_items_b"
+        app:srcCompat="@color/white" />
+
+    <TextView
+        android:id="@+id/name_c_l"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="45dp"
+        android:fontFamily="@font/cormorant_infant_light"
+        android:text="Назва:"
+        android:textColor="#2138CD"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cust_img" />
+
+    <EditText
+        android:id="@+id/enter_name_c"
+        android:layout_width="236dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="39dp"
+        android:layout_marginEnd="20dp"
+        android:background="@color/white"
+        android:ems="10"
+        android:fontFamily="@font/cormorant_sc_light"
+        android:inputType="text"
+        android:text="Введіть назву.."
+        android:textColor="#6D84F9"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/name_c_l"
+        app:layout_constraintTop_toBottomOf="@+id/cust_img" />
+
+    <EditText
+        android:id="@+id/editTextTextMultiLine"
+        android:layout_width="358dp"
+        android:layout_height="179dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="#FDFBFB"
+        android:ems="10"
+        android:gravity="start|top"
+        android:inputType="textMultiLine"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/desc_c_l" />
+
+    <Button
+        android:id="@+id/add_cust_item_b"
+        android:layout_width="253dp"
+        android:layout_height="69dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="60dp"
+        android:backgroundTint="#6E85FB"
+        android:fontFamily="@font/cormorant_infant_light"
+        android:text="Додати"
+        android:textSize="32sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextMultiLine" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
