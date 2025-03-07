@@ -40,6 +40,7 @@
         android:backgroundTint="#7D89F8"
         android:text="K"
         android:textColor="#FFFFFF"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintMarginEnd="20dp"
         app:layout_constraintMarginTop="20dp"
