@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#E1F0FF"
+    tools:context=".Customers_acc">
+
+    <TextView
+        android:id="@+id/lab1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="60dp"
+        android:fontFamily="@font/cormorant_sc_light"
+        android:text="Ваш акаунт:"
+        android:textColor="#001180"
+        android:textSize="40sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/name_lab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="33dp"
+        android:layout_marginEnd="60dp"
+        android:fontFamily="@font/cormorant_infant_light"
+        android:text="Ім'я:"
+        android:textColor="#6E85FB"
+        android:textSize="25sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lab1" />
+
+    <TextView
+        android:id="@+id/name_lab2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="33dp"
+        android:layout_marginEnd="60dp"
+        android:fontFamily="@font/cormorant_infant_light"
+        android:text="Ім'я:"
+        android:textColor="#6E85FB"
+        android:textSize="25sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lab1" />
+
+    <TextView
+        android:id="@+id/adress_lab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="33dp"
+        android:layout_marginEnd="60dp"
+        android:fontFamily="@font/cormorant_infant_light"
+        android:text="Адреса:"
+        android:textColor="#6E85FB"
+        android:textSize="25sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/name_lab" />
+
+    <TextView
+        android:id="@+id/adress_lab2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="33dp"
+        android:layout_marginEnd="60dp"
+        android:fontFamily="@font/cormorant_infant_light"
+        android:text="Телефон:"
+        android:textColor="#6E85FB"
+        android:textSize="25sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/adress_lab" />
+
+    <TextView
+        android:id="@+id/order_l"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="100dp"
+        android:fontFamily="@font/cormorant_sc_light"
+        android:text="Замовлення:"
+        android:textColor="#6E85FB"
+        android:textSize="25sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/phone_lab" />
+
+    <TextView
+        android:id="@+id/name_field"
+        android:layout_width="200dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="89dp"
+        android:background="#FBFBFB"
+        android:fontFamily="@font/cormorant_sc_light"
+        android:text=" Ваше ім'я"
+        android:textAlignment="viewStart"
+        android:textColor="#6E85FB"
+        android:textSize="20sp"
+        app:layout_constraintCircleRadius="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/name_lab"
+        app:layout_constraintTop_toBottomOf="@+id/lab1" />
+
+    <TextView
+        android:id="@+id/adress_field"
+        android:layout_width="200dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="22dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="89dp"
+        android:background="#FBFBFB"
+        android:fontFamily="@font/cormorant_sc_light"
+        android:text=" Ваш адрес"
+        android:textAlignment="viewStart"
+        android:textColor="#6E85FB"
+        android:textSize="20sp"
+        app:layout_constraintCircleRadius="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/adress_lab"
+        app:layout_constraintTop_toBottomOf="@+id/name_field" />
+
+    <TextView
+        android:id="@+id/phone_lab"
+        android:layout_width="200dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="89dp"
+        android:background="#FBFBFB"
+        android:fontFamily="@font/cormorant_sc_light"
+        android:text="Ваш телефон"
+        android:textAlignment="viewStart"
+        android:textColor="#6E85FB"
+        android:textSize="20sp"
+        app:layout_constraintCircleRadius="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/adress_lab2"
+        app:layout_constraintTop_toBottomOf="@+id/adress_field" />
+
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="330dp"
+        android:layout_height="280dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="#F6F6F6"
+        android:textAlignment="viewStart"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/order_l">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </ScrollView>
+
+    <Button
+        android:id="@+id/change_b"
+        android:layout_width="233dp"
+        android:layout_height="51dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="40dp"
+        android:backgroundTint="#3D5DFF"
+        android:fontFamily="@font/cormorant_infant_light"
+        android:text="Змінити"
+        android:textColorLink="#A91E1E"
+        android:textSize="26sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/scrollView2" />
+
+    <Button
+        android:id="@+id/confChanges_b"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="40dp"
+        android:backgroundTint="#3D5DFF"
+        android:text="✓"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/scrollView2" />
+
+    <Button
+        android:id="@+id/CustomerItems_b"
+        android:layout_width="329dp"
+        android:layout_height="54dp"
+        android:layout_marginStart="68dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="68dp"
+        android:backgroundTint="#6E85FB"
+        android:fontFamily="@font/cormorant_sc_light"
+        android:text="Ваші товари"
+        android:textSize="26sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/change_b" />
+
+    <Button
+        android:id="@+id/exitAcc_b"
+        android:layout_width="155dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="10dp"
+        android:backgroundTint="#6E85FB"
+        android:fontFamily="@font/cormorant_sc_light"
+        android:text="Вийти"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toStartOf="@+id/deleteAcc_b"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/CustomerItems_b" />
+
+    <Button
+        android:id="@+id/deleteAcc_b"
+        android:layout_width="158dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="40dp"
+        android:backgroundTint="#D4585A"
+        android:fontFamily="@font/cormorant_sc_light"
+        android:text="Видалити"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/CustomerItems_b" />
+</androidx.constraintlayout.widget.ConstraintLayout>
