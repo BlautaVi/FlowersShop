@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#E1F0FF"
+    tools:context=".manager_start_page">
+
+    <TextView
+        android:id="@+id/text_l"
+        android:layout_width="246dp"
+        android:layout_height="104dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="70dp"
+        android:layout_marginEnd="100dp"
+        android:fontFamily="@font/cormorant_infant_light"
+        android:text="Вітаємо! Оберіть дію:"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="#001180"
+        android:textSize="40sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/man_add_items_b"
+        android:layout_width="291dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="250dp"
+        android:layout_marginEnd="100dp"
+        android:backgroundTint="#6E85FB"
+        android:fontFamily="@font/cormorant_infant_light"
+        android:text="Додати товар"
+        android:textColor="#FFFFFF"
+        android:textSize="32sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/man_see_all_b"
+        android:layout_width="291dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="48dp"
+        android:backgroundTint="#6E85FB"
+        android:fontFamily="@font/cormorant_infant_light"
+        android:text="Переглянути всі"
+        android:textColor="#FFFFFF"
+        android:textSize="34sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/man_add_items_b" />
+
+    <Button
+        android:id="@+id/man_all_orders_b"
+        android:layout_width="291dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="67dp"
+        android:backgroundTint="#6E85FB"
+        android:fontFamily="@font/cormorant_infant_light"
+        android:text="Замовлення"
+        android:textColor="#FFFFFF"
+        android:textSize="34sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/man_see_all_b" />
+
+    <Button
+        android:id="@+id/man_exit_b"
+        android:layout_width="184dp"
+        android:layout_height="67dp"
+        android:layout_marginTop="73dp"
+        android:backgroundTint="#D4585A"
+        android:fontFamily="@font/cormorant_infant_light"
+        android:text="Вийти"
+        android:textColor="#FFFFFF"
+        android:textSize="34sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/man_all_orders_b" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
