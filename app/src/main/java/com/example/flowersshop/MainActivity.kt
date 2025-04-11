@@ -29,33 +29,28 @@ class MainActivity : AppCompatActivity() {
         loginBtn.setOnClickListener {
             val email = emailInput.text.toString()
             val password = passwordInput.text.toString()
-
-            if (email.isNotEmpty() && password.isNotEmpty()) {
-                auth.fetchSignInMethodsForEmail(email)
-                    .addOnCompleteListener { task ->
+            if (!email.isEmpty() && !password.isEmpty()) {
+                auth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this) { task ->
                         if (task.isSuccessful) {
-                            val signInMethods = task.result?.signInMethods
-                            if (signInMethods.isNullOrEmpty()) {
+                            Toast.makeText(this, "Вхід успішний!", Toast.LENGTH_SHORT).show()
+                            if (email == "manager@gmail.com"){
+                                startActivity(Intent(this, manager_start_page::class.java))
+                            }else {
+                                startActivity(Intent(this, main_page::class.java))
+                            }
+                            finish()
+                        } else {
+                            val exception = task.exception
+                            if (exception?.message?.contains("no user record") == true) {
                                 Toast.makeText(this, "Користувача не знайдено, перехід до реєстрації...", Toast.LENGTH_SHORT).show()
                                 val intent = Intent(this, Registration::class.java)
                                 intent.putExtra("email", email)
                                 startActivity(intent)
                             } else {
-                                auth.signInWithEmailAndPassword(email, password)
-                                    .addOnCompleteListener(this) { loginTask ->
-                                        if (loginTask.isSuccessful) {
-                                            Toast.makeText(this, "Вхід успішний!", Toast.LENGTH_SHORT).show()
-                                            startActivity(Intent(this, main_page::class.java))
-                                            finish()
-                                        } else {
-                                            Toast.makeText(this, "Помилка входу: ${loginTask.exception?.message}", Toast.LENGTH_SHORT).show()
-                                        }
-                                    }
+                                Toast.makeText(this, "Помилка входу: ${exception?.message}", Toast.LENGTH_SHORT).show()
                             }
-                        } else {
-                            Toast.makeText(this, "Помилка перевірки: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
-                        }
-                    }
+                            }}
             } else {
                 Toast.makeText(this, "Заповніть всі поля", Toast.LENGTH_SHORT).show()
             }
