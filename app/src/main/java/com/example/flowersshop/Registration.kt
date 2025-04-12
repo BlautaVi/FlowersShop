@@ -1,7 +1,9 @@
 package com.example.flowersshop
 
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -9,47 +11,105 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
-
+import com.google.firebase.firestore.firestore
+import android.util.Patterns
 class Registration : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var email: EditText
     private lateinit var password: EditText
     private lateinit var registerBtn: Button
+    val db = Firebase.firestore
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_registration)
         auth = FirebaseAuth.getInstance()
         email = findViewById(R.id.enter_login)
-        password = findViewById(R.id.enter_passwd)
+        password = findViewById(R.id.enter_passwd2)
         registerBtn = findViewById(R.id.reg_b)
+        val name = findViewById<EditText>(R.id.enter_name)
+        val phoneNum = findViewById<EditText>(R.id.enter_phone)
+        val customers_adress = findViewById<EditText>(R.id.enter_adress)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
         registerBtn.setOnClickListener {
-            val emailText = email.text.toString()
-            val passwordText = password.text.toString()
+            val emailText = email.text.toString().trim()
+            val passwordText = password.text.toString().trim()
+            val nameText = name.text.toString().trim()
+            val phoneText = phoneNum.text.toString().trim()
+            val addressText = customers_adress.text.toString().trim()
 
-            if (emailText.isNotEmpty() && passwordText.isNotEmpty()) {
-                registerUser(emailText, passwordText)
-            } else {
+            if (emailText.isEmpty() || passwordText.isEmpty() || nameText.isEmpty() || phoneText.isEmpty() || addressText.isEmpty()) {
                 Toast.makeText(this, "Заповніть всі поля!", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            if (!Patterns.EMAIL_ADDRESS.matcher(emailText).matches()) {
+                Toast.makeText(this, "Некоректний формат email", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            if (passwordText.length < 6) {
+                Toast.makeText(this, "Пароль має бути щонайменше 6 символів", Toast.LENGTH_SHORT)
+                    .show()
+                return@setOnClickListener
+            }
+
+            registerUser(emailText, passwordText) {
+                val user = hashMapOf(
+                    "name" to nameText,
+                    "email" to emailText,
+                    "phoneNumber" to phoneText,
+                    "address" to addressText
+                )
+                Log.d(TAG, "Спроба запису даних у Firestore: $user")
+                val userId = FirebaseAuth.getInstance().currentUser?.uid
+                if (userId != null) {
+                    db.collection("users")
+                        .document(userId)
+                        .set(user)
+                        .addOnSuccessListener {
+                            Log.d(TAG, "Користувач доданий в Firestore")
+                            startActivity(Intent(this, main_page::class.java))
+                            finish()
+                        }
+                        .addOnFailureListener { e ->
+                            Log.w(TAG, "Помилка при додаванні користувача: ${e.message}", e)
+                            Toast.makeText(
+                                this,
+                                "Помилка збереження даних: ${e.message}",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                } else {
+                    Log.e(TAG, "UID користувача не знайдено після реєстрації")
+                    Toast.makeText(
+                        this,
+                        "Помилка: користувач не автентифікований",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
         }
     }
-    private fun registerUser(email: String, password: String) {
+    private fun registerUser(email: String, password: String, onSuccess: () -> Unit) {
+        Log.d(TAG, "Спроба реєстрації: email=$email, password=$password")
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
+                    Log.d(TAG, "Реєстрація успішна, UID: ${auth.currentUser?.uid}")
                     Toast.makeText(this, "Успішно зареєстровано!", Toast.LENGTH_SHORT).show()
-                    startActivity(Intent(this, main_page::class.java))
-                    finish()
+                    onSuccess()
                 } else {
-                    Toast.makeText(this, "Помилка...", Toast.LENGTH_SHORT).show()
+                    val exception = task.exception
+                    Log.e(TAG, "Помилка реєстрації: ${exception?.message}", exception)
+                    Toast.makeText(this, "Помилка реєстрації: ${exception?.message}", Toast.LENGTH_SHORT).show()
                 }
             }
     }
-}
+    }

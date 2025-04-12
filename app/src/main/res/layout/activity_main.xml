@@ -27,9 +27,9 @@
     <TextView
         android:id="@+id/hello"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="49dp"
         android:layout_marginStart="68dp"
-        android:layout_marginTop="140dp"
+        android:layout_marginTop="40dp"
         android:layout_marginEnd="68dp"
         android:fontFamily="@font/cormorant_infant_light"
         android:text="Вітаємо!"
@@ -37,14 +37,14 @@
         android:textSize="40dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/shop_name" />
 
     <TextView
         android:id="@+id/login_l"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="68dp"
-        android:layout_marginTop="240dp"
+        android:layout_marginTop="50dp"
         android:layout_marginEnd="68dp"
         android:fontFamily="@font/cormorant_infant_light"
         android:text="пошта:"
@@ -52,7 +52,7 @@
         android:textSize="26dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/hello" />
 
     <TextView
         android:id="@+id/passwd_l"
@@ -97,30 +97,31 @@
         android:layout_width="250dp"
         android:layout_height="80dp"
         android:layout_marginStart="68dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="40dp"
         android:layout_marginEnd="68dp"
         android:backgroundTint="#6E85FB"
+        android:clickable="true"
         android:fontFamily="@font/cormorant_sc_light"
         android:text="Ввійти"
         android:textSize="28sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/enter_passwd" />
+        app:layout_constraintTop_toBottomOf="@+id/enter_passwd2" />
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="180dp"
         android:layout_height="180dp"
         android:layout_marginStart="68dp"
-        android:layout_marginTop="740dp"
+        android:layout_marginTop="40dp"
         android:layout_marginEnd="68dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/guest_b"
         app:srcCompat="@drawable/icon" />
 
     <EditText
-        android:id="@+id/enter_passwd"
+        android:id="@+id/enter_passwd2"
         style="@style/Widget.Material3.AutoCompleteTextView.FilledBox.Dense"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
