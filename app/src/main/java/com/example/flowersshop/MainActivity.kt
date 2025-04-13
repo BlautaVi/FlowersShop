@@ -2,7 +2,6 @@ package com.example.flowersshop
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -30,7 +29,6 @@ class MainActivity : AppCompatActivity() {
             val email = emailInput.text.toString().trim()
             val password = passwordInput.text.toString().trim()
             if (email.isNotEmpty() && password.isNotEmpty()) {
-                Log.d("Login", "Attempting login with email: $email and password: $password")
                 auth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this) { task ->
                         if (task.isSuccessful) {
@@ -54,6 +52,7 @@ class MainActivity : AppCompatActivity() {
                                     intent.putExtra("email", email)
                                     startActivity(intent)
                                 }
+
                                 exception?.message?.contains("INVALID_EMAIL") == true -> {
                                     Toast.makeText(
                                         this,
@@ -61,6 +60,7 @@ class MainActivity : AppCompatActivity() {
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 }
+
                                 else -> {
                                     Toast.makeText(
                                         this,
@@ -74,21 +74,16 @@ class MainActivity : AppCompatActivity() {
                             }
                         }
                     }
-                guestBtn.setOnClickListener {
-                    startActivity(Intent(this, for_guest::class.java))
-                }
-
-                ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-                    val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-                    v.setPadding(
-                        systemBars.left,
-                        systemBars.top,
-                        systemBars.right,
-                        systemBars.bottom
-                    )
-                    insets
-                }
             }
+        }
+        guestBtn.setOnClickListener {
+            startActivity(Intent(this, for_guest::class.java))
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
         }
     }
 }
