@@ -23,8 +23,8 @@
 
     <ImageView
         android:id="@+id/item_photo"
-        android:layout_width="246dp"
-        android:layout_height="207dp"
+        android:layout_width="222dp"
+        android:layout_height="185dp"
         android:layout_marginTop="100dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -40,7 +40,7 @@
         android:fontFamily="@font/cormorant_infant_light"
         android:text="Назва:"
         android:textColor="#2138CD"
-        android:textSize="30sp"
+        android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/item_photo" />
 
@@ -53,7 +53,7 @@
         android:fontFamily="@font/cormorant_infant_light"
         android:text="Вид:"
         android:textColor="#2138CD"
-        android:textSize="30sp"
+        android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/name_man_l" />
 
@@ -66,7 +66,7 @@
         android:fontFamily="@font/cormorant_infant_light"
         android:text="Ціна:"
         android:textColor="#2138CD"
-        android:textSize="30sp"
+        android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/man_type_l" />
 
@@ -79,7 +79,7 @@
         android:fontFamily="@font/cormorant_infant_light"
         android:text="Опис:"
         android:textColor="#2138CD"
-        android:textSize="30sp"
+        android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/man_price_l" />
 
@@ -96,7 +96,7 @@
         android:inputType="text|textPersonName|textAutoComplete"
         android:singleLine="true"
         android:textColor="#2138CD"
-        android:textSize="30sp"
+        android:textSize="24sp"
         app:layout_constraintStart_toEndOf="@+id/name_man_l"
         app:layout_constraintTop_toBottomOf="@+id/item_photo" />
 
@@ -113,7 +113,7 @@
         android:inputType="text|textAutoComplete"
         android:singleLine="true"
         android:textColor="#2138CD"
-        android:textSize="30sp"
+        android:textSize="24sp"
         app:layout_constraintStart_toEndOf="@+id/man_type_l"
         app:layout_constraintTop_toBottomOf="@+id/man_enter_name" />
 
@@ -130,7 +130,7 @@
         android:inputType="number|numberDecimal"
         android:singleLine="true"
         android:textColor="#2138CD"
-        android:textSize="30sp"
+        android:textSize="24sp"
         app:layout_constraintStart_toEndOf="@+id/man_price_l"
         app:layout_constraintTop_toBottomOf="@+id/man_enter_type" />
 
@@ -145,7 +145,7 @@
         android:gravity="start|top"
         android:hint="Введіть опис"
         android:inputType="textMultiLine"
-        android:textSize="30sp"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/man_desc_l" />
@@ -155,12 +155,12 @@
         android:layout_width="204dp"
         android:layout_height="69dp"
         android:layout_marginStart="163dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="158dp"
         android:backgroundTint="#6E85FB"
         android:fontFamily="@font/cormorant_infant_light"
         android:text="Додати"
-        android:textSize="34sp"
+        android:textSize="26sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/man_enter_decs" />
