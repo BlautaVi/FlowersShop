@@ -12,13 +12,17 @@
         android:id="@+id/man_show_all_items_b"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginStart="303dp"
+        android:layout_marginTop="30dp"
         android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
         android:backgroundTint="#6E85FB"
         android:fontFamily="@font/cormorant_infant_light"
         android:text="Всі"
         android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/item_photo"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
@@ -35,21 +39,21 @@
         android:id="@+id/name_man_l"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="325dp"
         android:fontFamily="@font/cormorant_infant_light"
         android:text="Назва:"
         android:textColor="#2138CD"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/item_photo" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/man_type_l"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="20dp"
         android:fontFamily="@font/cormorant_infant_light"
         android:text="Вид:"
         android:textColor="#2138CD"
@@ -61,8 +65,8 @@
         android:id="@+id/man_price_l"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="20dp"
         android:fontFamily="@font/cormorant_infant_light"
         android:text="Ціна:"
         android:textColor="#2138CD"
@@ -85,10 +89,10 @@
 
     <EditText
         android:id="@+id/man_enter_name"
-        android:layout_width="256dp"
-        android:layout_height="55dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="30dp"
+        android:layout_width="246dp"
+        android:layout_height="41dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="35dp"
         android:background="#FFFF"
         android:ems="10"
         android:fontFamily="@font/cormorant_infant_light"
@@ -96,16 +100,16 @@
         android:inputType="text|textPersonName|textAutoComplete"
         android:singleLine="true"
         android:textColor="#2138CD"
-        android:textSize="24sp"
-        app:layout_constraintStart_toEndOf="@+id/name_man_l"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/item_photo" />
 
     <EditText
         android:id="@+id/man_enter_type"
-        android:layout_width="256dp"
-        android:layout_height="55dp"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="15dp"
+        android:layout_width="246dp"
+        android:layout_height="41dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="35dp"
         android:background="#FFFF"
         android:ems="10"
         android:fontFamily="@font/cormorant_infant_light"
@@ -113,16 +117,16 @@
         android:inputType="text|textAutoComplete"
         android:singleLine="true"
         android:textColor="#2138CD"
-        android:textSize="24sp"
-        app:layout_constraintStart_toEndOf="@+id/man_type_l"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/man_enter_name" />
 
     <EditText
         android:id="@+id/man_enter_price"
-        android:layout_width="256dp"
-        android:layout_height="55dp"
-        android:layout_marginStart="35dp"
-        android:layout_marginTop="15dp"
+        android:layout_width="246dp"
+        android:layout_height="41dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="35dp"
         android:background="#FFFF"
         android:ems="10"
         android:fontFamily="@font/cormorant_infant_light"
@@ -130,14 +134,14 @@
         android:inputType="number|numberDecimal"
         android:singleLine="true"
         android:textColor="#2138CD"
-        android:textSize="24sp"
-        app:layout_constraintStart_toEndOf="@+id/man_price_l"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/man_enter_type" />
 
     <EditText
         android:id="@+id/man_enter_decs"
-        android:layout_width="358dp"
-        android:layout_height="122dp"
+        android:layout_width="365dp"
+        android:layout_height="83dp"
         android:layout_marginTop="20dp"
         android:background="#F6F6F6"
         android:ems="10"
@@ -145,7 +149,7 @@
         android:gravity="start|top"
         android:hint="Введіть опис"
         android:inputType="textMultiLine"
-        android:textSize="24sp"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/man_desc_l" />
@@ -164,4 +168,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/man_enter_decs" />
+
+    <Button
+        android:id="@+id/add_photo_btn"
+        android:layout_width="62dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="13dp"
+        android:layout_marginTop="170dp"
+        android:layout_marginEnd="19dp"
+        android:text="+"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/item_photo"
+        app:layout_constraintTop_toBottomOf="@+id/man_show_all_items_b" />
 </androidx.constraintlayout.widget.ConstraintLayout>
