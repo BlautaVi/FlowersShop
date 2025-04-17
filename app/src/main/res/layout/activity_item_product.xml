@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="350dp"
     android:background="#E1F0FF"
     tools:context=".item_product">
 
@@ -13,10 +13,11 @@
         android:layout_width="220dp"
         android:layout_height="199dp"
         android:layout_marginStart="95dp"
-        android:layout_marginTop="105dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="96dp"
         android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -25,12 +26,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="143dp"
-        android:layout_marginTop="31dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="144dp"
         android:fontFamily="@font/cormorant_infant_light"
         android:text="Назва"
         android:textColor="#3A5FCD"
-        android:textSize="48sp"
+        android:textSize="34sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -38,16 +39,17 @@
 
     <TextView
         android:id="@+id/productPrice"
-        android:layout_width="79dp"
-        android:layout_height="41dp"
-        android:layout_marginStart="166dp"
-        android:layout_marginTop="31dp"
-        android:layout_marginEnd="166dp"
+        android:layout_width="58dp"
+        android:layout_height="39dp"
+        android:layout_marginStart="176dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="177dp"
         android:fontFamily="@font/cormorant_infant_light"
         android:text="Ціна"
         android:textColor="#3A5FCD"
-        android:textSize="34sp"
+        android:textSize="28sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/productName" />
 </androidx.constraintlayout.widget.ConstraintLayout>

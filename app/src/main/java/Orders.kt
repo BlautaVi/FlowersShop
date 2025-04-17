@@ -1,3 +1,4 @@
+package com.example.flowersshop.models
 class Orders (
     var id: Int,
     var buyer: String,

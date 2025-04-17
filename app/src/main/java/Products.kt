@@ -1,16 +1,18 @@
-import android.media.Image
+package com.example.flowersshop.models
 
-abstract class Products (
-    var name: String,
-    var type: String,
-    var price: Double,
-    var description: String,
-    var image: Image,
-    var seller: String
-){
-    fun addProduct(){}
-    fun editProduct(){}
-    fun deleteProduct(){}
-    fun viewProductDetails(){}
+import android.os.Parcelable
+
+abstract class Products(
+    open val name: String, // Змінюємо var на val
+    open val type: String,
+    open val price: Double?,
+    open val description: String,
+    open val imageUrl: String,
+    open val seller: String
+) : Parcelable {
+    fun addProduct() {}
+    fun editProduct() {}
+    fun deleteProduct() {}
+    fun viewProductDetails() {}
     abstract fun isAvailable(): Boolean
 }

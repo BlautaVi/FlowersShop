@@ -25,7 +25,7 @@
             android:name=".manager_start_page"
             android:exported="false" />
         <activity
-            android:name=".customers_comfirming_page"
+            android:name=".ActivityManagerEditItem"
             android:exported="false" />
         <activity
             android:name=".Ordering_item_c"
