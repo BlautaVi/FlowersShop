@@ -1,14 +1,21 @@
+package com.example.flowersshop.models
+
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.example.flowersshop.ActivityManagerEditItem
+import com.example.flowersshop.Item_page
 import com.example.flowersshop.R
-import com.google.android.gms.analytics.ecommerce.Product
 
-class ProductAdapter(private val productList: List<Products>) :
-    RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
+class ProductAdapter(
+    private val productList: List<ProductItem>,
+    private val isManager: Boolean
+) : RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
 
     class ProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val image: ImageView = itemView.findViewById(R.id.productImage)
@@ -27,6 +34,20 @@ class ProductAdapter(private val productList: List<Products>) :
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
         val product = productList[position]
         holder.name.text = product.name
-        holder.price.text = product.price.toString()
+        holder.price.text = "${product.price ?: 0.0} грн"
+        Glide.with(holder.itemView.context)
+            .load(product.photoUrl)
+            .placeholder(R.drawable.icon)
+            .into(holder.image)
+
+        holder.itemView.setOnClickListener {
+            val intent = if (isManager) {
+                Intent(holder.itemView.context, ActivityManagerEditItem::class.java)
+            } else {
+                Intent(holder.itemView.context, Item_page::class.java)
+            }
+            intent.putExtra("product", product)
+            holder.itemView.context.startActivity(intent)
+        }
     }
 }

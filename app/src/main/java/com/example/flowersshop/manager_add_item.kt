@@ -34,7 +34,7 @@ class manager_add_item : AppCompatActivity() {
 
         val addPhotoBtn = findViewById<Button>(R.id.add_photo_btn)
         val addItemBtn = findViewById<Button>(R.id.man_add_item_b)
-
+        val showAllBtn = findViewById<Button>(R.id.man_show_all_items_b)
         addPhotoBtn.setOnClickListener {
             val intent = Intent()
             intent.type = "image/*"
@@ -48,6 +48,10 @@ class manager_add_item : AppCompatActivity() {
             } else {
                 Toast.makeText(this, "Спочатку оберіть фото", Toast.LENGTH_SHORT).show()
             }
+        }
+        showAllBtn.setOnClickListener{
+            val intent = Intent(this, main_page::class.java)
+            startActivity(intent)
         }
     }
 

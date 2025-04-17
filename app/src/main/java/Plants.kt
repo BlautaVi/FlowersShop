@@ -1,12 +1,11 @@
-import android.media.Image
+package com.example.flowersshop.models
 
-abstract class Plants (
+abstract class Plants(
     name: String,
     type: String,
     price: Double,
     description: String,
-    image: Image,
+    imageUrl: String,
     seller: String
-): Products(name, type, price, description, image, seller){
-
+) : Products(name, type, price, description, imageUrl, seller) {
 }
