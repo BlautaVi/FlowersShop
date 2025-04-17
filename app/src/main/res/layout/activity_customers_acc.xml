@@ -42,9 +42,8 @@
         android:id="@+id/phone_lab"
         android:layout_width="200dp"
         android:layout_height="35dp"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="28dp"
-        android:layout_marginEnd="89dp"
+        android:layout_marginEnd="60dp"
         android:background="#FBFBFB"
         android:fontFamily="@font/cormorant_sc_light"
         android:hint="Ваш телефон"
@@ -54,8 +53,6 @@
         android:textSize="20sp"
         app:layout_constraintCircleRadius="10dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/adress_lab2"
         app:layout_constraintTop_toBottomOf="@+id/adress_field" />
 
     <TextView
@@ -111,7 +108,7 @@
         android:layout_width="200dp"
         android:layout_height="35dp"
         android:layout_marginTop="24dp"
-        android:layout_marginEnd="68dp"
+        android:layout_marginEnd="60dp"
         android:background="#FBFBFB"
         android:fontFamily="@font/cormorant_sc_light"
         android:hint="Ваше ім'я"
@@ -127,9 +124,8 @@
         android:id="@+id/adress_field"
         android:layout_width="200dp"
         android:layout_height="35dp"
-        android:layout_marginStart="24dp"
         android:layout_marginTop="28dp"
-        android:layout_marginEnd="71dp"
+        android:layout_marginEnd="60dp"
         android:layout_marginBottom="28dp"
         android:background="#FBFBFB"
         android:fontFamily="@font/cormorant_sc_light"
@@ -141,7 +137,6 @@
         app:layout_constraintBottom_toTopOf="@+id/phone_lab"
         app:layout_constraintCircleRadius="10dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/adress_lab"
         app:layout_constraintTop_toBottomOf="@+id/name_field" />
 
     <ScrollView

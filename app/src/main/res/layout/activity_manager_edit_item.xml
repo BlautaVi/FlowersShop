@@ -87,9 +87,8 @@
         android:id="@+id/man_enter_name"
         android:layout_width="253dp"
         android:layout_height="48dp"
-        android:layout_marginStart="20dp"
         android:layout_marginTop="28dp"
-        android:layout_marginEnd="51dp"
+        android:layout_marginEnd="40dp"
         android:background="#FFFF"
         android:ems="10"
         android:fontFamily="@font/cormorant_infant_light"
@@ -99,16 +98,14 @@
         android:textColor="#2138CD"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/name_man_l"
         app:layout_constraintTop_toBottomOf="@+id/item_photo" />
 
     <EditText
         android:id="@+id/man_enter_type"
-        android:layout_width="251dp"
-        android:layout_height="47dp"
-        android:layout_marginStart="48dp"
+        android:layout_width="253dp"
+        android:layout_height="48dp"
         android:layout_marginTop="15dp"
-        android:layout_marginEnd="51dp"
+        android:layout_marginEnd="40dp"
         android:background="#FFFF"
         android:ems="10"
         android:fontFamily="@font/cormorant_infant_light"
@@ -118,16 +115,14 @@
         android:textColor="#2138CD"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/man_type_l"
         app:layout_constraintTop_toBottomOf="@+id/man_enter_name" />
 
     <EditText
         android:id="@+id/man_enter_price"
         android:layout_width="254dp"
         android:layout_height="50dp"
-        android:layout_marginStart="35dp"
         android:layout_marginTop="12dp"
-        android:layout_marginEnd="49dp"
+        android:layout_marginEnd="40dp"
         android:background="#FFFF"
         android:ems="10"
         android:fontFamily="@font/cormorant_infant_light"
@@ -137,8 +132,6 @@
         android:textColor="#2138CD"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/man_price_l"
         app:layout_constraintTop_toBottomOf="@+id/man_enter_type" />
 
     <EditText
