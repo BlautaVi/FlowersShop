@@ -37,7 +37,7 @@
         android:fontFamily="@font/cormorant_infant_light"
         android:text="Додати товар"
         android:textColor="#FFFFFF"
-        android:textSize="32sp"
+        android:textSize="28sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -52,7 +52,7 @@
         android:fontFamily="@font/cormorant_infant_light"
         android:text="Переглянути всі"
         android:textColor="#FFFFFF"
-        android:textSize="34sp"
+        android:textSize="28sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/man_add_items_b" />
@@ -67,7 +67,7 @@
         android:fontFamily="@font/cormorant_infant_light"
         android:text="Замовлення"
         android:textColor="#FFFFFF"
-        android:textSize="34sp"
+        android:textSize="28sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/man_see_all_b" />
@@ -81,7 +81,7 @@
         android:fontFamily="@font/cormorant_infant_light"
         android:text="Вийти"
         android:textColor="#FFFFFF"
-        android:textSize="34sp"
+        android:textSize="28sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/man_all_orders_b" />
