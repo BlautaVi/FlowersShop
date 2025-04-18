@@ -16,56 +16,40 @@ import com.example.flowersshop.models.ProductItem
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
-class main_page : AppCompatActivity() {
 
+class customers_items_main_page : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var productAdapter: ProductAdapter
     private val productList = mutableListOf<ProductItem>()
     private var isManager = false
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_main_page)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
-
-        val currentUser = FirebaseAuth.getInstance().currentUser
-        isManager = currentUser?.email == "manager@gmail.com"
+        setContentView(R.layout.activity_customers_items_main_page)
 
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        productAdapter = ProductAdapter(productList, isManager)
+        productAdapter = ProductAdapter(productList, isManager = false)
         recyclerView.adapter = productAdapter
 
-        loadProductsFromFirebase()
-
-        val accBtn = findViewById<Button>(R.id.buttonA)
-        val orderBtn = findViewById<Button>(R.id.button_Add)
-
-        if (isManager) {
-            accBtn.visibility = View.GONE
-            orderBtn.visibility = View.GONE
-        } else {
-            accBtn.visibility = View.VISIBLE
-            orderBtn.visibility = View.VISIBLE
-            accBtn.setOnClickListener {
-                val intent = Intent(this, Customers_acc::class.java)
-                startActivity(intent)
-            }
-            orderBtn.setOnClickListener {
-                val intent = Intent(this, Ordering_item_c::class.java)
-                startActivity(intent)
-            }
+        loadUserProducts()
+        val toAcc = findViewById<Button>(R.id.buttonA)
+        toAcc.setOnClickListener(){
+            val intent = Intent(this, Customers_acc::class.java)
+            startActivity(intent)
         }
-    }
+        val Add_item = findViewById<Button>(R.id.button_Add)
+        Add_item.setOnClickListener(){
+            val intent = Intent(this,manager_add_item::class.java)
+            startActivity(intent)
+        }
+}
+    private fun loadUserProducts() {
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        val userId = currentUser?.uid ?: return
 
-    private fun loadProductsFromFirebase() {
         val db = FirebaseFirestore.getInstance()
         db.collection("items")
+            .whereEqualTo("userId", userId)
             .get()
             .addOnSuccessListener { result ->
                 productList.clear()
@@ -74,7 +58,7 @@ class main_page : AppCompatActivity() {
                         val product = document.toObject(ProductItem::class.java).copy(id = document.id)
                         productList.add(product)
                     } catch (e: Exception) {
-                        Toast.makeText(this, "Помилка десеріалізації документа: ${document.id}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Помилка: ${document.id}", Toast.LENGTH_SHORT).show()
                     }
                 }
                 productAdapter.notifyDataSetChanged()

@@ -38,6 +38,12 @@ class Customers_acc : AppCompatActivity() {
             finish()
             return
         }
+        val OwnItems = findViewById<Button>(R.id.CustomerItems_b)
+        OwnItems.setOnClickListener(){
+            val intent = Intent(this, customers_items_main_page::class.java)
+            startActivity(intent)
+            finish()
+        }
         val userId = auth.currentUser?.uid
         if (userId != null) {
             db.collection("users").document(userId).get()

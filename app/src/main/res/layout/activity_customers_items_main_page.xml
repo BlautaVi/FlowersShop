@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="#E1F0FF"
-    tools:context=".main_page">
+    tools:context=".customers_items_main_page">
 
     <ImageView
         android:id="@+id/imageView2"
@@ -38,23 +38,23 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
         android:backgroundTint="#7D89F8"
-        android:text="K"
+        android:text="+"
         android:textColor="#FFFFFF"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/categoryButton"
+        android:id="@+id/orders_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginStart="177dp"
         android:layout_marginTop="5dp"
+        android:layout_marginEnd="20dp"
         android:backgroundTint="#7C88F6"
-        android:text="КАТЕГОРІЇ"
+        android:text="Замовлення"
         android:textSize="12sp"
-        app:layout_constraintStart_toEndOf="@+id/imageView2"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_Add" />
 
     <androidx.recyclerview.widget.RecyclerView
