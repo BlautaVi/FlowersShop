@@ -139,31 +139,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/name_field" />
 
-    <ScrollView
-        android:id="@+id/scrollView2"
-        android:layout_width="291dp"
-        android:layout_height="207dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:background="#F6F6F6"
-        android:textAlignment="viewStart"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/order_l">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" />
-    </ScrollView>
-
     <Button
         android:id="@+id/change_b"
         android:layout_width="223dp"
         android:layout_height="55dp"
         android:layout_marginStart="52dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="13dp"
         android:layout_marginEnd="55dp"
         android:backgroundTint="#3D5DFF"
         android:fontFamily="@font/cormorant_infant_light"
@@ -172,7 +153,7 @@
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scrollView2" />
+        app:layout_constraintTop_toBottomOf="@+id/orders_c_view" />
 
     <Button
         android:id="@+id/CustomerItems_b"
@@ -214,4 +195,20 @@
         android:textSize="17sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/CustomerItems_b" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/orders_c_view"
+        android:layout_width="291dp"
+        android:layout_height="207dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="60dp"
+        android:background="@color/white"
+        android:clickable="true"
+        android:fadeScrollbars="false"
+        android:paddingStart="10dp"
+        android:paddingTop="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/order_l" />
 </androidx.constraintlayout.widget.ConstraintLayout>
