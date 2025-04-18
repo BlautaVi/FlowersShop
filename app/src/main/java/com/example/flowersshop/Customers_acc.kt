@@ -13,6 +13,7 @@ import androidx.core.view.WindowInsetsCompat
 import android.widget.TextView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+
 class Customers_acc : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
@@ -46,11 +47,13 @@ class Customers_acc : AppCompatActivity() {
                         addressField.setText(document.getString("address") ?: "")
                         phoneField.setText(document.getString("phoneNumber") ?: "")
                     } else {
-                        Toast.makeText(this, "Дані користувача не знайдено", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Дані користувача не знайдено", Toast.LENGTH_SHORT)
+                            .show()
                     }
                 }
                 .addOnFailureListener {
-                    Toast.makeText(this, "Помилка при завантаженні профілю", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Помилка при завантаженні профілю", Toast.LENGTH_SHORT)
+                        .show()
                 }
         }
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -69,23 +72,30 @@ class Customers_acc : AppCompatActivity() {
             }
 
             if (userId != null) {
-            val updatedUser = hashMapOf(
-                "name" to newName,
-                "address" to newAddress,
-                "phoneNumber" to newPhone,
-                "email" to auth.currentUser?.email
-            )
-                db.collection("users").document(userId)
-                    .set(updatedUser)
-                    .addOnSuccessListener {
-                        Toast.makeText(this, "Дані успішно оновлено", Toast.LENGTH_SHORT).show()
-                    }
-                    .addOnFailureListener { e ->
-                        Log.w("Firestore", "Помилка при оновленні даних: ${e.message}", e)
-                        Toast.makeText(this, "Помилка оновлення даних: ${e.message}", Toast.LENGTH_SHORT).show()
-                    }
+                if (userId != null) {
+                    val updatedUser = hashMapOf(
+                        "name" to newName,
+                        "address" to newAddress,
+                        "phoneNumber" to newPhone,
+                        "email" to auth.currentUser?.email
+                    )
+                    db.collection("users").document(userId)
+                        .set(updatedUser)
+                        .addOnSuccessListener {
+                            Toast.makeText(this, "Дані успішно оновлено", Toast.LENGTH_SHORT).show()
+                        }
+                        .addOnFailureListener { e ->
+                            Log.w("Firestore", "Помилка при оновленні даних: ${e.message}", e)
+                            Toast.makeText(
+                                this,
+                                "Помилка оновлення даних: ${e.message}",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                }
             } else {
-                Toast.makeText(this, "Помилка: користувач не автентифікований", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Помилка: користувач не автентифікований", Toast.LENGTH_SHORT)
+                    .show()
                 startActivity(Intent(this, MainActivity::class.java))
                 finish()
             }

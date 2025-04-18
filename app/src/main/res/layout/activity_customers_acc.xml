@@ -160,10 +160,10 @@
 
     <Button
         android:id="@+id/change_b"
-        android:layout_width="234dp"
-        android:layout_height="45dp"
+        android:layout_width="223dp"
+        android:layout_height="55dp"
         android:layout_marginStart="52dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:layout_marginEnd="55dp"
         android:backgroundTint="#3D5DFF"
         android:fontFamily="@font/cormorant_infant_light"
@@ -176,10 +176,10 @@
 
     <Button
         android:id="@+id/CustomerItems_b"
-        android:layout_width="232dp"
-        android:layout_height="45dp"
+        android:layout_width="228dp"
+        android:layout_height="51dp"
         android:layout_marginStart="68dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="68dp"
         android:backgroundTint="#6E85FB"
         android:fontFamily="@font/cormorant_infant_light"
@@ -191,32 +191,27 @@
 
     <Button
         android:id="@+id/exitAcc_b"
-        android:layout_width="171dp"
+        android:layout_width="119dp"
         android:layout_height="42dp"
-        android:layout_marginStart="116dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="121dp"
+        android:layout_marginStart="82dp"
+        android:layout_marginTop="8dp"
         android:backgroundTint="#6E85FB"
         android:fontFamily="@font/cormorant_infant_light"
         android:text="Вийти"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/CustomerItems_b" />
 
     <Button
         android:id="@+id/deleteAcc_b"
-        android:layout_width="163dp"
-        android:layout_height="42dp"
-        android:layout_marginStart="125dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="128dp"
+        android:layout_width="127dp"
+        android:layout_height="41dp"
+        android:layout_marginTop="9dp"
+        android:layout_marginEnd="71dp"
         android:backgroundTint="#D4585A"
         android:fontFamily="@font/cormorant_sc_light"
         android:text="Видалити"
-        android:textSize="20sp"
+        android:textSize="17sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.333"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/exitAcc_b" />
+        app:layout_constraintTop_toBottomOf="@+id/CustomerItems_b" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -17,8 +17,9 @@
         android:layout_marginEnd="68dp"
         android:fontFamily="@font/cormorant_sc_light"
         android:text="Ваші замовлення:"
+        android:textAlignment="center"
         android:textColor="#001180"
-        android:textSize="34sp"
+        android:textSize="26sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.714"
         app:layout_constraintStart_toStartOf="parent"
@@ -26,8 +27,8 @@
 
     <ScrollView
         android:id="@+id/scrollView3"
-        android:layout_width="370dp"
-        android:layout_height="484dp"
+        android:layout_width="366dp"
+        android:layout_height="351dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="120dp"
         android:layout_marginEnd="10dp"
@@ -53,7 +54,7 @@
         android:backgroundTint="#6E85FB"
         android:fontFamily="@font/cormorant_sc_light"
         android:text="Назад"
-        android:textSize="30sp"
+        android:textSize="26sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/scrollView3" />

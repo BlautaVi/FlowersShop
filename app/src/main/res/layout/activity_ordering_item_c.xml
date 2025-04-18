@@ -11,7 +11,7 @@
     <EditText
         android:id="@+id/phone_text"
         android:layout_width="242dp"
-        android:layout_height="50dp"
+        android:layout_height="39dp"
         android:layout_marginTop="15dp"
         android:layout_marginEnd="40dp"
         android:background="#FDFDFD"
@@ -19,8 +19,9 @@
         android:fontFamily="@font/cormorant_sc_light"
         android:hint="Введіть номер"
         android:inputType="text"
+        android:paddingStart="10px"
         android:textColor="#001180"
-        android:textSize="24sp"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/address_text" />
 
@@ -29,11 +30,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="30dp"
         android:fontFamily="@font/cormorant_sc_light"
         android:text="Тел:"
         android:textColor="#6E85FB"
-        android:textSize="24sp"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/address_l" />
 
@@ -46,14 +47,14 @@
         android:fontFamily="@font/cormorant_sc_light"
         android:text="Товари:"
         android:textColor="#6E85FB"
-        android:textSize="24sp"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/phone2_l" />
 
     <EditText
         android:id="@+id/address_text"
         android:layout_width="242dp"
-        android:layout_height="50dp"
+        android:layout_height="39dp"
         android:layout_marginTop="15dp"
         android:layout_marginEnd="40dp"
         android:background="#FDFDFD"
@@ -61,8 +62,9 @@
         android:fontFamily="@font/cormorant_sc_light"
         android:hint="Введіть адрес"
         android:inputType="text"
+        android:paddingStart="10px"
         android:textColor="#001180"
-        android:textSize="24sp"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/name_text" />
 
@@ -71,11 +73,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="30dp"
         android:fontFamily="@font/cormorant_sc_light"
         android:text="Адрес:"
         android:textColor="#6E85FB"
-        android:textSize="24sp"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/name2_l" />
 
@@ -99,18 +101,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="35dp"
         android:fontFamily="@font/cormorant_sc_light"
         android:text="Ім'я:"
         android:textColor="#6E85FB"
-        android:textSize="24sp"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/order_c_l" />
 
     <EditText
         android:id="@+id/name_text"
         android:layout_width="242dp"
-        android:layout_height="50dp"
+        android:layout_height="39dp"
         android:layout_marginTop="30dp"
         android:layout_marginEnd="40dp"
         android:background="#FDFDFD"
@@ -118,15 +120,16 @@
         android:fontFamily="@font/cormorant_sc_light"
         android:hint="Введіть ім'я"
         android:inputType="text"
+        android:paddingStart="10px"
         android:textColor="#001180"
-        android:textSize="24sp"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/order_c_l" />
 
     <ListView
         android:id="@+id/items_for_order_c_list"
-        android:layout_width="328dp"
-        android:layout_height="268dp"
+        android:layout_width="342dp"
+        android:layout_height="194dp"
         android:layout_marginStart="40dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="40dp"
@@ -147,7 +150,7 @@
         android:clickable="true"
         android:fontFamily="@font/cormorant_infant_light"
         android:text="Підтвердити"
-        android:textSize="28sp"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/items_for_order_c_list" />
@@ -163,7 +166,7 @@
         android:clickable="true"
         android:fontFamily="@font/cormorant_infant_light"
         android:text="Скасувати"
-        android:textSize="28sp"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/confirm_order_b" />
