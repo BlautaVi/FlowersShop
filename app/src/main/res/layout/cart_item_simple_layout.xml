@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="8dp"
+    android:background="#FFFFFF"
+    android:layout_marginBottom="4dp">
+
+    <ImageView
+        android:id="@+id/cart_item_image"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:scaleType="centerCrop"
+        android:layout_marginEnd="8dp" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/cart_item_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/cormorant_infant_light"
+            android:text="Вид: "
+            android:textColor="#0E1B71"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/cart_item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/cormorant_infant_light"
+            android:text="Назва товару"
+            android:textColor="#2138CD"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/cart_item_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/cormorant_sc_light"
+            android:text="Ціна: 0 грн"
+            android:textColor="#900407"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/cart_item_quantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/cormorant_sc_light"
+            android:text="Кількість: 1"
+            android:textColor="#2138CD"
+            android:textSize="14sp" />
+    </LinearLayout>
+</LinearLayout>

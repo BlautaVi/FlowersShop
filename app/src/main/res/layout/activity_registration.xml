@@ -208,7 +208,7 @@
         android:background="#FFFFFF"
         android:ems="10"
         android:fontFamily="@font/cormorant_infant_light"
-        android:hint="Введіть адресу.."
+        android:hint="Формат: &quot;м.&quot;"
         android:inputType="text"
         android:lineSpacingExtra="8sp"
         android:padding="10dp"
