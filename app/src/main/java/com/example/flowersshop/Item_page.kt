@@ -1,6 +1,7 @@
 package com.example.flowersshop
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -16,6 +17,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 class Item_page : AppCompatActivity() {
+    private lateinit var auth: FirebaseAuth
+    private lateinit var db: FirebaseFirestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +29,8 @@ class Item_page : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        auth = FirebaseAuth.getInstance()
+        db = FirebaseFirestore.getInstance()
 
         val product = intent.getParcelableExtra<ProductItem>("product")
 
@@ -40,14 +45,15 @@ class Item_page : AppCompatActivity() {
         val itemType = findViewById<TextView>(R.id.Type_l)
         val itemPrice = findViewById<TextView>(R.id.Price_l)
         val scrollView = findViewById<androidx.core.widget.NestedScrollView>(R.id.scrollView4)
-        val itemDesc = scrollView.findViewById<TextView>(android.R.id.text1) ?: TextView(this).apply {
-            id = android.R.id.text1
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-            scrollView.findViewById<LinearLayout>(android.R.id.list).addView(this)
-        }
+        val itemDesc =
+            scrollView.findViewById<TextView>(android.R.id.text1) ?: TextView(this).apply {
+                id = android.R.id.text1
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+                scrollView.findViewById<LinearLayout>(android.R.id.list).addView(this)
+            }
         val addToCartBtn = findViewById<Button>(R.id.addToCart_b)
 
         itemName.text = product.name
@@ -60,24 +66,50 @@ class Item_page : AppCompatActivity() {
             .into(itemImage)
 
         addToCartBtn.setOnClickListener {
-            val user = FirebaseAuth.getInstance().currentUser
+            val user = auth.currentUser
             if (user == null) {
                 Toast.makeText(this, "Будь ласка, увійдіть у систему", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            val cartItem = hashMapOf(
-                "userId" to user.uid,
-                "productName" to product.name,
-                "productPrice" to product.price,
-                "productPhotoUrl" to product.photoUrl
-            )
-            FirebaseFirestore.getInstance().collection("cart")
-                .add(cartItem)
-                .addOnSuccessListener {
-                    Toast.makeText(this, "Додано в кошик", Toast.LENGTH_SHORT).show()
+
+            db.collection("cart")
+                .whereEqualTo("userId", user.uid)
+                .whereEqualTo("productName", product.name)
+                .get()
+                .addOnSuccessListener { documents ->
+                    if (documents.isEmpty) {
+                        val cartItem = hashMapOf(
+                            "userId" to user.uid,
+                            "productName" to product.name,
+                            "productType" to product.type,
+                            "productPrice" to (product.price ?: 0.0),
+                            "productPhotoUrl" to product.photoUrl,
+                            "quantity" to 1
+                        )
+                        db.collection("cart")
+                            .add(cartItem)
+                            .addOnSuccessListener {
+                                Toast.makeText(this, "Додано в кошик", Toast.LENGTH_SHORT).show()
+                            }
+                            .addOnFailureListener { e ->
+                                Toast.makeText(this, "Помилка: ${e.message}", Toast.LENGTH_SHORT).show()
+                            }
+                    } else {
+                        val cartDoc = documents.documents[0]
+                        val currentQuantity = cartDoc.getLong("quantity")?.toInt() ?: 1
+                        db.collection("cart")
+                            .document(cartDoc.id)
+                            .update("quantity", currentQuantity + 1)
+                            .addOnSuccessListener {
+                                Toast.makeText(this, "Кількість оновлено", Toast.LENGTH_SHORT).show()
+                            }
+                            .addOnFailureListener { e ->
+                                Toast.makeText(this, "Помилка: ${e.message}", Toast.LENGTH_SHORT).show()
+                            }
+                    }
                 }
-                .addOnFailureListener {
-                    Toast.makeText(this, "Помилка: ${it.message}", Toast.LENGTH_SHORT).show()
+                .addOnFailureListener { e ->
+                    Toast.makeText(this, "Помилка перевірки кошика: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
         }
     }
