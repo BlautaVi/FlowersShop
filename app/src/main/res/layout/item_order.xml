@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:background="@android:color/transparent">
+
+    <TextView
+        android:id="@+id/order_summary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Замовлення від 21.04.2025 - 150.0 грн"
+        android:textSize="16sp"
+        android:textColor="#001180"
+        android:fontFamily="@font/cormorant_sc_light"
+        android:padding="4dp" />
+</LinearLayout>
