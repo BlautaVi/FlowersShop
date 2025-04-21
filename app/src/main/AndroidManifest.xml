@@ -44,7 +44,7 @@
             android:name=".Item_page"
             android:exported="false" />
         <activity
-            android:name=".Customers_orders"
+            android:name=".ManagerOrders"
             android:exported="false" />
         <activity
             android:name=".Customers_acc"
