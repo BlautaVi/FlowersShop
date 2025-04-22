@@ -43,7 +43,6 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Заповніть усі поля", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-
             auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
@@ -66,6 +65,7 @@ class MainActivity : AppCompatActivity() {
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
+
                             exception?.message?.contains("INVALID_EMAIL") == true -> {
                                 Toast.makeText(
                                     this,
@@ -73,6 +73,7 @@ class MainActivity : AppCompatActivity() {
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
+
                             exception?.message?.contains("USER_NOT_FOUND") == true -> {
                                 Toast.makeText(
                                     this,
@@ -83,6 +84,7 @@ class MainActivity : AppCompatActivity() {
                                 intent.putExtra("email", email)
                                 startActivity(intent)
                             }
+
                             exception?.cause is UnknownHostException ||
                                     exception?.cause is TimeoutException -> {
                                 Toast.makeText(
@@ -91,6 +93,7 @@ class MainActivity : AppCompatActivity() {
                                     Toast.LENGTH_LONG
                                 ).show()
                             }
+
                             else -> {
                                 Toast.makeText(
                                     this,
@@ -102,7 +105,6 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
         }
-
         guestBtn.setOnClickListener {
             startActivity(Intent(this, for_guest::class.java))
         }
