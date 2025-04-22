@@ -1,7 +1,6 @@
 package com.example.flowersshop
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -13,95 +12,83 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
-import java.util.UUID
 
 class manager_add_item : AppCompatActivity() {
-    private lateinit var imageView: ImageView
-    private lateinit var imageUri: Uri
-    private val storage = FirebaseStorage.getInstance()
-    private val firestore = FirebaseFirestore.getInstance()
-    private val auth = FirebaseAuth.getInstance()
 
-    private val PICK_IMAGE_REQUEST = 1
+    private lateinit var nameEditText: EditText
+    private lateinit var typeEditText: EditText
+    private lateinit var priceEditText: EditText
+    private lateinit var descriptionEditText: EditText
+    private lateinit var itemImage: ImageView
+    private lateinit var addButton: Button
+    private lateinit var showAllButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_manager_add_item)
-
-        imageView = findViewById(R.id.item_photo)
-
-        val addPhotoBtn = findViewById<Button>(R.id.add_photo_btn)
-        val addItemBtn = findViewById<Button>(R.id.man_add_item_b)
-        val showAllBtn = findViewById<Button>(R.id.man_show_all_items_b)
-        addPhotoBtn.setOnClickListener {
-            val intent = Intent()
-            intent.type = "image/*"
-            intent.action = Intent.ACTION_GET_CONTENT
-            startActivityForResult(Intent.createChooser(intent, "Виберіть зображення"), PICK_IMAGE_REQUEST)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
         }
 
-        addItemBtn.setOnClickListener {
-            if (::imageUri.isInitialized) {
-                uploadImageAndSaveData()
-            } else {
-                Toast.makeText(this, "Спочатку оберіть фото", Toast.LENGTH_SHORT).show()
-            }
+        nameEditText = findViewById(R.id.man_enter_name)
+        typeEditText = findViewById(R.id.man_enter_type)
+        priceEditText = findViewById(R.id.man_enter_price)
+        descriptionEditText = findViewById(R.id.man_enter_decs)
+        itemImage = findViewById(R.id.item_photo)
+        addButton = findViewById(R.id.man_add_item_b)
+        showAllButton = findViewById(R.id.man_show_all_items_b)
+
+        val isManager = FirebaseAuth.getInstance().currentUser?.email == "manager@gmail.com"
+        if (!isManager) {
+            Toast.makeText(this, "Доступно лише для менеджера", Toast.LENGTH_SHORT).show()
+            finish()
+            return
         }
-        showAllBtn.setOnClickListener{
+
+        addButton.setOnClickListener {
+            saveProduct()
+        }
+
+        showAllButton.setOnClickListener {
             val intent = Intent(this, main_page::class.java)
             startActivity(intent)
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.data != null) {
-            imageUri = data.data!!
-            imageView.setImageURI(imageUri)
+    private fun saveProduct() {
+        val name = nameEditText.text.toString().trim()
+        val type = typeEditText.text.toString().trim()
+        val price = priceEditText.text.toString().toDoubleOrNull()
+        val description = descriptionEditText.text.toString().trim()
+
+        if (name.isEmpty() || type.isEmpty() || price == null || description.isEmpty()) {
+            Toast.makeText(this, "Заповніть усі поля", Toast.LENGTH_SHORT).show()
+            return
         }
-    }
 
-    private fun uploadImageAndSaveData() {
-        val fileName = UUID.randomUUID().toString()
-        val storageRef = storage.reference.child("items/$fileName.jpg")
+        val db = FirebaseFirestore.getInstance()
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
 
-        storageRef.putFile(imageUri)
-            .addOnSuccessListener {
-                storageRef.downloadUrl.addOnSuccessListener { uri ->
-                    saveItemData(uri.toString())
-                }
-            }
-            .addOnFailureListener {
-                Toast.makeText(this, "Помилка при завантаженні фото", Toast.LENGTH_SHORT).show()
-            }
-    }
-
-    private fun saveItemData(photoUrl: String) {
-        val name = findViewById<EditText>(R.id.man_enter_name).text.toString()
-        val type = findViewById<EditText>(R.id.man_enter_type).text.toString()
-        val price = findViewById<EditText>(R.id.man_enter_price).text.toString()
-        val desc = findViewById<EditText>(R.id.man_enter_decs).text.toString()
-        val uid = auth.currentUser?.uid ?: "невідомо"
-
-        val item = hashMapOf(
+        val product = hashMapOf(
             "name" to name,
             "type" to type,
-            "price" to price.toDoubleOrNull(),
-            "description" to desc,
-            "photoUrl" to photoUrl,
-            "userId" to uid
+            "price" to price,
+            "description" to description,
+            "userId" to userId,
+            "photoUrl" to ""
         )
 
-        firestore.collection("items")
-            .add(item)
+        db.collection("items")
+            .add(product)
             .addOnSuccessListener {
                 Toast.makeText(this, "Товар додано", Toast.LENGTH_SHORT).show()
                 finish()
             }
-            .addOnFailureListener {
-                Toast.makeText(this, "Помилка при збереженні", Toast.LENGTH_SHORT).show()
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Помилка: ${e.message}", Toast.LENGTH_SHORT).show()
             }
     }
 }

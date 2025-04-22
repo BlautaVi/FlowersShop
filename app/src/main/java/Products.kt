@@ -3,7 +3,7 @@ package com.example.flowersshop.models
 import android.os.Parcelable
 
 abstract class Products(
-    open val name: String, // Змінюємо var на val
+    open val name: String,
     open val type: String,
     open val price: Double?,
     open val description: String,

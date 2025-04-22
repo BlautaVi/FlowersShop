@@ -1,10 +1,9 @@
 package com.example.flowersshop
 
 import android.os.Bundle
-import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -29,88 +28,82 @@ class Item_page : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        auth = FirebaseAuth.getInstance()
+
         db = FirebaseFirestore.getInstance()
+        auth = FirebaseAuth.getInstance()
 
-        val product = intent.getParcelableExtra<ProductItem>("product")
+        val productId = intent.getStringExtra("productId") ?: return finish()
+        loadProductDetails(productId)
 
-        if (product == null) {
-            Toast.makeText(this, "Товар не знайдено", Toast.LENGTH_SHORT).show()
-            finish()
-            return
+        val addToCartButton = findViewById<Button>(R.id.addToCart_b)
+        addToCartButton.setOnClickListener {
         }
+    }
 
-        val itemImage = findViewById<ImageView>(R.id.items_image)
-        val itemName = findViewById<TextView>(R.id.Name_l)
-        val itemType = findViewById<TextView>(R.id.Type_l)
-        val itemPrice = findViewById<TextView>(R.id.Price_l)
-        val scrollView = findViewById<androidx.core.widget.NestedScrollView>(R.id.scrollView4)
-        val itemDesc =
-            scrollView.findViewById<TextView>(android.R.id.text1) ?: TextView(this).apply {
-                id = android.R.id.text1
-                layoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-                )
-                scrollView.findViewById<LinearLayout>(android.R.id.list).addView(this)
-            }
-        val addToCartBtn = findViewById<Button>(R.id.addToCart_b)
-
-        itemName.text = product.name
-        itemType.text = product.type
-        itemPrice.text = "${product.price ?: 0.0} грн"
-        itemDesc.text = product.description
-        Glide.with(this)
-            .load(product.photoUrl)
-            .placeholder(R.drawable.icon)
-            .into(itemImage)
-
-        addToCartBtn.setOnClickListener {
-            val user = auth.currentUser
-            if (user == null) {
-                Toast.makeText(this, "Будь ласка, увійдіть у систему", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            db.collection("cart")
-                .whereEqualTo("userId", user.uid)
-                .whereEqualTo("productName", product.name)
-                .get()
-                .addOnSuccessListener { documents ->
-                    if (documents.isEmpty) {
-                        val cartItem = hashMapOf(
-                            "userId" to user.uid,
-                            "productName" to product.name,
-                            "productType" to product.type,
-                            "productPrice" to (product.price ?: 0.0),
-                            "productPhotoUrl" to product.photoUrl,
-                            "quantity" to 1
-                        )
-                        db.collection("cart")
-                            .add(cartItem)
-                            .addOnSuccessListener {
-                                Toast.makeText(this, "Додано в кошик", Toast.LENGTH_SHORT).show()
-                            }
-                            .addOnFailureListener { e ->
-                                Toast.makeText(this, "Помилка: ${e.message}", Toast.LENGTH_SHORT).show()
-                            }
+    private fun loadProductDetails(productId: String) {
+        db.collection("items").document(productId)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    val product = document.toObject(ProductItem::class.java)?.copy(id = document.id)
+                    if (product != null) {
+                        setupProductView(product)
+                        findViewById<Button>(R.id.addToCart_b)?.setOnClickListener {
+                            addToCart(product)
+                        }
                     } else {
-                        val cartDoc = documents.documents[0]
-                        val currentQuantity = cartDoc.getLong("quantity")?.toInt() ?: 1
-                        db.collection("cart")
-                            .document(cartDoc.id)
-                            .update("quantity", currentQuantity + 1)
-                            .addOnSuccessListener {
-                                Toast.makeText(this, "Кількість оновлено", Toast.LENGTH_SHORT).show()
-                            }
-                            .addOnFailureListener { e ->
-                                Toast.makeText(this, "Помилка: ${e.message}", Toast.LENGTH_SHORT).show()
-                            }
+                        Toast.makeText(this, "Помилка завантаження товару", Toast.LENGTH_SHORT).show()
+                        finish()
                     }
+                } else {
+                    Toast.makeText(this, "Товар не знайдено", Toast.LENGTH_SHORT).show()
+                    finish()
                 }
-                .addOnFailureListener { e ->
-                    Toast.makeText(this, "Помилка перевірки кошика: ${e.message}", Toast.LENGTH_SHORT).show()
-                }
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Помилка: ${e.message}", Toast.LENGTH_SHORT).show()
+                finish()
+            }
+    }
+
+    private fun setupProductView(product: ProductItem) {
+        val imageView = findViewById<ImageView>(R.id.items_image)
+        val nameText = findViewById<TextView>(R.id.Name_l)
+        val typeText = findViewById<TextView>(R.id.Type_l)
+        val priceText = findViewById<TextView>(R.id.Price_l)
+        val descText = findViewById<TextView>(R.id.description_text)
+
+        nameText.text = product.name
+        typeText.text = product.type
+        priceText.text = "${product.price} грн"
+        descText.text = product.description
+
+        if (product.photoUrl.isNotEmpty()) {
+            Glide.with(this)
+                .load(product.photoUrl)
+                .into(imageView)
+        } else {
+            imageView.setImageResource(android.R.drawable.ic_menu_gallery)
         }
+    }
+
+    private fun addToCart(product: ProductItem) {
+        val userId = auth.currentUser?.uid ?: return
+        val cartItem = hashMapOf(
+            "userId" to userId,
+            "productId" to product.id,
+            "productName" to product.name,
+            "productPrice" to product.price,
+            "quantity" to 1
+        )
+
+        db.collection("cart")
+            .add(cartItem)
+            .addOnSuccessListener {
+                Toast.makeText(this, "Додано до кошика", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Помилка додавання до кошика: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
     }
 }

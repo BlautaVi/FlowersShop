@@ -22,6 +22,7 @@ class main_page : AppCompatActivity() {
     private lateinit var productAdapter: ProductAdapter
     private val productList = mutableListOf<ProductItem>()
     private var isManager = false
+    private val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +39,34 @@ class main_page : AppCompatActivity() {
 
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        productAdapter = ProductAdapter(productList, isManager)
+
+        productAdapter = ProductAdapter(
+            productList,
+            onItemClick = { product ->
+                if (isManager) {
+                    val intent = Intent(this, ActivityManagerEditItem::class.java).apply {
+                        putExtra("product", product)
+                    }
+                    startActivity(intent)
+                    startActivity(intent)
+                } else if (product.userId == currentUserId) {
+                    val intent = Intent(this, customer_edit_item::class.java).apply {
+                        putExtra("product", product)
+                    }
+                    startActivity(intent)
+                } else {
+                    val intent = Intent(this, Item_page::class.java).apply {
+                        putExtra("productId", product.id)
+                    }
+                    startActivity(intent)
+                }
+            },
+            onAddToCartClick = { product ->
+                if (!isManager && product.userId != currentUserId) {
+                    addToCart(product)
+                }
+            }
+        )
         recyclerView.adapter = productAdapter
 
         loadProductsFromFirebase()
@@ -61,6 +89,26 @@ class main_page : AppCompatActivity() {
                 startActivity(intent)
             }
         }
+    }
+
+    private fun addToCart(product: ProductItem) {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val cartItem = hashMapOf(
+            "userId" to userId,
+            "productId" to product.id,
+            "productName" to product.name,
+            "productPrice" to product.price,
+            "quantity" to 1
+        )
+
+        FirebaseFirestore.getInstance().collection("cart")
+            .add(cartItem)
+            .addOnSuccessListener {
+                Toast.makeText(this, "${product.name} додано до кошика", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Помилка додавання до кошика: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
     }
 
     private fun loadProductsFromFirebase() {
