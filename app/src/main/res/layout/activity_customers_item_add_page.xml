@@ -21,7 +21,7 @@
         android:inputType="number|numberDecimal"
         android:text="Введіть ціну.."
         android:textColor="#6D84F9"
-        android:textSize="24sp"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/name_c_l"
         app:layout_constraintTop_toBottomOf="@+id/enter_type_c" />
@@ -78,7 +78,7 @@
         android:inputType="text"
         android:text="Введіть вид.."
         android:textColor="#6D84F9"
-        android:textSize="24sp"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/name_c_l"
         app:layout_constraintTop_toBottomOf="@+id/enter_name_c" />
@@ -150,7 +150,7 @@
         android:inputType="text"
         android:text="Введіть назву.."
         android:textColor="#6D84F9"
-        android:textSize="24sp"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/name_c_l"
         app:layout_constraintTop_toBottomOf="@+id/cust_img" />
@@ -184,5 +184,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextTextMultiLine" />
+
+    <Button
+        android:id="@+id/add_items_photo_C"
+        android:layout_width="62dp"
+        android:layout_height="46dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="178dp"
+        android:layout_marginEnd="10dp"
+        android:text="+"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/cust_img"
+        app:layout_constraintTop_toBottomOf="@+id/button2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

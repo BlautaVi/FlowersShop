@@ -109,12 +109,12 @@
             android:padding="8dp">
 
             <TextView
-                android:id="@android:id/text1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Опис товару"
-                android:textColor="#2138CD"
-                android:textSize="16sp" />
+                android:id="@+id/description_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Опис товару"
+            android:textColor="#2138CD"
+            android:textSize="16sp" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
@@ -132,5 +132,37 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/scrollView4" />
+
+    <Button
+        android:id="@+id/edit_button"
+        android:layout_width="265dp"
+        android:layout_height="69dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="40dp"
+        android:backgroundTint="#6E85FB"
+        android:fontFamily="@font/cormorant_infant_light"
+        android:text="Редагувати"
+        android:textSize="26sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addToCart_b" />
+
+    <Button
+        android:id="@+id/delete_button"
+        android:layout_width="265dp"
+        android:layout_height="69dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="40dp"
+        android:backgroundTint="#D4585A"
+        android:fontFamily="@font/cormorant_infant_light"
+        android:text="Видалити"
+        android:textSize="26sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_button" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
