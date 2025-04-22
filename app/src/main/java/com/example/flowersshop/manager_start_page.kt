@@ -27,8 +27,10 @@ class manager_start_page : AppCompatActivity() {
         }
         val add_item = findViewById<Button>(R.id.man_add_items_b)
         val see_items = findViewById<Button>(R.id.man_see_all_b)
-        val see_orders = findViewById<Button>(R.id.man_all_orders_b)
+        val unconfirmed_orders = findViewById<Button>(R.id.man_unconfirmed_orders_b)
+        val confirmed_orders = findViewById<Button>(R.id.man_confirmed_orders_b)
         val exit_b = findViewById<Button>(R.id. man_exit_b)
+
         exit_b.setOnClickListener {
             auth.signOut()
             if (auth.currentUser == null) {
@@ -48,7 +50,10 @@ class manager_start_page : AppCompatActivity() {
         see_items.setOnClickListener {
             startActivity(Intent(this, main_page::class.java))
         }
-        see_orders.setOnClickListener {
+        unconfirmed_orders.setOnClickListener {
+            startActivity(Intent(this, ManagerUnconfirmedOrdersActivity::class.java))
+        }
+        confirmed_orders.setOnClickListener {
             startActivity(Intent(this, ManagerOrders::class.java))
         }
     }

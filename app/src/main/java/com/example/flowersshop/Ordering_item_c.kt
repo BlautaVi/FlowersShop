@@ -56,6 +56,7 @@ class Ordering_item_c : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
         postOfficeSpinner = findViewById(R.id.spinner)
         nameText = findViewById(R.id.name_text)
         addressText = findViewById(R.id.address_text)
@@ -85,6 +86,7 @@ class Ordering_item_c : AppCompatActivity() {
             finish()
         }
     }
+
     private fun loadUserData() {
         db.collection("users").document(userId!!).get()
             .addOnSuccessListener { document ->
@@ -156,22 +158,30 @@ class Ordering_item_c : AppCompatActivity() {
             .whereEqualTo("userId", userId)
             .get()
             .addOnSuccessListener { documents ->
-                val batch = db.batch()
-                for (document in documents) {
-                    batch.delete(db.collection("cart").document(document.id))
+                if (documents.isEmpty) {
+                    cartItems.clear()
+                    cartAdapter.notifyDataSetChanged()
+                    updateTotalPrice()
+                    return@addOnSuccessListener
                 }
-                batch.commit()
-                    .addOnSuccessListener {
-                        cartItems.clear()
-                        cartAdapter.notifyDataSetChanged()
-                        updateTotalPrice()
+
+                db.runBatch { batch ->
+                    for (document in documents) {
+                        batch.delete(document.reference)
                     }
-                    .addOnFailureListener {
-                        Toast.makeText(this, "Помилка очищення кошика: ${it.message}", Toast.LENGTH_SHORT).show()
-                    }
+                }.addOnSuccessListener {
+                    cartItems.clear()
+                    cartAdapter.notifyDataSetChanged()
+                    updateTotalPrice()
+                    Log.d("Ordering_item_c", "Кошик успішно очищено")
+                }.addOnFailureListener { e ->
+                    Toast.makeText(this, "Помилка очищення кошика: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Log.e("Ordering_item_c", "Помилка очищення кошика: ${e.message}", e)
+                }
             }
-            .addOnFailureListener {
-                Toast.makeText(this, "Помилка очищення кошика: ${it.message}", Toast.LENGTH_SHORT).show()
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Помилка завантаження кошика: ${e.message}", Toast.LENGTH_SHORT).show()
+                Log.e("Ordering_item_c", "Помилка завантаження кошика: ${e.message}", e)
             }
     }
 
@@ -208,20 +218,26 @@ class Ordering_item_c : AppCompatActivity() {
                     "productName" to it.productName,
                     "productType" to it.productType,
                     "productPrice" to it.productPrice,
-                    "quantity" to it.quantity
+                    "quantity" to it.quantity,
+                    "productPhotoUrl" to it.productPhotoUrl
                 )
             },
-            "totalPrice" to cartItems.sumOf { it.productPrice * it.quantity }
+            "totalPrice" to cartItems.sumOf { it.productPrice * it.quantity },
+            "status" to "unconfirmed"
         )
 
+        progressBar.visibility = View.VISIBLE
         db.collection("orders").add(order)
             .addOnSuccessListener {
                 clearCart()
+                progressBar.visibility = View.GONE
                 Toast.makeText(this, "Замовлення оформлено!", Toast.LENGTH_SHORT).show()
                 finish()
             }
             .addOnFailureListener { e ->
-                Toast.makeText(this, "Помилка: ${e.message}", Toast.LENGTH_SHORT).show()
+                progressBar.visibility = View.GONE
+                Toast.makeText(this, "Помилка оформлення замовлення: ${e.message}", Toast.LENGTH_SHORT).show()
+                Log.e("Ordering_item_c", "Помилка оформлення замовлення: ${e.message}", e)
             }
     }
 
@@ -256,6 +272,7 @@ class Ordering_item_c : AppCompatActivity() {
             return view
         }
     }
+
     private fun extractCityFromAddress(address: String): String {
         if (address.isEmpty()) return ""
         val parts = address.split(",").map { it.trim() }

@@ -60,6 +60,11 @@ class Customers_acc : AppCompatActivity() {
             finish()
         }
 
+        val yourOrdersButton = findViewById<Button>(R.id.your_orders_button)
+        yourOrdersButton.setOnClickListener {
+            startActivity(Intent(this, CustomersOrdersActivity::class.java))
+        }
+
         val userId = auth.currentUser?.uid
         if (userId != null) {
             db.collection("users").document(userId).get()
@@ -75,8 +80,6 @@ class Customers_acc : AppCompatActivity() {
                 .addOnFailureListener {
                     Toast.makeText(this, "Помилка при завантаженні профілю", Toast.LENGTH_SHORT).show()
                 }
-
-            loadUserOrders(userId)
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -130,6 +133,7 @@ class Customers_acc : AppCompatActivity() {
             val intent = Intent(this, MainActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
+            finish()
         }
 
         val deleteAccButton = findViewById<Button>(R.id.deleteAcc_b)
@@ -166,66 +170,5 @@ class Customers_acc : AppCompatActivity() {
                 finish()
             }
         }
-    }
-    private fun loadUserOrders(userId: String) {
-        db.collection("orders")
-            .whereEqualTo("userId", userId)
-            .get()
-            .addOnSuccessListener { documents ->
-                ordersList.clear()
-                if (documents.isEmpty) {
-                    Toast.makeText(this, "У вас немає замовлень", Toast.LENGTH_SHORT).show()
-                    ordersRecyclerView.adapter = OrderAdapter(ordersList) {  }
-                    return@addOnSuccessListener
-                }
-
-                for (document in documents) {
-                    val orderId = document.id
-                    val orderDateMillis = document.getLong("orderDate") ?: 0L
-                    val totalPrice = document.getDouble("totalPrice") ?: 0.0
-                    val items = document.get("items") as? List<Map<String, Any>> ?: emptyList()
-                    ordersList.add(Order(orderId, userId, orderDateMillis, totalPrice, items))
-                }
-
-                ordersRecyclerView.adapter = OrderAdapter(ordersList) { order ->
-                    showOrderDetails(order)
-                }
-            }
-            .addOnFailureListener { e ->
-                Toast.makeText(this, "Помилка завантаження замовлень: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
-    }
-    private fun showOrderDetails(order: Order) {
-        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_order_details, null)
-
-        val detailsTextView = dialogView.findViewById<TextView>(R.id.order_details_text)
-        val deleteButton = dialogView.findViewById<Button>(R.id.delete_order_button)
-
-        deleteButton.visibility = View.GONE
-
-        val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
-        val orderDate = dateFormat.format(Date(order.orderDateMillis))
-
-        val detailsBuilder = StringBuilder()
-        detailsBuilder.append("Дата замовлення: $orderDate\n")
-        detailsBuilder.append("Загальна сума: ${order.totalPrice} грн\n\n")
-        detailsBuilder.append("Товари:\n")
-
-        for (item in order.items) {
-            val productName = item["productName"] as? String ?: "Невідомий товар"
-            val productType = item["productType"] as? String ?: "Невідомий тип"
-            val productPrice = item["productPrice"] as? Double ?: 0.0
-            val quantity = (item["quantity"] as? Long)?.toInt() ?: 1
-            detailsBuilder.append("- $productName ($productType): $productPrice грн x $quantity\n")
-        }
-
-        detailsTextView.text = detailsBuilder.toString()
-        val dialog = AlertDialog.Builder(this)
-            .setView(dialogView)
-            .setTitle("Деталі замовлення")
-            .setNegativeButton("Закрити") { dialog, _ -> dialog.dismiss() }
-            .create()
-
-        dialog.show()
     }
 }

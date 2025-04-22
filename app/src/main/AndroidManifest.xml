@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -13,6 +15,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FlowersShop"
         tools:targetApi="31">
+        <activity
+            android:name=".ManagerConfirmedOrdersActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DialogUnconfirmedOrderDetailsActivity"
+            android:exported="false" />
         <activity
             android:name=".customers_items_main_page"
             android:exported="false" />
@@ -44,6 +52,9 @@
             android:name=".Item_page"
             android:exported="false" />
         <activity
+            android:name=".ManagerUnconfirmedOrdersActivity"
+            android:exported="false" />
+        <activity
             android:name=".ManagerOrders"
             android:exported="false" />
         <activity
@@ -67,7 +78,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name="com.google.firebase.components.ComponentDiscoveryService"
+
+        <service
+            android:name="com.google.firebase.components.ComponentDiscoveryService"
             android:exported="false">
             <meta-data
                 android:name="com.google.firebase.components:com.google.firebase.auth.FirebaseAuthRegistrar"
