@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#E1F0FF"
-    tools:context=".customers_orders_for_sales">
+    tools:context=".CustomersOrdersForSalesActivity">
 
     <TextView
         android:id="@+id/ur_orders_l"
@@ -16,7 +16,8 @@
         android:layout_marginTop="70dp"
         android:layout_marginEnd="60dp"
         android:fontFamily="@font/cormorant_sc_light"
-        android:text="Ваші замовлення"
+        android:text="Замовлення з вашими товарами"
+        android:textAlignment="center"
         android:textColor="#001180"
         android:textSize="34sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -25,17 +26,37 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/listView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="382dp"
+        android:layout_height="430dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:background="#FFFFFF"
+        app:layout_constraintBottom_toTopOf="@+id/back_b"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.529"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ur_orders_l"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/back_b"
+        android:layout_width="278dp"
+        android:layout_height="69dp"
+        android:layout_marginStart="68dp"
+        android:layout_marginTop="29dp"
+        android:layout_marginEnd="68dp"
+        android:layout_marginBottom="80dp"
+        android:backgroundTint="#6E85FB"
+        android:fontFamily="@font/cormorant_sc_light"
+        android:text="Назад"
+        android:textSize="26sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.666"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ur_orders_l" />
+        app:layout_constraintTop_toBottomOf="@+id/listView" />
 
     <Button
         android:id="@+id/add_item_c_b"
@@ -48,9 +69,10 @@
         android:fontFamily="@font/cormorant_infant_light"
         android:text="Додати товар"
         android:textSize="30sp"
-        android:visibility="gone" app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/listView" />
+        app:layout_constraintTop_toBottomOf="@+id/back_b" />
 
     <Button
         android:id="@+id/delete_all_orders_b"
@@ -63,7 +85,8 @@
         android:fontFamily="@font/cormorant_infant_light"
         android:text="Видалити все"
         android:textSize="30sp"
-        android:visibility="gone" app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/add_item_c_b" />
 

@@ -1,5 +1,6 @@
 package com.example.flowersshop
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -28,6 +29,7 @@ import com.example.flowersshop.models.CartItem
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import org.json.JSONObject
+import java.util.UUID
 
 class Ordering_item_c : AppCompatActivity() {
     private val auth = FirebaseAuth.getInstance()
@@ -206,6 +208,17 @@ class Ordering_item_c : AppCompatActivity() {
             return
         }
 
+        val orderItems = cartItems.map {
+            hashMapOf(
+                "productId" to UUID.randomUUID().toString(),
+                "productName" to it.productName,
+                "productType" to it.productType,
+                "productPrice" to it.productPrice,
+                "quantity" to it.quantity,
+                "productPhotoUrl" to it.productPhotoUrl
+            )
+        }
+
         val order = hashMapOf(
             "userId" to userId,
             "name" to name,
@@ -213,15 +226,7 @@ class Ordering_item_c : AppCompatActivity() {
             "phone" to phone,
             "postOffice" to selectedPostOffice,
             "orderDate" to System.currentTimeMillis(),
-            "items" to cartItems.map {
-                hashMapOf(
-                    "productName" to it.productName,
-                    "productType" to it.productType,
-                    "productPrice" to it.productPrice,
-                    "quantity" to it.quantity,
-                    "productPhotoUrl" to it.productPhotoUrl
-                )
-            },
+            "items" to orderItems,
             "totalPrice" to cartItems.sumOf { it.productPrice * it.quantity },
             "status" to "unconfirmed"
         )

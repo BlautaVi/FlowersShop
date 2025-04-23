@@ -60,11 +60,11 @@ class Customers_acc : AppCompatActivity() {
             finish()
         }
 
-        val yourOrdersButton = findViewById<Button>(R.id.your_orders_button)
-        yourOrdersButton.setOnClickListener {
-            startActivity(Intent(this, CustomersOrdersActivity::class.java))
+        val ordersButton = findViewById<Button>(R.id.your_orders_button)
+        ordersButton.setOnClickListener {
+            val intent = Intent(this, CustomersOrdersActivity::class.java)
+            startActivity(intent)
         }
-
         val userId = auth.currentUser?.uid
         if (userId != null) {
             db.collection("users").document(userId).get()
