@@ -56,7 +56,6 @@ class MainActivity : AppCompatActivity() {
                         finish()
                     } else {
                         val exception = task.exception
-                        Log.e(TAG, "Authentication failed: ${exception?.message}", exception)
                         when {
                             exception?.message?.contains("INVALID_LOGIN_CREDENTIALS") == true -> {
                                 Toast.makeText(

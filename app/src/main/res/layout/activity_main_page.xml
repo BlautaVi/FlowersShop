@@ -53,7 +53,7 @@
             android:id="@+id/categoryButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="198dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             android:backgroundTint="#7C88F6"
             android:fontFamily="@font/cormorant_infant_light"
@@ -62,8 +62,7 @@
             android:textColor="#FFFFFF"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imageView2"
-            tools:layout_editor_absoluteY="73dp" />
+            app:layout_constraintTop_toBottomOf="@+id/buttonA" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"

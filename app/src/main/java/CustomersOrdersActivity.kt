@@ -42,25 +42,11 @@ class CustomersOrdersActivity : AppCompatActivity() {
             insets
         }
 
-        val googleApiAvailability = GoogleApiAvailability.getInstance()
-        val resultCode = googleApiAvailability.isGooglePlayServicesAvailable(this)
-        if (resultCode != ConnectionResult.SUCCESS) {
-            Log.e("CustomersOrders", "Google Play Services unavailable: $resultCode")
-            if (googleApiAvailability.isUserResolvableError(resultCode)) {
-                googleApiAvailability.getErrorDialog(this, resultCode, 9000)?.show()
-            } else {
-                Toast.makeText(this, "Google Play Services недоступні", Toast.LENGTH_LONG).show()
-                finish()
-            }
-            return
-        }
-
-        Log.d("CustomersOrders", "Current user: ${auth.currentUser?.uid}, Email: ${auth.currentUser?.email}")
 
         isManager = auth.currentUser?.email == "manager@gmail.com"
         findViewById<TextView>(R.id.your_orders_l).text = if (isManager) "Всі замовлення" else "Ваші замовлення"
 
-        ordersRecyclerView = findViewById(R.id.orders_recycler_view) // Оновлено ID
+        ordersRecyclerView = findViewById(R.id.orders_recycler_view)
         ordersRecyclerView.layoutManager = LinearLayoutManager(this)
         ordersRecyclerView.setHasFixedSize(true)
 
@@ -86,7 +72,6 @@ class CustomersOrdersActivity : AppCompatActivity() {
 
     private fun loadOrders() {
         if (userId != null) {
-            Log.d("CustomersOrders", "Loading orders for userId: $userId, isManager: $isManager")
             val query = if (isManager) {
                 db.collection("orders").get()
             } else {
@@ -116,15 +101,12 @@ class CustomersOrdersActivity : AppCompatActivity() {
                     val items = document.get("items") as? List<Map<String, Any>> ?: emptyList()
                     val status = document.getString("status") ?: "unconfirmed"
                     ordersList.add(Order(orderId, userId, orderDateMillis, totalPrice, items, status))
-                    Log.d("CustomersOrders", "Order: $orderId, Date: $orderDateMillis, Total: $totalPrice, Status: $status")
                 }
                 adapter.notifyDataSetChanged()
             }.addOnFailureListener { e ->
-                Log.e("CustomersOrders", "Помилка завантаження замовлень: ${e.message}", e)
                 Toast.makeText(this, "Помилка завантаження: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         } else {
-            Log.e("CustomersOrders", "User not authenticated")
             Toast.makeText(this, "Користувач не автентифікований", Toast.LENGTH_SHORT).show()
             finish()
         }
@@ -258,7 +240,6 @@ class CustomersOrdersActivity : AppCompatActivity() {
                 loadOrders()
             }
             .addOnFailureListener { e ->
-                Log.e("CustomersOrders", "Помилка оновлення статусу: ${e.message}", e)
                 Toast.makeText(this, "Помилка: ${e.message}", Toast.LENGTH_SHORT).show()
             }
     }
@@ -271,7 +252,6 @@ class CustomersOrdersActivity : AppCompatActivity() {
                 loadOrders()
             }
             .addOnFailureListener { e ->
-                Log.e("CustomersOrders", "Помилка видалення замовлення: ${e.message}", e)
                 Toast.makeText(this, "Помилка видалення: ${e.message}", Toast.LENGTH_SHORT).show()
             }
     }

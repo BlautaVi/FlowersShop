@@ -85,7 +85,7 @@
 
     <Button
         android:id="@+id/change_b"
-        android:layout_width="270dp"
+        android:layout_width="250dp"
         android:layout_height="57dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="35dp"
@@ -93,40 +93,42 @@
         android:backgroundTint="#6E85FB"
         android:fontFamily="@font/cormorant_sc_light"
         android:text="Зберегти зміни"
-        android:textSize="22sp"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/phone_lab" />
 
     <Button
         android:id="@+id/CustomerItems_b"
-        android:layout_width="165dp"
-        android:layout_height="54dp"
+        android:layout_width="170dp"
+        android:layout_height="57dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="20dp"
+        android:layout_marginEnd="39dp"
         android:backgroundTint="#4F65DC"
         android:fontFamily="@font/cormorant_sc_light"
         android:text="Ваші товари"
-        android:textSize="18sp"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toStartOf="@+id/your_orders_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/change_b" />
 
     <Button
         android:id="@+id/your_orders_button"
-        android:layout_width="208dp"
-        android:layout_height="54dp"
+        android:layout_width="170dp"
+        android:layout_height="57dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="16dp"
         android:backgroundTint="#4E64DA"
         android:fontFamily="@font/cormorant_sc_light"
         android:text="Ваші замовлення"
-        android:textSize="18sp"
+        android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/change_b" />
 
     <Button
         android:id="@+id/exitAcc_b"
-        android:layout_width="347dp"
+        android:layout_width="250dp"
         android:layout_height="57dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="15dp"
@@ -134,14 +136,14 @@
         android:backgroundTint="#24399E"
         android:fontFamily="@font/cormorant_sc_light"
         android:text="Вийти"
-        android:textSize="22sp"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/CustomerItems_b" />
 
     <Button
         android:id="@+id/deleteAcc_b"
-        android:layout_width="347dp"
+        android:layout_width="250dp"
         android:layout_height="57dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="15dp"
@@ -149,7 +151,7 @@
         android:backgroundTint="#B41F1F"
         android:fontFamily="@font/cormorant_sc_light"
         android:text="Видалити акаунт"
-        android:textSize="22sp"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/exitAcc_b" />

@@ -97,8 +97,6 @@ class customers_items_main_page : AppCompatActivity(), NavigationView.OnNavigati
                         Toast.makeText(this, "Помилка: ${document.id}", Toast.LENGTH_SHORT).show()
                     }
                 }
-
-                // Додаємо категорії до меню
                 categories.clear()
                 categories.addAll(categorySet.sorted())
                 val menu = navigationView.menu

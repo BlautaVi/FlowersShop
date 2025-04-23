@@ -38,18 +38,6 @@ class Item_page : AppCompatActivity() {
             insets
         }
 
-        val googleApiAvailability = GoogleApiAvailability.getInstance()
-        val resultCode = googleApiAvailability.isGooglePlayServicesAvailable(this)
-        if (resultCode != ConnectionResult.SUCCESS) {
-            if (googleApiAvailability.isUserResolvableError(resultCode)) {
-                googleApiAvailability.getErrorDialog(this, resultCode, 9000)?.show()
-            } else {
-                Toast.makeText(this, "Google Play Services недоступні", Toast.LENGTH_LONG).show()
-                finish()
-            }
-            return
-        }
-
         db = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
 
@@ -117,7 +105,6 @@ class Item_page : AppCompatActivity() {
     private fun addToCart(product: ProductItem) {
         val userId = auth.currentUser?.uid
         if (userId == null) {
-            Log.e("Item_page", "User not authenticated")
             Toast.makeText(this, "Увійдіть в акаунт", Toast.LENGTH_SHORT).show()
             startActivity(Intent(this, MainActivity::class.java))
             finish()
@@ -127,7 +114,6 @@ class Item_page : AppCompatActivity() {
             Toast.makeText(this, "Товар не має ціни", Toast.LENGTH_SHORT).show()
             return
         }
-        Log.d("Item_page", "Adding to cart: productId=${product.id}, userId=$userId")
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val existingItem = db.collection("cart")
@@ -139,7 +125,6 @@ class Item_page : AppCompatActivity() {
                 if (!existingItem.isEmpty) {
                     val doc = existingItem.documents[0]
                     val currentQuantity = doc.getLong("quantity")?.toInt() ?: 1
-                    Log.d("Item_page", "Updating quantity for cart item: ${doc.id}, new quantity: ${currentQuantity + 1}")
                     db.collection("cart").document(doc.id)
                         .update("quantity", currentQuantity + 1)
                         .await()
@@ -165,7 +150,6 @@ class Item_page : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 runOnUiThread {
-                    Log.e("Item_page", "Error adding to cart: ${e.message}", e)
                     Toast.makeText(this@Item_page, "Помилка додавання до кошика: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
             }

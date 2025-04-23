@@ -88,12 +88,9 @@ class ManagerOrders : AppCompatActivity() {
                         val items = document.get("items") as? List<Map<String, Any>> ?: emptyList()
                         confirmedOrdersList.add(Order(orderId, userId, orderDateMillis, totalPrice, items))
                     }
-                    adapter.notifyDataSetChanged()
-                    Log.d("ManagerOrders", "Завантажено ${confirmedOrdersList.size} замовлень")
-                }
+                    adapter.notifyDataSetChanged() }
             } catch (e: Exception) {
                 runOnUiThread {
-                    Log.e("ManagerOrders", "Помилка завантаження підтверджених: ${e.message}", e)
                     Toast.makeText(this@ManagerOrders, "Помилка завантаження: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
             }

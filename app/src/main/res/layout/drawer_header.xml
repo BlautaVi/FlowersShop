@@ -15,13 +15,4 @@
         android:textSize="20sp"
         android:textStyle="bold" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:fontFamily="@font/cormorant_infant_light"
-        android:text="Виберіть категорію для фільтрації"
-        android:textColor="#E1F0FF"
-        android:textSize="18sp" />
-
 </LinearLayout>

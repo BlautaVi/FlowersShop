@@ -74,12 +74,10 @@ class Registration : AppCompatActivity() {
                         .document(userId)
                         .set(user)
                         .addOnSuccessListener {
-                            Log.d(TAG, "Користувач доданий в Firestore")
                             startActivity(Intent(this, main_page::class.java))
                             finish()
                         }
                         .addOnFailureListener { e ->
-                            Log.w(TAG, "Помилка при додаванні користувача: ${e.message}", e)
                             Toast.makeText(
                                 this,
                                 "Помилка збереження даних: ${e.message}",
@@ -87,7 +85,6 @@ class Registration : AppCompatActivity() {
                             ).show()
                         }
                 } else {
-                    Log.e(TAG, "UID користувача не знайдено після реєстрації")
                     Toast.makeText(
                         this,
                         "Помилка: користувач не автентифікований",
