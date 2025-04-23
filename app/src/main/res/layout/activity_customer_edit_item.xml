@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#E1F0FF"
+    tools:context=".customer_edit_item">
+
+    <ImageView
+        android:id="@+id/item_photo"
+        android:layout_width="224dp"
+        android:layout_height="167dp"
+        android:layout_marginTop="90dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+    <TextView
+        android:id="@+id/name_customer_l"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="40dp"
+        android:fontFamily="@font/cormorant_infant_light"
+        android:text="Назва:"
+        android:textColor="#2138CD"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/item_photo" />
+
+    <TextView
+        android:id="@+id/customer_type_l"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="30dp"
+        android:fontFamily="@font/cormorant_infant_light"
+        android:text="Вид:"
+        android:textColor="#2138CD"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/name_customer_l" />
+
+    <TextView
+        android:id="@+id/customer_price_l"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="30dp"
+        android:fontFamily="@font/cormorant_infant_light"
+        android:text="Ціна:"
+        android:textColor="#2138CD"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/customer_type_l" />
+
+    <TextView
+        android:id="@+id/customer_desc_l"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="30dp"
+        android:fontFamily="@font/cormorant_infant_light"
+        android:text="Опис:"
+        android:textColor="#2138CD"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/customer_price_l" />
+
+    <EditText
+        android:id="@+id/customer_enter_name"
+        android:layout_width="253dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="40dp"
+        android:background="#FFFF"
+        android:ems="10"
+        android:fontFamily="@font/cormorant_infant_light"
+        android:hint="Введіть назву..."
+        android:inputType="text|textPersonName|textAutoComplete"
+        android:paddingStart="10px"
+        android:singleLine="true"
+        android:textColor="#2138CD"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/item_photo" />
+
+    <EditText
+        android:id="@+id/customer_enter_type"
+        android:layout_width="253dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="40dp"
+        android:background="#FFFF"
+        android:ems="10"
+        android:fontFamily="@font/cormorant_infant_light"
+        android:hint="Введіть вид..."
+        android:inputType="text|textAutoComplete"
+        android:paddingStart="10px"
+        android:singleLine="true"
+        android:textColor="#2138CD"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/customer_enter_name" />
+
+    <EditText
+        android:id="@+id/customer_enter_price"
+        android:layout_width="254dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="40dp"
+        android:background="#FFFF"
+        android:ems="10"
+        android:fontFamily="@font/cormorant_infant_light"
+        android:hint="Введіть ціну..."
+        android:inputType="number|numberDecimal"
+        android:paddingStart="10px"
+        android:singleLine="true"
+        android:textColor="#2138CD"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/customer_enter_type" />
+
+    <EditText
+        android:id="@+id/customer_enter_desc"
+        android:layout_width="357dp"
+        android:layout_height="109dp"
+        android:layout_marginTop="20dp"
+        android:background="#F6F6F6"
+        android:ems="10"
+        android:fontFamily="@font/cormorant_infant_light"
+        android:gravity="start|top"
+        android:hint="Введіть опис"
+        android:inputType="textMultiLine"
+        android:paddingStart="10px"
+        android:paddingTop="10px"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/customer_desc_l" />
+
+    <Button
+        android:id="@+id/customer_update_b"
+        android:layout_width="273dp"
+        android:layout_height="57dp"
+        android:layout_marginStart="160dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="161dp"
+        android:backgroundTint="#6E85FB"
+        android:fontFamily="@font/cormorant_infant_light"
+        android:text="Оновити"
+        android:textSize="26sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/customer_enter_desc" />
+
+    <Button
+        android:id="@+id/customer_delete_b"
+        android:layout_width="228dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="155dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="166dp"
+        android:backgroundTint="#D4585A"
+        android:fontFamily="@font/cormorant_infant_light"
+        android:text="Видалити"
+        android:textSize="26sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/customer_update_b" />
+</androidx.constraintlayout.widget.ConstraintLayout>
