@@ -12,6 +12,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import java.util.UUID
 
 class Customers_item_Add_page : AppCompatActivity() {
 
@@ -87,7 +88,9 @@ class Customers_item_Add_page : AppCompatActivity() {
             return
         }
 
+        val productId = UUID.randomUUID().toString()
         val product = hashMapOf(
+            "id" to productId,
             "name" to name,
             "type" to type,
             "price" to price,
@@ -97,7 +100,8 @@ class Customers_item_Add_page : AppCompatActivity() {
         )
 
         db.collection("items")
-            .add(product)
+            .document(productId)
+            .set(product)
             .addOnSuccessListener {
                 Toast.makeText(this, "Товар додано", Toast.LENGTH_SHORT).show()
                 finish()

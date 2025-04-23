@@ -24,7 +24,11 @@ class customers_items_main_page : AppCompatActivity() {
 
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
-
+        val ordersButton = findViewById<Button>(R.id.orders_btn)
+        ordersButton.setOnClickListener {
+            val intent = Intent(this, CustomersOrdersForSalesActivity::class.java)
+            startActivity(intent)
+        }
         productAdapter = ProductAdapter(
             productList,
             onItemClick = { product ->

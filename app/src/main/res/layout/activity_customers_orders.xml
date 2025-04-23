@@ -13,7 +13,7 @@
         android:layout_width="282dp"
         android:layout_height="48dp"
         android:layout_marginStart="68dp"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="48dp"
         android:layout_marginEnd="68dp"
         android:fontFamily="@font/cormorant_sc_light"
         android:text="Всі замовлення"
@@ -21,14 +21,14 @@
         android:textColor="#001180"
         android:textSize="26sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.714"
+        app:layout_constraintHorizontal_bias="0.285"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/orders_recycler_view"
-        android:layout_width="366dp"
-        android:layout_height="0dp"
+        android:layout_width="344dp"
+        android:layout_height="465dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="120dp"
         android:layout_marginEnd="10dp"
@@ -38,24 +38,26 @@
         android:paddingBottom="5dp"
         app:layout_constraintBottom_toTopOf="@+id/back_b"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.666"
+        app:layout_constraintHorizontal_bias="0.489"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/your_orders_l" />
+        app:layout_constraintTop_toTopOf="@+id/your_orders_l"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/back_b"
         android:layout_width="278dp"
         android:layout_height="69dp"
         android:layout_marginStart="68dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="29dp"
         android:layout_marginEnd="68dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="160dp"
         android:backgroundTint="#6E85FB"
         android:fontFamily="@font/cormorant_sc_light"
         android:text="Назад"
         android:textSize="26sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.666"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/orders_recycler_view" />
 

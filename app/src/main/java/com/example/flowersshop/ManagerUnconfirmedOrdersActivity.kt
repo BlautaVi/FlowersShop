@@ -140,15 +140,31 @@ class ManagerUnconfirmedOrdersActivity : AppCompatActivity() {
     }
 
     private fun updateOrderStatus(orderId: String, status: String) {
-        db.collection("orders").document(orderId)
-            .update("status", status)
-            .addOnSuccessListener {
-                Toast.makeText(this, "Замовлення оновлено підтверджено!", Toast.LENGTH_SHORT).show()
-                loadUnconfirmedOrders()
+        val user = auth.currentUser
+        Log.d("ManagerUnconfirmed", "Спроба оновити статус замовлення. Поточний User: ${user?.uid}, Email: ${user?.email}")
+        if (user == null || user.email != "manager@gmail.com") {
+            Log.e("ManagerUnconfirmed", "Користувач не автентифікований або не є менеджером")
+            Toast.makeText(this, "Помилка: Ви не автентифіковані як менеджер", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        user.getIdToken(true).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Log.d("ManagerUnconfirmed", "Токен автентифікації оновлено")
+                db.collection("orders").document(orderId)
+                    .update("status", status)
+                    .addOnSuccessListener {
+                        Toast.makeText(this, "Замовлення оновлено!", Toast.LENGTH_SHORT).show()
+                        loadUnconfirmedOrders()
+                    }
+                    .addOnFailureListener { e ->
+                        Log.e("ManagerUnconfirmed", "Помилка оновлення статусу: ${e.message}", e)
+                        Toast.makeText(this, "Помилка: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
+            } else {
+                Log.e("ManagerUnconfirmed", "Помилка оновлення токена: ${task.exception?.message}", task.exception)
+                Toast.makeText(this, "Помилка автентифікації: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
             }
-            .addOnFailureListener { e ->
-                Log.e("ManagerUnconfirmed", "Помилка оновлення статусу: ${e.message}", e)
-                Toast.makeText(this, "Помилка: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
+        }
     }
 }

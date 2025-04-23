@@ -43,7 +43,10 @@
             android:name=".Ordering_item_c"
             android:exported="false" />
         <activity
-            android:name=".customers_orders_for_sales"
+            android:name=".CustomersOrdersForSalesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CustomersOrdersActivity"
             android:exported="false" />
         <activity
             android:name=".Customers_item_Add_page"
