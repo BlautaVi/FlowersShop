@@ -4,12 +4,5 @@ class Customer (
     name: String,
     phoneNumber: Int,
     email: String
-): User(login, password, name, phoneNumber, email, "Customer"){
-    fun addProduct() {}
-    fun editProduct() {}
-    fun deleteMyProduct() {}
-    fun viewMyProducts() {}
-    fun createOrder() {}
-    fun viewMyOrders() {}
-    fun cancelOrder() { }
-}
+): User(login, password, name, phoneNumber, email, "Customer")
+

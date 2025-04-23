@@ -83,11 +83,9 @@ class ManagerUnconfirmedOrdersActivity : AppCompatActivity() {
                         unconfirmedOrdersList.add(Order(orderId, userId, orderDateMillis, totalPrice, items))
                     }
                     adapter.notifyDataSetChanged()
-                    Log.d("ManagerUnconfirmed", "Завантажено ${unconfirmedOrdersList.size} замовлень")
                 }
             } catch (e: Exception) {
                 runOnUiThread {
-                    Log.e("ManagerUnconfirmed", "Помилка завантаження непідтверджених: ${e.message}", e)
                     Toast.makeText(this@ManagerUnconfirmedOrdersActivity, "Помилка завантаження: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
             }
@@ -143,14 +141,12 @@ class ManagerUnconfirmedOrdersActivity : AppCompatActivity() {
         val user = auth.currentUser
         Log.d("ManagerUnconfirmed", "Спроба оновити статус замовлення. Поточний User: ${user?.uid}, Email: ${user?.email}")
         if (user == null || user.email != "manager@gmail.com") {
-            Log.e("ManagerUnconfirmed", "Користувач не автентифікований або не є менеджером")
             Toast.makeText(this, "Помилка: Ви не автентифіковані як менеджер", Toast.LENGTH_SHORT).show()
             return
         }
 
         user.getIdToken(true).addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                Log.d("ManagerUnconfirmed", "Токен автентифікації оновлено")
                 db.collection("orders").document(orderId)
                     .update("status", status)
                     .addOnSuccessListener {
@@ -158,11 +154,9 @@ class ManagerUnconfirmedOrdersActivity : AppCompatActivity() {
                         loadUnconfirmedOrders()
                     }
                     .addOnFailureListener { e ->
-                        Log.e("ManagerUnconfirmed", "Помилка оновлення статусу: ${e.message}", e)
                         Toast.makeText(this, "Помилка: ${e.message}", Toast.LENGTH_SHORT).show()
                     }
             } else {
-                Log.e("ManagerUnconfirmed", "Помилка оновлення токена: ${task.exception?.message}", task.exception)
                 Toast.makeText(this, "Помилка автентифікації: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
             }
         }

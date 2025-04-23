@@ -26,7 +26,7 @@ class Customers_item_Add_page : AppCompatActivity() {
     private lateinit var showAllButton: Button
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
-
+    private lateinit var AccountButton: Button
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -60,9 +60,11 @@ class Customers_item_Add_page : AppCompatActivity() {
         addButton = findViewById(R.id.add_cust_item_b)
         addPhotoButton = findViewById(R.id.add_items_photo_C)
         showAllButton = findViewById(R.id.All_cust_items_b)
-        val AccountButton = findViewById<Button>(R.id.button2)
+        AccountButton = findViewById(R.id.button2)
+
         AccountButton.setOnClickListener{
             val intent = Intent(this, Customers_acc::class.java)
+            startActivity(intent)
         }
         addButton.setOnClickListener {
             saveProduct()

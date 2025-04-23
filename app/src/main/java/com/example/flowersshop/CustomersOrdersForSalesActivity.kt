@@ -14,8 +14,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.GoogleApiAvailability
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
@@ -41,20 +39,7 @@ class CustomersOrdersForSalesActivity : AppCompatActivity() {
             insets
         }
 
-        val googleApiAvailability = GoogleApiAvailability.getInstance()
-        val resultCode = googleApiAvailability.isGooglePlayServicesAvailable(this)
-        if (resultCode != ConnectionResult.SUCCESS) {
-            Log.e("CustomersOrdersForSales", "Google Play Services unavailable: $resultCode")
-            if (googleApiAvailability.isUserResolvableError(resultCode)) {
-                googleApiAvailability.getErrorDialog(this, resultCode, 9000)?.show()
-            } else {
-                Toast.makeText(this, "Сервіси Google Play недоступні", Toast.LENGTH_LONG).show()
-                finish()
-            }
-            return
-        }
 
-        Log.d("CustomersOrdersForSales", "Поточний користувач: ${auth.currentUser?.uid}, Email: ${auth.currentUser?.email}")
         findViewById<TextView>(R.id.ur_orders_l).text = "Замовлення з вашими товарами"
 
         ordersRecyclerView = findViewById(R.id.listView) as RecyclerView
@@ -75,8 +60,6 @@ class CustomersOrdersForSalesActivity : AppCompatActivity() {
 
     private fun loadOrdersWithUserItems() {
         if (userId != null) {
-            Log.d("CustomersOrdersForSales", "Завантаження підтверджених замовлень з товарами користувача (ID: $userId)")
-
             db.collection("orders")
                 .whereEqualTo("status", "confirmed")
                 .get()
@@ -87,15 +70,12 @@ class CustomersOrdersForSalesActivity : AppCompatActivity() {
                         .whereEqualTo("userId", userId)
                         .get()
                         .addOnSuccessListener { userItemsSnapshot ->
-                            Log.d("CustomersOrdersForSales", "Кількість товарів користувача: ${userItemsSnapshot.size()}")
                             for (doc in userItemsSnapshot) {
                                 val itemId = doc.getString("productId")
                                 if (itemId != null) {
                                     userProductIds.add(itemId)
-                                    Log.d("CustomersOrdersForSales", "ID товару користувача: $itemId")
                                 }
                             }
-                            Log.d("CustomersOrdersForSales", "ID товарів користувача: $userProductIds")
                             for (document in ordersSnapshot) {
                                 val orderId = document.id
                                 val orderUserId = document.getString("userId") ?: "невідомий_користувач"
@@ -128,16 +108,13 @@ class CustomersOrdersForSalesActivity : AppCompatActivity() {
 
                         }
                         .addOnFailureListener { e ->
-                            Log.e("CustomersOrdersForSales", "Помилка завантаження товарів користувача: ${e.message}", e)
                             Toast.makeText(this, "Помилка завантаження товарів користувача: ${e.message}", Toast.LENGTH_SHORT).show()
                         }
                 }
                 .addOnFailureListener { e ->
-                    Log.e("CustomersOrdersForSales", "Помилка завантаження підтверджених замовлень: ${e.message}", e)
                     Toast.makeText(this, "Помилка завантаження підтверджених замовлень: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
         } else {
-            Log.e("CustomersOrdersForSales", "Користувач не автентифікований")
             Toast.makeText(this, "Користувач не автентифікований", Toast.LENGTH_SHORT).show()
             finish()
         }
@@ -166,7 +143,7 @@ class CustomersOrdersForSalesActivity : AppCompatActivity() {
             val productPrice = item["productPrice"] as? Double ?: 0.0
             val quantity = (item["quantity"] as? Long)?.toInt() ?: 1
             val productId = item["productId"] as? String ?: "ID відсутній"
-            detailsBuilder.append("- $productName ($productType), Ціна: $productPrice грн, Кількість: $quantity, ID: $productId\n")
+            detailsBuilder.append("- $productName ($productType), Ціна: $productPrice грн, Кількість: $quantity\n")
         }
 
         detailsTextView.text = detailsBuilder.toString()

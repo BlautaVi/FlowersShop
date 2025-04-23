@@ -114,7 +114,6 @@ class Ordering_item_c : AppCompatActivity() {
                 }
             }
             .addOnFailureListener { e ->
-                Log.e("Ordering_item_c", "Помилка при завантаженні профілю: ${e.message}", e)
                 Toast.makeText(this, "Помилка при завантаженні профілю: ${e.message}", Toast.LENGTH_SHORT).show()
                 setEmptySpinner()
             }
@@ -175,15 +174,12 @@ class Ordering_item_c : AppCompatActivity() {
                     cartItems.clear()
                     cartAdapter.notifyDataSetChanged()
                     updateTotalPrice()
-                    Log.d("Ordering_item_c", "Кошик успішно очищено")
                 }.addOnFailureListener { e ->
                     Toast.makeText(this, "Помилка очищення кошика: ${e.message}", Toast.LENGTH_SHORT).show()
-                    Log.e("Ordering_item_c", "Помилка очищення кошика: ${e.message}", e)
                 }
             }
             .addOnFailureListener { e ->
                 Toast.makeText(this, "Помилка завантаження кошика: ${e.message}", Toast.LENGTH_SHORT).show()
-                Log.e("Ordering_item_c", "Помилка завантаження кошика: ${e.message}", e)
             }
     }
 
@@ -242,7 +238,6 @@ class Ordering_item_c : AppCompatActivity() {
             .addOnFailureListener { e ->
                 progressBar.visibility = View.GONE
                 Toast.makeText(this, "Помилка оформлення замовлення: ${e.message}", Toast.LENGTH_SHORT).show()
-                Log.e("Ordering_item_c", "Помилка оформлення замовлення: ${e.message}", e)
             }
     }
 
@@ -277,7 +272,6 @@ class Ordering_item_c : AppCompatActivity() {
             return view
         }
     }
-
     private fun extractCityFromAddress(address: String): String {
         if (address.isEmpty()) return ""
         val parts = address.split(",").map { it.trim() }
@@ -315,7 +309,6 @@ class Ordering_item_c : AppCompatActivity() {
             Request.Method.POST, "https://api.novaposhta.ua/v2.0/json/", requestBody,
             { response ->
                 try {
-                    Log.d("Ordering_item_c", "Відповідь API (cityRef): $response")
                     val dataArray = response.getJSONArray("data")
                     if (dataArray.length() > 0) {
                         val firstData = dataArray.getJSONObject(0)
@@ -330,12 +323,10 @@ class Ordering_item_c : AppCompatActivity() {
                         callback(null)
                     }
                 } catch (e: Exception) {
-                    Log.e("Ordering_item_c", "Помилка парсингу cityRef: ${e.message}", e)
                     callback(null)
                 }
             },
             { error ->
-                Log.e("Ordering_item_c", "Помилка запиту cityRef: ${error.message}", error)
                 callback(null)
             })
 
@@ -357,7 +348,6 @@ class Ordering_item_c : AppCompatActivity() {
             Request.Method.POST, "https://api.novaposhta.ua/v2.0/json/", requestBody,
             { response ->
                 try {
-                    Log.d("Ordering_item_c", "Відповідь API (warehouses): $response")
                     val data = response.getJSONArray("data")
                     val warehouses = mutableListOf<String>()
                     for (i in 0 until data.length()) {
@@ -367,12 +357,10 @@ class Ordering_item_c : AppCompatActivity() {
                     warehouses.sortBy { it.split("№").getOrNull(1)?.toIntOrNull() ?: 0 }
                     callback(warehouses)
                 } catch (e: Exception) {
-                    Log.e("Ordering_item_c", "Помилка парсингу відділень: ${e.message}", e)
                     callback(emptyList())
                 }
             },
             { error ->
-                Log.e("Ordering_item_c", "Помилка запиту відділень: ${error.message}", error)
                 callback(emptyList())
             })
 
