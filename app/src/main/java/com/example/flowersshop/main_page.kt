@@ -2,27 +2,35 @@ package com.example.flowersshop
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.flowersshop.models.ProductAdapter
 import com.example.flowersshop.models.ProductItem
+import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
-class main_page : AppCompatActivity() {
+class main_page : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var productAdapter: ProductAdapter
     private val productList = mutableListOf<ProductItem>()
+    private val allProducts = mutableListOf<ProductItem>()
     private var isManager = false
     private val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var navigationView: NavigationView
+    private val categories = mutableListOf<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +45,10 @@ class main_page : AppCompatActivity() {
         val currentUser = FirebaseAuth.getInstance().currentUser
         isManager = currentUser?.email == "manager@gmail.com"
 
+        drawerLayout = findViewById(R.id.drawer_layout)
+        navigationView = findViewById(R.id.nav_view)
+        navigationView.setNavigationItemSelectedListener(this)
+
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -47,7 +59,6 @@ class main_page : AppCompatActivity() {
                     val intent = Intent(this, ActivityManagerEditItem::class.java).apply {
                         putExtra("product", product)
                     }
-                    startActivity(intent)
                     startActivity(intent)
                 } else if (product.userId == currentUserId) {
                     val intent = Intent(this, customer_edit_item::class.java).apply {
@@ -69,7 +80,9 @@ class main_page : AppCompatActivity() {
         )
         recyclerView.adapter = productAdapter
 
-        loadProductsFromFirebase()
+        findViewById<Button>(R.id.categoryButton).setOnClickListener {
+            drawerLayout.openDrawer(GravityCompat.START)
+        }
 
         val accBtn = findViewById<Button>(R.id.buttonA)
         val orderBtn = findViewById<Button>(R.id.button_Add)
@@ -89,6 +102,61 @@ class main_page : AppCompatActivity() {
                 startActivity(intent)
             }
         }
+
+        loadCategoriesAndProducts()
+    }
+
+    private fun loadCategoriesAndProducts() {
+        val db = FirebaseFirestore.getInstance()
+        db.collection("items")
+            .get()
+            .addOnSuccessListener { result ->
+                allProducts.clear()
+                productList.clear()
+                val categorySet = mutableSetOf<String>()
+
+                for (document in result) {
+                    try {
+                        val product = document.toObject(ProductItem::class.java).copy(id = document.id)
+                        allProducts.add(product)
+                        productList.add(product)
+                        categorySet.add(product.type)
+                    } catch (e: Exception) {
+                        Toast.makeText(this, "Помилка десеріалізації документа: ${document.id}", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                categories.clear()
+                categories.addAll(categorySet.sorted())
+                val menu = navigationView.menu
+                menu.clear()
+                menu.add(0, R.id.nav_all, 0, "Усі категорії").setOnMenuItemClickListener {
+                    filterProducts(null)
+                    drawerLayout.closeDrawer(GravityCompat.START)
+                    true
+                }
+                categories.forEachIndexed { index, category ->
+                    menu.add(0, index + 1, 0, category).setOnMenuItemClickListener {
+                        filterProducts(category)
+                        drawerLayout.closeDrawer(GravityCompat.START)
+                        true
+                    }
+                }
+
+                productAdapter.notifyDataSetChanged()
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Помилка: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun filterProducts(category: String?) {
+        productList.clear()
+        if (category == null) {
+            productList.addAll(allProducts)
+        } else {
+            productList.addAll(allProducts.filter { it.type == category })
+        }
+        productAdapter.notifyDataSetChanged()
     }
 
     private fun addToCart(product: ProductItem) {
@@ -111,24 +179,17 @@ class main_page : AppCompatActivity() {
             }
     }
 
-    private fun loadProductsFromFirebase() {
-        val db = FirebaseFirestore.getInstance()
-        db.collection("items")
-            .get()
-            .addOnSuccessListener { result ->
-                productList.clear()
-                for (document in result) {
-                    try {
-                        val product = document.toObject(ProductItem::class.java).copy(id = document.id)
-                        productList.add(product)
-                    } catch (e: Exception) {
-                        Toast.makeText(this, "Помилка десеріалізації документа: ${document.id}", Toast.LENGTH_SHORT).show()
-                    }
-                }
-                productAdapter.notifyDataSetChanged()
-            }
-            .addOnFailureListener { e ->
-                Toast.makeText(this, "Помилка: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        drawerLayout.closeDrawer(GravityCompat.START)
+        return true
     }
+
+    override fun onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START)
+        } else {
+            super.onBackPressed()
+        }
+    }
+
 }
