@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -58,7 +59,7 @@ class ManagerUnconfirmedOrdersActivity : AppCompatActivity() {
 
         loadUnconfirmedOrders()
 
-        val backButton = findViewById<Button>(R.id.back_b_unconfirmed)
+        val backButton = findViewById<ImageButton>(R.id.back_b_unconfirmed)
         backButton.setOnClickListener {
             finish()
         }

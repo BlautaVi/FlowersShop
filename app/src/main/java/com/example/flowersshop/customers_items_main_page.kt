@@ -50,11 +50,11 @@ class customers_items_main_page : AppCompatActivity(), NavigationView.OnNavigati
         )
         recyclerView.adapter = productAdapter
 
-        findViewById<Button>(R.id.categoryButton).setOnClickListener {
+        findViewById<ImageButton>(R.id.categoryButton).setOnClickListener {
             drawerLayout.openDrawer(GravityCompat.START)
         }
 
-        val ordersButton = findViewById<Button>(R.id.orders_btn)
+        val ordersButton = findViewById<ImageButton>(R.id.orders_btn)
         ordersButton.setOnClickListener {
             val intent = Intent(this, CustomersOrdersForSalesActivity::class.java)
             startActivity(intent)

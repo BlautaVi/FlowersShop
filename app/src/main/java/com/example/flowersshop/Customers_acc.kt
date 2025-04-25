@@ -58,7 +58,6 @@ class Customers_acc : AppCompatActivity() {
         ownItems.setOnClickListener {
             val intent = Intent(this, customers_items_main_page::class.java)
             startActivity(intent)
-            finish()
         }
 
         val ordersButton = findViewById<Button>(R.id.your_orders_button)

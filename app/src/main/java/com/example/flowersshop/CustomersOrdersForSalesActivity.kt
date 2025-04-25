@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -123,7 +124,7 @@ class CustomersOrdersForSalesActivity : AppCompatActivity() {
     private fun showOrderDetailsDialog(order: Order) {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_order_details, null)
         val detailsTextView = dialogView.findViewById<TextView>(R.id.order_details_text)
-        val deleteButton = dialogView.findViewById<Button>(R.id.delete_order_button)
+        val deleteButton = dialogView.findViewById<ImageButton>(R.id.delete_order_button)
         deleteButton.visibility = View.GONE
 
         val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
@@ -142,7 +143,6 @@ class CustomersOrdersForSalesActivity : AppCompatActivity() {
             val productType = item["productType"] as? String ?: "Невідомий тип"
             val productPrice = item["productPrice"] as? Double ?: 0.0
             val quantity = (item["quantity"] as? Long)?.toInt() ?: 1
-            val productId = item["productId"] as? String ?: "ID відсутній"
             detailsBuilder.append("- $productName ($productType), Ціна: $productPrice грн, Кількість: $quantity\n")
         }
 
