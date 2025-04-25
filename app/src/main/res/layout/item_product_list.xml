@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp"
+    android:background="#FFFFFF"
+    android:layout_marginBottom="4dp">
+
+    <ImageView
+        android:id="@+id/productImage"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:scaleType="centerCrop"
+        android:background="@drawable/rounded_image_background"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/productName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:fontFamily="@font/cormorant_infant_light"
+        android:text="Назва товару"
+        android:textColor="#2138CD"
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@id/productImage"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/productPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:fontFamily="@font/cormorant_sc_light"
+        android:text="Ціна: 0 грн"
+        android:textColor="#900407"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@id/productImage"
+        app:layout_constraintTop_toBottomOf="@id/productName" />
+
+    <ImageButton
+        android:id="@+id/edit_button"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="8dp"
+        android:background="@null"
+        android:contentDescription="@string/edit_button_description"
+        android:scaleType="fitCenter"
+        android:src="@drawable/edit"
+        android:visibility="gone"
+        app:layout_constraintEnd_toStartOf="@id/addToCart_b"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="#4F65DC" />
+
+    <ImageButton
+        android:id="@+id/addToCart_b"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="8dp"
+        android:background="@null"
+        android:contentDescription="@string/add_to_cart_button_description"
+        android:fontFamily="@font/cormorant_infant_light"
+        android:scaleType="fitCenter"
+        android:src="@drawable/add_to_cart"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="#7A8DF6" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

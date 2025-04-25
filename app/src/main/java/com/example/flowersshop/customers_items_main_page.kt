@@ -1,8 +1,8 @@
 package com.example.flowersshop
 
-import android.content.Intent import android.os.Bundle
+import android.content.Intent
+import android.os.Bundle
 import android.view.MenuItem
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -26,6 +26,7 @@ class customers_items_main_page : AppCompatActivity(), NavigationView.OnNavigati
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navigationView: NavigationView
     private val categories = mutableListOf<String>()
+    private var isListView = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +53,11 @@ class customers_items_main_page : AppCompatActivity(), NavigationView.OnNavigati
 
         findViewById<ImageButton>(R.id.categoryButton).setOnClickListener {
             drawerLayout.openDrawer(GravityCompat.START)
+        }
+
+        findViewById<ImageButton>(R.id.toggleViewButton).setOnClickListener {
+            isListView = !isListView
+            productAdapter.toggleViewType()
         }
 
         val ordersButton = findViewById<ImageButton>(R.id.orders_btn)
@@ -143,5 +149,4 @@ class customers_items_main_page : AppCompatActivity(), NavigationView.OnNavigati
             super.onBackPressed()
         }
     }
-
 }

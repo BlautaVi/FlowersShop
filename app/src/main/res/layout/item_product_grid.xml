@@ -1,20 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="290dp"
-    android:background="#E1F0FF"
-    tools:context=".item_product">
+    android:background="#E1F0FF">
 
     <ImageView
         android:id="@+id/imageView9"
-        android:layout_width="373dp"
+        android:layout_width="match_parent"
         android:layout_height="260dp"
-        android:layout_marginStart="78dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="78dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="19dp"
         android:background="@drawable/rounded_image_background"
         android:backgroundTint="#FFFFFF"
@@ -27,8 +24,8 @@
 
     <ImageView
         android:id="@+id/productImage"
-        android:layout_width="160dp"
-        android:layout_height="160dp"
+        android:layout_width="170dp"
+        android:layout_height="170dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/rounded_image_background"
@@ -64,5 +61,35 @@
         app:layout_constraintEnd_toEndOf="@+id/imageView9"
         app:layout_constraintTop_toTopOf="@+id/imageView9" />
 
+    <ImageButton
+        android:id="@+id/edit_button"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="164dp"
+        android:layout_marginEnd="16dp"
+        android:background="@null"
+        android:contentDescription="@string/edit_button_description"
+        android:scaleType="fitCenter"
+        android:src="@drawable/edit"
+        app:layout_constraintEnd_toEndOf="@+id/imageView9"
+        app:layout_constraintTop_toBottomOf="@+id/productPrice"
+        app:tint="#4F65DC"
+        android:visibility="gone"/>
+
+    <ImageButton
+        android:id="@+id/addToCart_b"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="168dp"
+        android:layout_marginEnd="16dp"
+        android:background="@null"
+        android:contentDescription="@string/add_to_cart_button_description"
+        android:fontFamily="@font/cormorant_infant_light"
+        android:scaleType="fitCenter"
+        android:src="@drawable/add_to_cart"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/imageView9"
+        app:layout_constraintTop_toBottomOf="@+id/edit_button"
+        app:tint="#4E64DA" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
