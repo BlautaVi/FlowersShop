@@ -10,4 +10,5 @@
     <string name="add_item_user_button_description">Add item by user button</string>
     <string name="users_orders_for_sales_button_description">Add item by user button</string>
     <string name="users_add_photos_button_description">Add item by user button</string>
+    <string name="edit_button_description" />
 </resources>

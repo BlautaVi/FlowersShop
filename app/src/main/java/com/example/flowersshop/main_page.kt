@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -32,6 +31,7 @@ class main_page : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLi
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navigationView: NavigationView
     private val categories = mutableListOf<String>()
+    private var isListView = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,6 +83,11 @@ class main_page : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLi
 
         findViewById<ImageButton>(R.id.categoryButton).setOnClickListener {
             drawerLayout.openDrawer(GravityCompat.START)
+        }
+
+        findViewById<ImageButton>(R.id.toggleViewButton).setOnClickListener {
+            isListView = !isListView
+            productAdapter.toggleViewType()
         }
 
         val accBtn = findViewById<ImageButton>(R.id.buttonA)
@@ -191,5 +196,4 @@ class main_page : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLi
             super.onBackPressed()
         }
     }
-
 }

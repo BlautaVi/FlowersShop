@@ -58,7 +58,6 @@
             android:fontFamily="@font/cormorant_infant_light"
             android:scaleType="fitCenter"
             android:src="@drawable/trolley"
-            android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="@+id/buttonA"
             app:layout_constraintTop_toTopOf="parent"
             app:tint="#FFFFFF" />
@@ -78,17 +77,31 @@
             app:layout_constraintVertical_bias="0.471"
             app:tint="#FFFFFF" />
 
+        <ImageButton
+            android:id="@+id/toggleViewButton"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
+            android:background="@null"
+            android:contentDescription="Toggle view type"
+            android:paddingHorizontal="16dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/list"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView6"
+            app:tint="#4F65DC" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="100dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginTop="5dp"
             android:clipToPadding="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/toggleViewButton" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

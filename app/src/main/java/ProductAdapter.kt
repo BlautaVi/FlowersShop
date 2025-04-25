@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -18,27 +19,32 @@ class ProductAdapter(
 ) : RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
 
     private val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+    private var isListView = false
+
+    companion object {
+        private const val VIEW_TYPE_GRID = 0
+        private const val VIEW_TYPE_LIST = 1
+    }
+    fun toggleViewType() {
+        isListView = !isListView
+        notifyDataSetChanged()
+    }
+    override fun getItemViewType(position: Int): Int {
+        return if (isListView) VIEW_TYPE_LIST else VIEW_TYPE_GRID
+    }
 
     class ProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val nameTextView: TextView = itemView.findViewById(R.id.productName)
         val priceTextView: TextView = itemView.findViewById(R.id.productPrice)
         val productImage: ImageView = itemView.findViewById(R.id.productImage)
-        val editButton: Button? = itemView.findViewById(R.id.edit_button)
-        val addToCartButton: Button? = itemView.findViewById(R.id.addToCart_b)
-
-        init {
-            itemView.setOnClickListener {
-                val product = itemView.tag as? ProductItem
-                product?.let {
-                    (it)
-                }
-            }
-        }
+        val editButton: ImageButton? = itemView.findViewById(R.id.edit_button)
+        val addToCartButton: ImageButton? = itemView.findViewById(R.id.addToCart_b)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
+        val layoutId = if (viewType == VIEW_TYPE_GRID) R.layout.item_product_grid else R.layout.item_product_list
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.activity_item_product, parent, false)
+            .inflate(layoutId, parent, false)
         return ProductViewHolder(view)
     }
 
@@ -72,6 +78,5 @@ class ProductAdapter(
             }
         }
     }
-
     override fun getItemCount(): Int = productList.size
 }
