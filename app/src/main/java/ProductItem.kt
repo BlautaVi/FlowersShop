@@ -7,6 +7,7 @@ import kotlinx.parcelize.Parcelize
 data class ProductItem(
     val id: String = "",
     override val name: String = "",
+    val productId: String = "",
     override val type: String = "",
     override val price: Double = 0.0,
     override val description: String = "",

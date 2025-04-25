@@ -13,6 +13,8 @@ import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.firestore.firestore
 import java.net.UnknownHostException
 import java.util.concurrent.TimeoutException
@@ -56,36 +58,42 @@ class MainActivity : AppCompatActivity() {
                         finish()
                     } else {
                         val exception = task.exception
+                        Log.d("Exception", "exception ${exception}")
                         when {
-                            exception?.message?.contains("INVALID_LOGIN_CREDENTIALS") == true -> {
+                            email.isBlank() -> {
                                 Toast.makeText(
                                     this,
-                                    "Невірний пароль",
+                                    "Поле email не може бути порожнім",
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
 
-                            exception?.message?.contains("INVALID_EMAIL") == true -> {
+                            password.isBlank() -> {
                                 Toast.makeText(
                                     this,
-                                    "Некоректний формат email",
+                                    "Поле пароля не може бути порожнім",
                                     Toast.LENGTH_SHORT
                                 ).show()
-                            }
+                            }exception is FirebaseAuthInvalidCredentialsException -> {
+                            Firebase.firestore.collection("users")
+                                .whereEqualTo("email", email)
+                                .get()
+                                .addOnSuccessListener { documents ->
+                                    if (documents.isEmpty) {
+                                        Toast.makeText(this, "Користувача з таким email не знайдено", Toast.LENGTH_SHORT).show()
+                                        val intent = Intent(this, Registration::class.java)
+                                        intent.putExtra("email", email)
+                                        startActivity(intent)
+                                    } else {
+                                        Toast.makeText(this, "Невірний пароль", Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+                                .addOnFailureListener {
+                                    Toast.makeText(this, "Помилка при перевірці користувача", Toast.LENGTH_SHORT).show()
+                                }
+                        }
 
-                            exception?.message?.contains("USER_NOT_FOUND") == true -> {
-                                Toast.makeText(
-                                    this,
-                                    "Користувача не знайдено, перехід до реєстрації...",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                                val intent = Intent(this, Registration::class.java)
-                                intent.putExtra("email", email)
-                                startActivity(intent)
-                            }
-
-                            exception?.cause is UnknownHostException ||
-                                    exception?.cause is TimeoutException -> {
+                            exception?.cause is UnknownHostException || exception?.cause is TimeoutException -> {
                                 Toast.makeText(
                                     this,
                                     "Помилка мережі. Перевірте підключення до інтернету",
@@ -96,7 +104,7 @@ class MainActivity : AppCompatActivity() {
                             else -> {
                                 Toast.makeText(
                                     this,
-                                    "Помилка входу: ${exception?.message}",
+                                    "Помилка входу: ${exception?.localizedMessage ?: "Невідома помилка"}",
                                     Toast.LENGTH_LONG
                                 ).show()
                             }

@@ -9,46 +9,59 @@
     tools:context=".item_product">
 
     <ImageView
-        android:id="@+id/productImage"
-        android:layout_width="160dp"
-        android:layout_height="160dp"
-        android:layout_marginStart="95dp"
-        android:layout_marginTop="28dp"
-        android:layout_marginEnd="96dp"
-        android:scaleType="centerCrop"
+        android:id="@+id/imageView9"
+        android:layout_width="366dp"
+        android:layout_height="250dp"
+        android:layout_marginStart="78dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="78dp"
+        android:layout_marginBottom="19dp"
+        android:background="@drawable/rounded_image_background"
+        android:backgroundTint="#FFFFFF"
+        android:backgroundTintMode="add"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/productImage"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/rounded_image_background"
+        android:clipToOutline="true"
+        android:scaleType="centerCrop"
+        app:layout_constraintStart_toStartOf="@+id/imageView9"
+        app:layout_constraintTop_toTopOf="@+id/imageView9" />
 
     <TextView
         android:id="@+id/productName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="143dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="144dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="36dp"
         android:fontFamily="@font/cormorant_infant_light"
         android:text="Назва"
         android:textColor="#3A5FCD"
-        android:textSize="28sp"
+        android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/imageView9"
         app:layout_constraintTop_toBottomOf="@+id/productImage" />
 
     <TextView
         android:id="@+id/productPrice"
-        android:layout_width="58dp"
-        android:layout_height="39dp"
-        android:layout_marginStart="176dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="177dp"
+        android:layout_width="99dp"
+        android:layout_height="31dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="12dp"
         android:fontFamily="@font/cormorant_infant_light"
         android:text="Ціна"
         android:textColor="#EF969E"
         android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/productName" />
+        app:layout_constraintEnd_toEndOf="@+id/imageView9"
+        app:layout_constraintTop_toTopOf="@+id/imageView9" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

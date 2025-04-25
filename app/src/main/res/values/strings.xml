@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">FlowersShop</string>
+    <string name="user_profile_button_description">User profile button</string>
+    <string name="add_to_cart_button_description">Add to cart button</string>
+    <string name="category_button_description">Category button</string>
+    <string name="accept_changes_button_description">Accept changes button</string>
+    <string name="logout_button_description">Logout button</string>
+    <string name="delete_button_description">Delete button</string>
+    <string name="acc_user_button_description">Acc button</string>
+    <string name="add_item_user_button_description">Add item by user button</string>
+
 </resources>
