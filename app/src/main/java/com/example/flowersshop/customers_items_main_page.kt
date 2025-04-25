@@ -3,6 +3,7 @@ package com.example.flowersshop
 import android.content.Intent import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -59,18 +60,17 @@ class customers_items_main_page : AppCompatActivity(), NavigationView.OnNavigati
             startActivity(intent)
         }
 
-        val toAcc = findViewById<Button>(R.id.buttonA)
+        val toAcc = findViewById<ImageButton>(R.id.buttonA)
         toAcc.setOnClickListener {
             val intent = Intent(this, Customers_acc::class.java)
             startActivity(intent)
         }
 
-        val addItem = findViewById<Button>(R.id.button_Add)
+        val addItem = findViewById<ImageButton>(R.id.button_Add)
         addItem.setOnClickListener {
             val intent = Intent(this, Customers_item_Add_page::class.java)
             startActivity(intent)
         }
-
         loadCategoriesAndProducts()
     }
 

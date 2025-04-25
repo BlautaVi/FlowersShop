@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -80,12 +81,12 @@ class main_page : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLi
         )
         recyclerView.adapter = productAdapter
 
-        findViewById<Button>(R.id.categoryButton).setOnClickListener {
+        findViewById<ImageButton>(R.id.categoryButton).setOnClickListener {
             drawerLayout.openDrawer(GravityCompat.START)
         }
 
-        val accBtn = findViewById<Button>(R.id.buttonA)
-        val orderBtn = findViewById<Button>(R.id.button_Add)
+        val accBtn = findViewById<ImageButton>(R.id.buttonA)
+        val orderBtn = findViewById<ImageButton>(R.id.button_Add)
 
         if (isManager) {
             accBtn.visibility = View.GONE
@@ -141,7 +142,6 @@ class main_page : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLi
                         true
                     }
                 }
-
                 productAdapter.notifyDataSetChanged()
             }
             .addOnFailureListener { e ->

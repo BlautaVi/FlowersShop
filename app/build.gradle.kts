@@ -4,7 +4,6 @@ plugins {
     alias(libs.plugins.google.gms.google.services)
     id("org.jetbrains.kotlin.kapt")
     id("kotlin-parcelize")
-
 }
 
 android {
@@ -17,10 +16,8 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -51,7 +48,7 @@ dependencies {
     implementation(libs.firebase.storage)
     implementation("com.google.firebase:firebase-auth:22.3.0")
     implementation("com.google.android.gms:play-services-base:18.5.0")
-    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+    implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
     implementation(libs.volley)
     implementation("com.github.bumptech.glide:glide:4.16.0")
     kapt("com.github.bumptech.glide:compiler:4.16.0")

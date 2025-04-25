@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -88,7 +89,7 @@ class Customers_acc : AppCompatActivity() {
             insets
         }
 
-        val changeButton = findViewById<Button>(R.id.change_b)
+        val changeButton = findViewById<ImageButton>(R.id.change_b)
         changeButton.setOnClickListener {
             val newName = nameField.text.toString().trim()
             val newAddress = addressField.text.toString().trim()
@@ -121,7 +122,7 @@ class Customers_acc : AppCompatActivity() {
             }
         }
 
-        val exitAccButton = findViewById<Button>(R.id.exitAcc_b)
+        val exitAccButton = findViewById<ImageButton>(R.id.exitAcc_b)
         exitAccButton.setOnClickListener {
             auth.signOut()
             if (auth.currentUser == null) {
@@ -136,7 +137,7 @@ class Customers_acc : AppCompatActivity() {
             finish()
         }
 
-        val deleteAccButton = findViewById<Button>(R.id.deleteAcc_b)
+        val deleteAccButton = findViewById<ImageButton>(R.id.deleteAcc_b)
         deleteAccButton.setOnClickListener {
             Toast.makeText(this, "Видаляємо ваш акаунт...", Toast.LENGTH_SHORT).show()
             val user = auth.currentUser
