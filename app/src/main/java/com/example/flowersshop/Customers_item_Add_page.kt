@@ -1,17 +1,22 @@
 package com.example.flowersshop
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import java.util.UUID
 
 class Customers_item_Add_page : AppCompatActivity() {
@@ -22,11 +27,29 @@ class Customers_item_Add_page : AppCompatActivity() {
     private lateinit var descriptionEditText: EditText
     private lateinit var itemImage: ImageView
     private lateinit var addButton: Button
-    private lateinit var addPhotoButton: Button
+    private lateinit var addPhotoButton: ImageButton
     private lateinit var showAllButton: Button
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
-    private lateinit var AccountButton: Button
+    private lateinit var storage: FirebaseStorage
+    private lateinit var accountButton: ImageButton
+    private var selectedImageUri: Uri? = null
+    private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+        if (isGranted) {
+            openGallery()
+        } else {
+            Toast.makeText(this, "Дозвіл на доступ до галереї не надано", Toast.LENGTH_SHORT).show()
+        }
+    }
+    private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        uri?.let {
+            selectedImageUri = it
+            Glide.with(this)
+                .load(it)
+                .into(itemImage)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -39,6 +62,7 @@ class Customers_item_Add_page : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
+        storage = FirebaseStorage.getInstance()
 
         if (auth.currentUser == null) {
             Toast.makeText(this, "Увійдіть в акаунт", Toast.LENGTH_SHORT).show()
@@ -60,23 +84,37 @@ class Customers_item_Add_page : AppCompatActivity() {
         addButton = findViewById(R.id.add_cust_item_b)
         addPhotoButton = findViewById(R.id.add_items_photo_C)
         showAllButton = findViewById(R.id.All_cust_items_b)
-        AccountButton = findViewById(R.id.button2)
+        accountButton = findViewById(R.id.button2)
 
-        AccountButton.setOnClickListener{
+        accountButton.setOnClickListener {
             val intent = Intent(this, Customers_acc::class.java)
             startActivity(intent)
         }
+
         addButton.setOnClickListener {
             saveProduct()
         }
 
         addPhotoButton.setOnClickListener {
-            Toast.makeText(this, "Функція завантаження фото ще не реалізована", Toast.LENGTH_SHORT).show()
+            requestStoragePermission()
         }
 
         showAllButton.setOnClickListener {
             startActivity(Intent(this, main_page::class.java))
         }
+    }
+
+    private fun requestStoragePermission() {
+        val permission = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            android.Manifest.permission.READ_MEDIA_IMAGES
+        } else {
+            android.Manifest.permission.READ_EXTERNAL_STORAGE
+        }
+        requestPermissionLauncher.launch(permission)
+    }
+
+    private fun openGallery() {
+        pickImageLauncher.launch("image/*")
     }
 
     private fun saveProduct() {
@@ -91,6 +129,24 @@ class Customers_item_Add_page : AppCompatActivity() {
         }
 
         val productId = UUID.randomUUID().toString()
+
+        if (selectedImageUri != null) {
+            val storageRef = storage.reference.child("items/$productId.jpg")
+            storageRef.putFile(selectedImageUri!!)
+                .addOnSuccessListener {
+                    storageRef.downloadUrl.addOnSuccessListener { uri ->
+                        saveProductToFirestore(productId, name, type, price, description, uri.toString())
+                    }
+                }
+                .addOnFailureListener { e ->
+                    Toast.makeText(this, "Помилка завантаження фото: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+        } else {
+            saveProductToFirestore(productId, name, type, price, description, "")
+        }
+    }
+
+    private fun saveProductToFirestore(productId: String, name: String, type: String, price: Double, description: String, photoUrl: String) {
         val product = hashMapOf(
             "id" to productId,
             "name" to name,
@@ -98,7 +154,7 @@ class Customers_item_Add_page : AppCompatActivity() {
             "price" to price,
             "description" to description,
             "userId" to auth.currentUser!!.uid,
-            "photoUrl" to ""
+            "photoUrl" to photoUrl
         )
 
         db.collection("items")

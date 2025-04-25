@@ -12,14 +12,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#E1F0FF">
+
         <ImageView
             android:id="@+id/imageView8"
             android:layout_width="427dp"
             android:layout_height="80dp"
-            android:background="#0AA0CE"
+            android:background="#4F65DC"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
         <ImageView
             android:id="@+id/imageView2"
             android:layout_width="82dp"
@@ -32,7 +34,7 @@
             android:id="@+id/buttonA"
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="25dp"
             android:layout_marginEnd="28dp"
             android:background="@null"
             android:contentDescription="@string/acc_user_button_description"
@@ -41,42 +43,42 @@
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="#E1E3FB" />
+            app:tint="#FFFFFF" />
 
         <ImageButton
             android:id="@+id/button_Add"
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="14dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="55dp"
             android:background="@null"
             android:contentDescription="@string/add_item_user_button_description"
             android:scaleType="fitCenter"
             android:src="@drawable/add"
-            app:layout_constraintEnd_toStartOf="@+id/buttonA"
+            app:layout_constraintEnd_toEndOf="@+id/orders_btn"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="#C8CCFB" />
+            app:tint="#FFFFFF" />
 
-        <Button
+        <ImageButton
             android:id="@+id/orders_btn"
-            android:layout_width="112dp"
-            android:layout_height="45dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="16dp"
-            android:backgroundTint="#7C88F6"
-            android:fontFamily="@font/cormorant_infant_light"
-            android:paddingHorizontal="16dp"
-            android:text="Замовлення"
-            android:textColor="#FFFFFF"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="55dp"
+            android:background="@null"
+            android:contentDescription="@string/users_orders_for_sales_button_description"
+            android:scaleType="fitCenter"
+            android:src="@drawable/customers_orders"
             android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button_Add" />
+            app:layout_constraintEnd_toEndOf="@+id/buttonA"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="#FFFFFF" />
 
         <ImageButton
             android:id="@+id/categoryButton"
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="30dp"
             android:layout_marginBottom="60dp"
             android:background="@null"
             android:contentDescription="@string/category_button_description"
@@ -86,7 +88,7 @@
             app:layout_constraintBottom_toTopOf="@+id/recyclerView"
             app:layout_constraintStart_toEndOf="@+id/imageView2"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="#E1E3FB" />
+            app:tint="#FFFFFF" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"

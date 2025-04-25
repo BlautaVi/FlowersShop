@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="35dp"
         android:layout_marginEnd="32dp"
         android:fontFamily="@font/cormorant_sc_light"
         android:text="Підтверджені замовлення"
@@ -22,36 +22,35 @@
         android:textSize="28sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/back_b_confirmed" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/confirmed_orders_recycler_view"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="373dp"
+        android:layout_height="611dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="30dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="24dp"
         android:background="#F6F5F5"
         android:padding="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/back_b_confirmed"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/confirmed_orders_label" />
 
-    <Button
+    <ImageButton
         android:id="@+id/back_b_confirmed"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="32dp"
-        android:backgroundTint="#6E85FB"
-        android:fontFamily="@font/cormorant_sc_light"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="25dp"
+        android:background="@null"
+        android:contentDescription="@string/logout_button_description"
+        android:scaleType="fitCenter"
+        android:src="@drawable/logout"
         android:text="Назад"
         android:textSize="22sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="#C12C2C" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

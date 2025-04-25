@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/dialog_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -19,27 +20,28 @@
         android:orientation="horizontal"
         android:layout_marginTop="16dp">
 
-        <Button
+        <ImageButton
             android:id="@+id/confirm_order_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="8dp"
             android:layout_weight="1"
-            android:backgroundTint="#4CAF50"
-            android:fontFamily="@font/cormorant_infant_light"
-            android:text="Підтвердити"
-            android:textColor="#FFFFFF"
-            android:layout_marginEnd="8dp" />
+            android:background="@null"
+            android:contentDescription="@string/delete_button_description"
+            android:scaleType="fitCenter"
+            android:src="@drawable/tickmark"
+            app:tint="#2ecc71" />
 
-        <Button
+        <ImageButton
             android:id="@+id/cancel_order_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="8dp"
             android:layout_weight="1"
-            android:backgroundTint="#F44336"
-            android:fontFamily="@font/cormorant_infant_light"
-            android:text="Скасувати"
-            android:textColor="#FFFFFF"
-            android:layout_marginStart="8dp" />
+            android:background="@null"
+            android:contentDescription="@string/delete_button_description"
+            android:scaleType="fitCenter"
+            android:src="@drawable/multiply" />
 
     </LinearLayout>
 </LinearLayout>

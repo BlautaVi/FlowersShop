@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -193,12 +194,10 @@ class CustomersOrdersActivity : AppCompatActivity() {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_unconfirmed_order_details, null)
 
         val detailsTextView = dialogView.findViewById<TextView>(R.id.order_details_text)
-        val confirmButton = dialogView.findViewById<Button>(R.id.confirm_order_button)
-        val cancelButton = dialogView.findViewById<Button>(R.id.cancel_order_button)
+        val confirmButton = dialogView.findViewById<ImageButton>(R.id.confirm_order_button)
+        val cancelButton = dialogView.findViewById<ImageButton>(R.id.cancel_order_button)
 
         confirmButton.visibility = View.GONE
-        cancelButton.text = "Видалити"
-
         val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
         val orderDate = dateFormat.format(Date(order.orderDateMillis))
 

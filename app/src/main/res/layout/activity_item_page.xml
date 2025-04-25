@@ -9,6 +9,19 @@
     tools:context=".Item_page">
 
     <ImageView
+        android:id="@+id/imageView11"
+        android:layout_width="370dp"
+        android:layout_height="137dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/rounded_edittext_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/items_image" />
+
+    <ImageView
         android:id="@+id/items_image"
         android:layout_width="200dp"
         android:layout_height="200dp"
@@ -28,7 +41,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="172dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="36dp"
         android:layout_marginEnd="172dp"
         android:fontFamily="@font/cormorant_infant_light"
         android:text="Назва"
@@ -37,6 +50,7 @@
         android:textSize="26sp"
         android:textStyle="bold|italic"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/items_image" />
 
@@ -44,34 +58,32 @@
         android:id="@+id/Type_l"
         android:layout_width="220dp"
         android:layout_height="30dp"
-        android:layout_marginStart="187dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="188dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="32dp"
         android:fontFamily="@font/cormorant_infant_light"
+        android:paddingStart="10dp"
         android:text="Вид"
-        android:textAlignment="center"
+        android:textAlignment="viewStart"
         android:textColor="#0E1B71"
         android:textSize="24sp"
         android:textStyle="italic"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/imageView11"
         app:layout_constraintTop_toBottomOf="@+id/Name_l" />
 
     <TextView
         android:id="@+id/Price_l"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="173dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="172dp"
+        android:layout_width="107dp"
+        android:layout_height="37dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="10dp"
         android:fontFamily="@font/cormorant_sc_light"
+        android:paddingEnd="10dp"
         android:text="Ціна"
-        android:textAlignment="textStart"
+        android:textAlignment="viewEnd"
         android:textColor="#900407"
-        android:textSize="30sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Type_l" />
+        android:textSize="26sp"
+        app:layout_constraintEnd_toEndOf="@+id/imageView11"
+        app:layout_constraintTop_toBottomOf="@+id/Name_l" />
 
     <TextView
         android:id="@+id/Desc_l"
@@ -91,14 +103,14 @@
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollView4"
-        android:layout_width="325dp"
-        android:layout_height="98dp"
+        android:layout_width="359dp"
+        android:layout_height="131dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="23dp"
         android:background="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.307"
+        app:layout_constraintHorizontal_bias="0.666"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Desc_l">
 
@@ -111,11 +123,12 @@
 
             <TextView
                 android:id="@+id/description_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Опис товару"
-            android:textColor="#2138CD"
-            android:textSize="16sp" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/cormorant_sc_light"
+                android:text="Опис товару"
+                android:textColor="#2138CD"
+                android:textSize="16sp" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
@@ -165,5 +178,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_button" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
