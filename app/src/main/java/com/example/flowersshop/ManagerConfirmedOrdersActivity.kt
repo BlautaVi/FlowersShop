@@ -20,7 +20,6 @@ class ManagerConfirmedOrdersActivity : AppCompatActivity() {
             finish()
             return
         }
-
         startActivity(Intent(this, ManagerOrders::class.java))
         finish()
     }

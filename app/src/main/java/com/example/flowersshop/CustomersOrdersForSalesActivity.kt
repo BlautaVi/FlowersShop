@@ -53,8 +53,8 @@ class CustomersOrdersForSalesActivity : AppCompatActivity() {
         ordersRecyclerView.adapter = adapter
 
         loadOrdersWithUserItems()
-
-        findViewById<Button>(R.id.back_b)?.setOnClickListener {
+        val backBtn = findViewById<ImageButton>(R.id.back_b_confirmed)
+        backBtn.setOnClickListener() {
             finish()
         }
     }

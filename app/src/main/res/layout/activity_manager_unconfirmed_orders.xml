@@ -41,16 +41,16 @@
         android:id="@+id/back_b_unconfirmed"
         android:layout_width="40dp"
         android:layout_height="40dp"
+        android:layout_marginStart="25dp"
         android:layout_marginTop="25dp"
-        android:layout_marginEnd="25dp"
         android:background="@null"
         android:contentDescription="@string/logout_button_description"
         android:scaleType="fitCenter"
-        android:src="@drawable/logout"
+        android:src="@drawable/previous"
         android:text="Назад"
         android:textSize="22sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="#C12C2C" />
+        app:tint="#2ecc71" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
