@@ -104,30 +104,30 @@
 
     <Button
         android:id="@+id/CustomerItems_b"
-        android:layout_width="260dp"
-        android:layout_height="54dp"
+        android:layout_width="291dp"
+        android:layout_height="78dp"
         android:layout_marginStart="75dp"
         android:layout_marginTop="55dp"
         android:layout_marginEnd="76dp"
         android:backgroundTint="#4F65DC"
         android:fontFamily="@font/cormorant_sc_light"
         android:text="Ваші товари"
-        android:textSize="15sp"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/change_b" />
 
     <Button
         android:id="@+id/your_orders_button"
-        android:layout_width="260dp"
-        android:layout_height="52dp"
+        android:layout_width="291dp"
+        android:layout_height="78dp"
         android:layout_marginStart="75dp"
         android:layout_marginTop="25dp"
         android:layout_marginEnd="76dp"
         android:backgroundTint="#4E64DA"
         android:fontFamily="@font/cormorant_sc_light"
         android:text="Ваші замовлення"
-        android:textSize="15sp"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/CustomerItems_b" />
@@ -159,7 +159,20 @@
         app:layout_constraintEnd_toStartOf="@+id/exitAcc_b"
         app:layout_constraintTop_toTopOf="parent"
         app:tint="#900707" />
-
+    <ImageButton
+        android:id="@+id/back_b_confirmed"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="25dp"
+        android:background="@null"
+        android:contentDescription="@string/logout_button_description"
+        android:scaleType="fitCenter"
+        android:src="@drawable/previous"
+        android:textSize="22sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="#2ecc71" />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/orders_c_view"
         android:layout_width="0dp"

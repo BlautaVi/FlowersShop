@@ -3,6 +3,7 @@ package com.example.flowersshop
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -43,7 +44,10 @@ class customer_edit_item : AppCompatActivity() {
         val enterDesc = findViewById<EditText>(R.id.customer_enter_desc)
         val updateButton = findViewById<Button>(R.id.customer_update_b)
         val deleteButton = findViewById<Button>(R.id.customer_delete_b)
-
+        val backBtn = findViewById<ImageButton>(R.id.back_b_confirmed)
+        backBtn.setOnClickListener() {
+            finish()
+        }
         Glide.with(this)
             .load(product.photoUrl)
             .placeholder(R.drawable.icon)

@@ -40,10 +40,11 @@
         android:id="@+id/Name_l"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="172dp"
-        android:layout_marginTop="36dp"
-        android:layout_marginEnd="172dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="312dp"
         android:fontFamily="@font/cormorant_infant_light"
+        android:paddingStart="10dp"
         android:text="Назва"
         android:textAlignment="textStart"
         android:textColor="#2138CD"
@@ -51,14 +52,14 @@
         android:textStyle="bold|italic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/imageView11"
         app:layout_constraintTop_toBottomOf="@+id/items_image" />
 
     <TextView
         android:id="@+id/Type_l"
         android:layout_width="220dp"
         android:layout_height="30dp"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="32dp"
         android:fontFamily="@font/cormorant_infant_light"
         android:paddingStart="10dp"
@@ -179,5 +180,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_button" />
 
-
+    <ImageButton
+        android:id="@+id/back_b_confirmed"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="25dp"
+        android:background="@null"
+        android:contentDescription="@string/logout_button_description"
+        android:scaleType="fitCenter"
+        android:src="@drawable/previous"
+        android:textSize="22sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="#2ecc71" />
 </androidx.constraintlayout.widget.ConstraintLayout>

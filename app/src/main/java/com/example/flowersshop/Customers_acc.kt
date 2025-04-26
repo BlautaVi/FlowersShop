@@ -46,7 +46,10 @@ class Customers_acc : AppCompatActivity() {
         ordersRecyclerView = findViewById(R.id.orders_c_view)
         ordersRecyclerView.layoutManager = LinearLayoutManager(this)
         ordersRecyclerView.setHasFixedSize(true)
-
+        val backBtn = findViewById<ImageButton>(R.id.back_b_confirmed)
+        backBtn.setOnClickListener() {
+            finish()
+        }
         if (auth.currentUser?.email == "manager@gmail.com") {
             Toast.makeText(this, "Менеджерський акаунт не має профілю", Toast.LENGTH_SHORT).show()
             startActivity(Intent(this, manager_start_page::class.java))

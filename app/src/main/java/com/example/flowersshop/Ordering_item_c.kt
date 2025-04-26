@@ -59,7 +59,10 @@ class Ordering_item_c : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
+        val backBtn = findViewById<ImageButton>(R.id.back_b_confirmed)
+        backBtn.setOnClickListener() {
+            finish()
+        }
         postOfficeSpinner = findViewById(R.id.spinner)
         nameText = findViewById(R.id.name_text)
         addressText = findViewById(R.id.address_text)

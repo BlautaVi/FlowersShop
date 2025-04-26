@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -40,7 +41,10 @@ class Item_page : AppCompatActivity() {
 
         db = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
-
+        val backBtn = findViewById<ImageButton>(R.id.back_b_confirmed)
+        backBtn.setOnClickListener() {
+            finish()
+        }
         val productId = intent.getStringExtra("productId") ?: return finish()
         loadProductDetails(productId)
     }
