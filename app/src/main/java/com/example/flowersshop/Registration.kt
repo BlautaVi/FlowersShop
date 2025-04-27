@@ -15,12 +15,16 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore
 import android.util.Patterns
+import java.util.regex.Pattern
+
 class Registration : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var email: EditText
     private lateinit var password: EditText
     private lateinit var registerBtn: Button
     val db = Firebase.firestore
+    private val PHONE_PATTERN = Pattern.compile("^\\+380\\d{9}$")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -32,11 +36,13 @@ class Registration : AppCompatActivity() {
         val name = findViewById<EditText>(R.id.enter_name)
         val phoneNum = findViewById<EditText>(R.id.enter_phone)
         val customers_adress = findViewById<EditText>(R.id.enter_adress)
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
         registerBtn.setOnClickListener {
             val emailText = email.text.toString().trim()
             val passwordText = password.text.toString().trim()
@@ -57,6 +63,11 @@ class Registration : AppCompatActivity() {
             if (passwordText.length < 6) {
                 Toast.makeText(this, "Пароль має бути щонайменше 6 символів", Toast.LENGTH_SHORT)
                     .show()
+                return@setOnClickListener
+            }
+
+            if (!PHONE_PATTERN.matcher(phoneText).matches()) {
+                Toast.makeText(this, "Номер телефону має бути у форматі +380xxxxxxxxx", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -94,6 +105,7 @@ class Registration : AppCompatActivity() {
             }
         }
     }
+
     private fun registerUser(email: String, password: String, onSuccess: () -> Unit) {
         Log.d(TAG, "Спроба реєстрації: email=$email, password=$password")
         auth.createUserWithEmailAndPassword(email, password)
@@ -109,4 +121,4 @@ class Registration : AppCompatActivity() {
                 }
             }
     }
-    }
+}

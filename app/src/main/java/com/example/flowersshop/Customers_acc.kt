@@ -22,6 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.regex.Pattern
 
 class Customers_acc : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
@@ -31,6 +32,7 @@ class Customers_acc : AppCompatActivity() {
     private lateinit var phoneField: EditText
     private lateinit var ordersRecyclerView: RecyclerView
     private val ordersList = mutableListOf<Order>()
+    private val PHONE_PATTERN = Pattern.compile("^\\+380\\d{9}$")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,8 +98,14 @@ class Customers_acc : AppCompatActivity() {
             val newName = nameField.text.toString().trim()
             val newAddress = addressField.text.toString().trim()
             val newPhone = phoneField.text.toString().trim()
+
             if (newName.isEmpty() || newAddress.isEmpty() || newPhone.isEmpty()) {
                 Toast.makeText(this, "Заповніть усі поля", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            if (!PHONE_PATTERN.matcher(newPhone).matches()) {
+                Toast.makeText(this, "Номер телефону має бути у форматі +380xxxxxxxxx", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 

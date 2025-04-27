@@ -31,6 +31,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import org.json.JSONObject
 import java.util.UUID
+import java.util.regex.Pattern
 
 class Ordering_item_c : AppCompatActivity() {
     private val auth = FirebaseAuth.getInstance()
@@ -42,6 +43,7 @@ class Ordering_item_c : AppCompatActivity() {
     private lateinit var nameText: EditText
     private lateinit var addressText: EditText
     private lateinit var phoneText: EditText
+    private lateinit var changeCityButton: ImageButton
     private lateinit var confirmOrderButton: Button
     private lateinit var cancelOrderButton: Button
     private lateinit var progressBar: ProgressBar
@@ -49,6 +51,7 @@ class Ordering_item_c : AppCompatActivity() {
     private lateinit var totalPriceText: TextView
     private val cartItems = mutableListOf<CartItem>()
     private lateinit var cartAdapter: CartItemsAdapter
+    private val PHONE_PATTERN = Pattern.compile("^\\+380\\d{9}$")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,6 +70,7 @@ class Ordering_item_c : AppCompatActivity() {
         nameText = findViewById(R.id.name_text)
         addressText = findViewById(R.id.address_text)
         phoneText = findViewById(R.id.phone_text)
+        changeCityButton = findViewById(R.id.change_city_button)
         confirmOrderButton = findViewById(R.id.confirm_order_b)
         cancelOrderButton = findViewById(R.id.cancel_order_b)
         progressBar = findViewById(R.id.progressBar)
@@ -82,6 +86,15 @@ class Ordering_item_c : AppCompatActivity() {
         } else {
             Toast.makeText(this, "Користувач не автентифікований", Toast.LENGTH_SHORT).show()
             finish()
+        }
+
+        changeCityButton.setOnClickListener {
+            val newCity = extractCityFromAddress(addressText.text.toString().trim())
+            if (newCity.isEmpty()) {
+                Toast.makeText(this, "Введіть місто", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            loadWarehouses(newCity)
         }
 
         confirmOrderButton.setOnClickListener {
@@ -131,6 +144,9 @@ class Ordering_item_c : AppCompatActivity() {
             .get()
             .addOnSuccessListener { documents ->
                 cartItems.clear()
+
+                // Group items by productName to sum quantities
+                val groupedItems = mutableMapOf<String, CartItem>()
                 for (document in documents) {
                     val cartItem = CartItem(
                         id = document.id,
@@ -141,8 +157,22 @@ class Ordering_item_c : AppCompatActivity() {
                         productPhotoUrl = document.getString("productPhotoUrl") ?: "",
                         quantity = document.getLong("quantity")?.toInt() ?: 1
                     )
-                    cartItems.add(cartItem)
+
+                    // Log the photo URL for debugging
+                    Log.d("CartItemPhoto", "Product: ${cartItem.productName}, Photo URL: ${cartItem.productPhotoUrl}")
+
+                    val key = cartItem.productName
+                    if (groupedItems.containsKey(key)) {
+                        val existingItem = groupedItems[key]!!
+                        groupedItems[key] = existingItem.copy(
+                            quantity = existingItem.quantity + cartItem.quantity
+                        )
+                    } else {
+                        groupedItems[key] = cartItem
+                    }
                 }
+
+                cartItems.addAll(groupedItems.values)
                 cartAdapter.notifyDataSetChanged()
                 updateTotalPrice()
             }
@@ -197,9 +227,15 @@ class Ordering_item_c : AppCompatActivity() {
         val name = nameText.text.toString().trim()
         val address = addressText.text.toString().trim()
         val phone = phoneText.text.toString().trim()
+        val city = extractCityFromAddress(address)
 
-        if (name.isEmpty() || address.isEmpty() || phone.isEmpty()) {
+        if (name.isEmpty() || address.isEmpty() || phone.isEmpty() || city.isEmpty()) {
             Toast.makeText(this, "Заповніть усі поля", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (!PHONE_PATTERN.matcher(phone).matches()) {
+            Toast.makeText(this, "Номер телефону має бути у форматі +380xxxxxxxxx", Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -224,6 +260,7 @@ class Ordering_item_c : AppCompatActivity() {
             "name" to name,
             "address" to address,
             "phone" to phone,
+            "city" to city,
             "postOffice" to selectedPostOffice,
             "orderDate" to System.currentTimeMillis(),
             "items" to orderItems,
@@ -268,14 +305,21 @@ class Ordering_item_c : AppCompatActivity() {
             itemPrice.text = "Ціна: ${cartItem.productPrice} грн"
             itemQuantity.text = "Кількість: ${cartItem.quantity}"
 
-            Glide.with(this@Ordering_item_c)
-                .load(cartItem.productPhotoUrl)
-                .placeholder(R.drawable.icon)
-                .into(itemImage)
+            if (cartItem.productPhotoUrl.isNotEmpty()) {
+                Glide.with(this@Ordering_item_c)
+                    .load(cartItem.productPhotoUrl)
+                    .placeholder(R.drawable.icon)
+                    .error(R.drawable.icon)
+                    .into(itemImage)
+            } else {
+                itemImage.setImageResource(R.drawable.icon) // Default image if URL is empty
+                Log.w("CartItemPhoto", "Photo URL is empty for product: ${cartItem.productName}")
+            }
 
             return view
         }
     }
+
     private fun extractCityFromAddress(address: String): String {
         if (address.isEmpty()) return ""
         val parts = address.split(",").map { it.trim() }
