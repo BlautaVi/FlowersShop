@@ -171,9 +171,9 @@ class main_page : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLi
             "productId" to product.id,
             "productName" to product.name,
             "productPrice" to product.price,
+            "productPhotoUrl" to product.photoUrl,
             "quantity" to 1
         )
-
         FirebaseFirestore.getInstance().collection("cart")
             .add(cartItem)
             .addOnSuccessListener {
