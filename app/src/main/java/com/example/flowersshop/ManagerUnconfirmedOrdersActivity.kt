@@ -3,7 +3,6 @@ package com.example.flowersshop
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
@@ -81,7 +80,15 @@ class ManagerUnconfirmedOrdersActivity : AppCompatActivity() {
                         val orderDateMillis = document.getLong("orderDate") ?: 0L
                         val totalPrice = document.getDouble("totalPrice") ?: 0.0
                         val items = document.get("items") as? List<Map<String, Any>> ?: emptyList()
-                        unconfirmedOrdersList.add(Order(orderId, userId, orderDateMillis, totalPrice, items))
+                        unconfirmedOrdersList.add(
+                            Order(
+                                orderId,
+                                userId,
+                                orderDateMillis,
+                                totalPrice,
+                                items
+                            )
+                        )
                     }
                     adapter.notifyDataSetChanged()
                 }

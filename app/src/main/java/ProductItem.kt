@@ -13,13 +13,10 @@ data class ProductItem(
     override val description: String = "",
     override val photoUrl: String = "",
     override val userId: String = ""
-) : Products(
-    name = name,
-    type = type,
-    price = price,
-    description = description,
-    photoUrl = photoUrl,
-    userId = userId
-), Parcelable {
+) : Products(name, type, price, description, photoUrl, userId), Parcelable {
+    constructor() : this("", "", "", "", 0.0, "", "", "")
     override fun isAvailable(): Boolean = true
+    override fun getProductInfo(): String {
+        return "${super.getProductInfo()}, ID: $id"
+    }
 }

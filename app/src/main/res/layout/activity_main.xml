@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="#E1F0FF"
     android:padding="10dp"
-    tools:context=".MainActivity">
+    tools:context="com.example.flowersshop.MainActivity">
 
     <TextView
         android:id="@+id/shop_name"

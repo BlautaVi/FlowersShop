@@ -66,7 +66,7 @@ class CustomersOrdersActivity : AppCompatActivity() {
 
         loadOrders()
 
-        findViewById<Button>(R.id.back_b).setOnClickListener {
+        findViewById<ImageButton>(R.id.back_b_confirmed).setOnClickListener {
             finish()
         }
     }

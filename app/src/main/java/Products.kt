@@ -8,5 +8,9 @@ abstract class Products(
     open val photoUrl: String,
     open val userId: String
 ) {
+    constructor() : this("", "", 0.0, "", "", "")
     abstract fun isAvailable(): Boolean
+    open fun getProductInfo(): String {
+        return "Name: $name, Type: $type, Price: $price, Description: $description"
+    }
 }

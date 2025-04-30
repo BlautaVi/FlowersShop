@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
@@ -15,8 +14,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.GoogleApiAvailability
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
@@ -87,7 +84,15 @@ class ManagerOrders : AppCompatActivity() {
                         val orderDateMillis = document.getLong("orderDate") ?: 0L
                         val totalPrice = document.getDouble("totalPrice") ?: 0.0
                         val items = document.get("items") as? List<Map<String, Any>> ?: emptyList()
-                        confirmedOrdersList.add(Order(orderId, userId, orderDateMillis, totalPrice, items))
+                        confirmedOrdersList.add(
+                            Order(
+                                orderId,
+                                userId,
+                                orderDateMillis,
+                                totalPrice,
+                                items
+                            )
+                        )
                     }
                     adapter.notifyDataSetChanged() }
             } catch (e: Exception) {

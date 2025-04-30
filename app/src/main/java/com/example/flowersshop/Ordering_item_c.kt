@@ -1,6 +1,5 @@
 package com.example.flowersshop
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -217,6 +216,23 @@ class Ordering_item_c : AppCompatActivity() {
             }
     }
 
+    private fun removeCartItem(cartItem: CartItem) {
+        if (userId == null) return
+
+        db.collection("cart")
+            .document(cartItem.id)
+            .delete()
+            .addOnSuccessListener {
+                cartItems.remove(cartItem)
+                cartAdapter.notifyDataSetChanged()
+                updateTotalPrice()
+                Toast.makeText(this, "Товар видалено з кошика", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Помилка видалення товару: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
     private fun handleOrderConfirmation() {
         val selectedPostOffice = postOfficeSpinner.selectedItem?.toString()
         if (selectedPostOffice.isNullOrEmpty() || selectedPostOffice == "Відділення не знайдено") {
@@ -299,6 +315,7 @@ class Ordering_item_c : AppCompatActivity() {
             val itemName = view.findViewById<TextView>(R.id.cart_item_name)
             val itemPrice = view.findViewById<TextView>(R.id.cart_item_price)
             val itemQuantity = view.findViewById<TextView>(R.id.cart_item_quantity)
+            val deleteButton = view.findViewById<ImageButton>(R.id.delete_cart_item_button)
 
             itemType.text = "Вид: ${cartItem.productType}"
             itemName.text = cartItem.productName
@@ -314,6 +331,10 @@ class Ordering_item_c : AppCompatActivity() {
             } else {
                 itemImage.setImageResource(R.drawable.icon) // Default image if URL is empty
                 Log.w("CartItemPhoto", "Photo URL is empty for product: ${cartItem.productName}")
+            }
+
+            deleteButton.setOnClickListener {
+                removeCartItem(cartItem)
             }
 
             return view

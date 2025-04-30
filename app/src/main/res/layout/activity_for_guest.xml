@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#E1F0FF"
-    tools:context=".for_guest">
+    tools:context="com.example.flowersshop.for_guest">
 
     <ImageView
         android:id="@+id/imageView3"

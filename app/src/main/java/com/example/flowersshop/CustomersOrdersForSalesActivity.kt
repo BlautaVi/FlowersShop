@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
@@ -89,7 +88,16 @@ class CustomersOrdersForSalesActivity : AppCompatActivity() {
                                 for (item in items) {
                                     val productId = item["productId"] as? String
                                     if (productId != null && userProductIds.contains(productId)) {
-                                        confirmedOrders.add(Order(orderId, orderUserId, orderDateMillis, totalPrice, items, status))
+                                        confirmedOrders.add(
+                                            Order(
+                                                orderId,
+                                                orderUserId,
+                                                orderDateMillis,
+                                                totalPrice,
+                                                items,
+                                                status
+                                            )
+                                        )
                                         itemFound = true
                                         break
                                     }

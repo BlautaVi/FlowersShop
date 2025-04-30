@@ -3,6 +3,7 @@ package com.example.flowersshop
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -30,7 +31,11 @@ class manager_start_page : AppCompatActivity() {
         val unconfirmed_orders = findViewById<Button>(R.id.man_unconfirmed_orders_b)
         val confirmed_orders = findViewById<Button>(R.id.man_confirmed_orders_b)
         val exit_b = findViewById<Button>(R.id. man_exit_b)
-
+        val analyticsButton = findViewById<ImageButton>(R.id.analyz_items_button)
+        analyticsButton.setOnClickListener {
+        val intent = Intent(this, manager_sales_analyst::class.java)
+            startActivity(intent)
+        }
         exit_b.setOnClickListener {
             auth.signOut()
             if (auth.currentUser == null) {

@@ -96,6 +96,7 @@ class main_page : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLi
         if (isManager) {
             accBtn.visibility = View.GONE
             orderBtn.visibility = View.GONE
+
         } else {
             accBtn.visibility = View.VISIBLE
             orderBtn.visibility = View.VISIBLE

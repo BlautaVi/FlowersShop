@@ -12,4 +12,7 @@ data class CartItem(
     val productPrice: Double = 0.0,
     val productPhotoUrl: String = "",
     val quantity: Int = 1
-) : Parcelable
+) : Parcelable{
+    constructor() : this("", "", "", "", 0.0, "", 1)
+    fun getTotalCost(): Double = productPrice * quantity
+}
