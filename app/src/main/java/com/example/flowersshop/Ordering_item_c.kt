@@ -112,11 +112,9 @@ class Ordering_item_c : AppCompatActivity() {
                     val name = document.getString("name") ?: ""
                     val address = document.getString("address") ?: ""
                     val phone = document.getString("phoneNumber") ?: ""
-
                     nameText.setText(name)
                     addressText.setText(address)
                     phoneText.setText(phone)
-
                     val city = extractCityFromAddress(address)
                     if (city.isNotEmpty()) {
                         loadWarehouses(city)
@@ -137,15 +135,12 @@ class Ordering_item_c : AppCompatActivity() {
 
     private fun loadCartItems() {
         if (userId == null) return
-
         db.collection("cart")
             .whereEqualTo("userId", userId)
             .get()
             .addOnSuccessListener { documents ->
                 cartItems.clear()
-
-                // Group items by productName to sum quantities
-                val groupedItems = mutableMapOf<String, CartItem>()
+                val groupedItems = mutableMapOf<String, Pair<CartItem, Int>>()
                 for (document in documents) {
                     val cartItem = CartItem(
                         id = document.id,
@@ -156,26 +151,25 @@ class Ordering_item_c : AppCompatActivity() {
                         productPhotoUrl = document.getString("productPhotoUrl") ?: "",
                         quantity = document.getLong("quantity")?.toInt() ?: 1
                     )
-
-                    // Log the photo URL for debugging
-                    Log.d("CartItemPhoto", "Product: ${cartItem.productName}, Photo URL: ${cartItem.productPhotoUrl}")
+                    Log.d("CartItemLoad", "Loaded item: ${cartItem.productName}, ID: ${cartItem.id}, Quantity: ${cartItem.quantity}")
 
                     val key = cartItem.productName
                     if (groupedItems.containsKey(key)) {
-                        val existingItem = groupedItems[key]!!
-                        groupedItems[key] = existingItem.copy(
-                            quantity = existingItem.quantity + cartItem.quantity
-                        )
+                        val (existingItem, totalQuantity) = groupedItems[key]!!
+                        groupedItems[key] = Pair(existingItem, totalQuantity + cartItem.quantity)
                     } else {
-                        groupedItems[key] = cartItem
+                        groupedItems[key] = Pair(cartItem, cartItem.quantity)
                     }
                 }
-
-                cartItems.addAll(groupedItems.values)
+                cartItems.addAll(groupedItems.values.map { (item, totalQuantity) ->
+                    item.copy(quantity = totalQuantity, id = item.id) // Зберігаємо перше id
+                })
                 cartAdapter.notifyDataSetChanged()
                 updateTotalPrice()
+                Log.d("CartLoad", "Loaded ${cartItems.size} unique items")
             }
             .addOnFailureListener {
+                Log.e("CartLoad", "Error loading cart items: ${it.message}")
                 Toast.makeText(this, "Помилка завантаження товарів: ${it.message}", Toast.LENGTH_SHORT).show()
             }
     }
@@ -218,21 +212,43 @@ class Ordering_item_c : AppCompatActivity() {
 
     private fun removeCartItem(cartItem: CartItem) {
         if (userId == null) return
-
-        db.collection("cart")
-            .document(cartItem.id)
-            .delete()
-            .addOnSuccessListener {
-                cartItems.remove(cartItem)
-                cartAdapter.notifyDataSetChanged()
-                updateTotalPrice()
-                Toast.makeText(this, "Товар видалено з кошика", Toast.LENGTH_SHORT).show()
-            }
-            .addOnFailureListener { e ->
-                Toast.makeText(this, "Помилка видалення товару: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
+        val currentQuantity = cartItem.quantity
+        if (currentQuantity > 1) {
+            val updatedItem = cartItem.copy(quantity = currentQuantity - 1)
+            db.collection("cart")
+                .document(cartItem.id)
+                .set(updatedItem)
+                .addOnSuccessListener {
+                    val index = cartItems.indexOf(cartItem)
+                    if (index != -1) {
+                        cartItems[index] = updatedItem
+                        cartAdapter.notifyDataSetChanged()
+                        updateTotalPrice()
+                        Log.d("CartUpdate", "Quantity reduced for ${cartItem.productName} to ${updatedItem.quantity}")
+                        Toast.makeText(this, "Кількість товару зменшено", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                .addOnFailureListener { e ->
+                    Log.e("CartUpdate", "Error updating quantity: ${e.message}")
+                    Toast.makeText(this, "Помилка оновлення кількості: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+        } else {
+            db.collection("cart")
+                .document(cartItem.id)
+                .delete()
+                .addOnSuccessListener {
+                    cartItems.remove(cartItem)
+                    cartAdapter.notifyDataSetChanged()
+                    updateTotalPrice()
+                    Log.d("CartUpdate", "Item ${cartItem.productName} removed from cart")
+                    Toast.makeText(this, "Товар видалено з кошика", Toast.LENGTH_SHORT).show()
+                }
+                .addOnFailureListener { e ->
+                    Log.e("CartUpdate", "Error deleting item: ${e.message}")
+                    Toast.makeText(this, "Помилка видалення товару: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+        }
     }
-
     private fun handleOrderConfirmation() {
         val selectedPostOffice = postOfficeSpinner.selectedItem?.toString()
         if (selectedPostOffice.isNullOrEmpty() || selectedPostOffice == "Відділення не знайдено") {
@@ -329,7 +345,7 @@ class Ordering_item_c : AppCompatActivity() {
                     .error(R.drawable.icon)
                     .into(itemImage)
             } else {
-                itemImage.setImageResource(R.drawable.icon) // Default image if URL is empty
+                itemImage.setImageResource(R.drawable.icon)
                 Log.w("CartItemPhoto", "Photo URL is empty for product: ${cartItem.productName}")
             }
 
