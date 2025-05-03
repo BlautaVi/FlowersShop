@@ -52,7 +52,7 @@ class ProductAdapter(
         val product = productList[position]
         holder.itemView.tag = product
 
-        holder.nameTextView.text = product.name
+        holder.nameTextView.text = if (product.availableQuantity <= 0) "Товар закінчився..." else product.name
         holder.priceTextView.text = "${product.price} грн"
 
         if (product.photoUrl.isNotEmpty()) {
@@ -73,8 +73,12 @@ class ProductAdapter(
                 holder.editButton.setOnClickListener { onItemClick(product) }
             } else {
                 holder.editButton.visibility = View.GONE
-                holder.addToCartButton.visibility = View.VISIBLE
-                holder.addToCartButton.setOnClickListener { onAddToCartClick(product) }
+                if (product.availableQuantity <= 0) {
+                    holder.addToCartButton.visibility = View.GONE
+                } else {
+                    holder.addToCartButton.visibility = View.VISIBLE
+                    holder.addToCartButton.setOnClickListener { onAddToCartClick(product) }
+                }
             }
         }
     }

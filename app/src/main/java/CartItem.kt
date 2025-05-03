@@ -7,12 +7,12 @@ import kotlinx.parcelize.Parcelize
 data class CartItem(
     val id: String = "",
     val userId: String = "",
+    val productId: String = "",
     val productName: String = "",
     val productType: String = "",
     val productPrice: Double = 0.0,
     val productPhotoUrl: String = "",
     val quantity: Int = 1
 ) : Parcelable{
-    constructor() : this("", "", "", "", 0.0, "", 1)
     fun getTotalCost(): Double = productPrice * quantity
 }

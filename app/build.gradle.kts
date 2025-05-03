@@ -47,6 +47,7 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.storage)
     implementation(libs.glide)
+    implementation(libs.play.services.tasks)
     annotationProcessor(libs.compiler)
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.fragment.ktx)

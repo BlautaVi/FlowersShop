@@ -8,6 +8,36 @@
     android:background="#E1F0FF"
     tools:context="com.example.flowersshop.customer_edit_item">
 
+    <EditText
+        android:id="@+id/customer_enter_quantity"
+        android:layout_width="213dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="40dp"
+        android:background="@drawable/rounded_edittext_background"
+        android:ems="10"
+        android:fontFamily="@font/cormorant_infant_light"
+        android:hint="Введіть кількість..."
+        android:inputType="number"
+        android:paddingStart="10dp"
+        android:singleLine="true"
+        android:textColor="#2138CD"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/customer_enter_price" />
+
+    <TextView
+        android:id="@+id/customer_quantity_l"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="30dp"
+        android:fontFamily="@font/cormorant_infant_light"
+        android:text="Кількість:"
+        android:textColor="#2138CD"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/customer_price_l" />
     <ImageView
         android:id="@+id/item_photo"
         android:layout_width="180dp"
@@ -63,13 +93,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="12dp"
         android:fontFamily="@font/cormorant_infant_light"
         android:text="Опис:"
         android:textColor="#2138CD"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/customer_price_l" />
+        app:layout_constraintTop_toBottomOf="@+id/customer_quantity_l" />
 
     <EditText
         android:id="@+id/customer_enter_name"
@@ -129,7 +159,7 @@
         android:id="@+id/customer_enter_desc"
         android:layout_width="357dp"
         android:layout_height="109dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/rounded_edittext_background"
         android:ems="10"
         android:fontFamily="@font/cormorant_infant_light"
@@ -141,6 +171,7 @@
         android:textColor="#2138CD"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.37"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/customer_desc_l" />
 

@@ -167,21 +167,46 @@ class main_page : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLi
 
     private fun addToCart(product: ProductItem) {
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
-        val cartItem = hashMapOf(
-            "userId" to userId,
-            "productId" to product.id,
-            "productName" to product.name,
-            "productPrice" to product.price,
-            "productPhotoUrl" to product.photoUrl,
-            "quantity" to 1
-        )
-        FirebaseFirestore.getInstance().collection("cart")
-            .add(cartItem)
-            .addOnSuccessListener {
-                Toast.makeText(this, "${product.name} додано до кошика", Toast.LENGTH_SHORT).show()
+        val db = FirebaseFirestore.getInstance()
+        db.collection("cart")
+            .whereEqualTo("userId", userId)
+            .whereEqualTo("productId", product.id)
+            .get()
+            .addOnSuccessListener { documents ->
+                if (documents.isEmpty) {
+                    val cartItem = hashMapOf(
+                        "userId" to userId,
+                        "productId" to product.id,
+                        "productName" to product.name,
+                        "productType" to product.type,
+                        "productPrice" to product.price,
+                        "productPhotoUrl" to product.photoUrl,
+                        "quantity" to 1
+                    )
+                    db.collection("cart")
+                        .add(cartItem)
+                        .addOnSuccessListener {
+                            Toast.makeText(this, "${product.name} додано до кошика", Toast.LENGTH_SHORT).show()
+                        }
+                        .addOnFailureListener { e ->
+                            Toast.makeText(this, "Помилка додавання до кошика: ${e.message}", Toast.LENGTH_SHORT).show()
+                        }
+                } else {
+                    val document = documents.documents.first()
+                    val currentQuantity = document.getLong("quantity")?.toInt() ?: 1
+                    db.collection("cart")
+                        .document(document.id)
+                        .update("quantity", currentQuantity + 1)
+                        .addOnSuccessListener {
+                            Toast.makeText(this, "${product.name} додано до кошика", Toast.LENGTH_SHORT).show()
+                        }
+                        .addOnFailureListener { e ->
+                            Toast.makeText(this, "Помилка оновлення кількості: ${e.message}", Toast.LENGTH_SHORT).show()
+                        }
+                }
             }
             .addOnFailureListener { e ->
-                Toast.makeText(this, "Помилка додавання до кошика: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Помилка перевірки кошика: ${e.message}", Toast.LENGTH_SHORT).show()
             }
     }
 

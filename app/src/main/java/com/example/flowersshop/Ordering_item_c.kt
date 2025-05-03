@@ -27,6 +27,7 @@ import com.android.volley.toolbox.Volley
 import com.bumptech.glide.Glide
 import com.example.flowersshop.models.CartItem
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import org.json.JSONObject
 import java.util.UUID
@@ -140,30 +141,20 @@ class Ordering_item_c : AppCompatActivity() {
             .get()
             .addOnSuccessListener { documents ->
                 cartItems.clear()
-                val groupedItems = mutableMapOf<String, Pair<CartItem, Int>>()
                 for (document in documents) {
                     val cartItem = CartItem(
                         id = document.id,
                         userId = document.getString("userId") ?: "",
+                        productId = document.getString("productId") ?: "",
                         productName = document.getString("productName") ?: "",
                         productType = document.getString("productType") ?: "",
                         productPrice = document.getDouble("productPrice") ?: 0.0,
                         productPhotoUrl = document.getString("productPhotoUrl") ?: "",
                         quantity = document.getLong("quantity")?.toInt() ?: 1
                     )
-                    Log.d("CartItemLoad", "Loaded item: ${cartItem.productName}, ID: ${cartItem.id}, Quantity: ${cartItem.quantity}")
-
-                    val key = cartItem.productName
-                    if (groupedItems.containsKey(key)) {
-                        val (existingItem, totalQuantity) = groupedItems[key]!!
-                        groupedItems[key] = Pair(existingItem, totalQuantity + cartItem.quantity)
-                    } else {
-                        groupedItems[key] = Pair(cartItem, cartItem.quantity)
-                    }
+                    cartItems.add(cartItem)
+                    Log.d("CartItemLoad", "Loaded item: ${cartItem.productName}, ID: ${cartItem.id}, Quantity: ${cartItem.quantity}, ProductId: ${cartItem.productId}")
                 }
-                cartItems.addAll(groupedItems.values.map { (item, totalQuantity) ->
-                    item.copy(quantity = totalQuantity, id = item.id) // Зберігаємо перше id
-                })
                 cartAdapter.notifyDataSetChanged()
                 updateTotalPrice()
                 Log.d("CartLoad", "Loaded ${cartItems.size} unique items")
@@ -265,52 +256,105 @@ class Ordering_item_c : AppCompatActivity() {
             Toast.makeText(this, "Заповніть усі поля", Toast.LENGTH_SHORT).show()
             return
         }
-
         if (!PHONE_PATTERN.matcher(phone).matches()) {
             Toast.makeText(this, "Номер телефону має бути у форматі +380xxxxxxxxx", Toast.LENGTH_SHORT).show()
             return
         }
-
         if (cartItems.isEmpty()) {
             Toast.makeText(this, "Кошик порожній", Toast.LENGTH_SHORT).show()
             return
         }
+        val db = FirebaseFirestore.getInstance()
+        val itemsToUpdate = mutableListOf<Pair<String, Int>>()
+        val tasks = mutableListOf<com.google.android.gms.tasks.Task<DocumentSnapshot>>()
 
-        val orderItems = cartItems.map {
-            hashMapOf(
-                "productId" to UUID.randomUUID().toString(),
-                "productName" to it.productName,
-                "productType" to it.productType,
-                "productPrice" to it.productPrice,
-                "quantity" to it.quantity,
-                "productPhotoUrl" to it.productPhotoUrl
-            )
+        for (cartItem in cartItems) {
+            val task = db.collection("items")
+                .document(cartItem.productId)
+                .get()
+            tasks.add(task)
         }
-
-        val order = hashMapOf(
-            "userId" to userId,
-            "name" to name,
-            "address" to address,
-            "phone" to phone,
-            "city" to city,
-            "postOffice" to selectedPostOffice,
-            "orderDate" to System.currentTimeMillis(),
-            "items" to orderItems,
-            "totalPrice" to cartItems.sumOf { it.productPrice * it.quantity },
-            "status" to "unconfirmed"
-        )
-
         progressBar.visibility = View.VISIBLE
-        db.collection("orders").add(order)
-            .addOnSuccessListener {
-                clearCart()
-                progressBar.visibility = View.GONE
-                Toast.makeText(this, "Замовлення оформлено!", Toast.LENGTH_SHORT).show()
-                finish()
+        com.google.android.gms.tasks.Tasks.whenAllSuccess<DocumentSnapshot>(tasks)
+            .addOnSuccessListener { documents ->
+                var allItemsAvailable = true
+
+                for (i in documents.indices) {
+                    val document = documents[i]
+                    val cartItem = cartItems[i]
+                    if (document.exists()) {
+                        val availableQuantity = document.getLong("availableQuantity")?.toInt() ?: 0
+                        if (availableQuantity < cartItem.quantity) {
+                            allItemsAvailable = false
+                            Toast.makeText(this, "Недостатньо товару: ${cartItem.productName}", Toast.LENGTH_SHORT).show()
+                            break
+                        } else {
+                            itemsToUpdate.add(Pair(cartItem.productId, cartItem.quantity))
+                        }
+                    } else {
+                        allItemsAvailable = false
+                        Toast.makeText(this, "Товар не знайдено: ${cartItem.productName}", Toast.LENGTH_SHORT).show()
+                        break
+                    }
+                }
+
+                if (allItemsAvailable && itemsToUpdate.size == cartItems.size) {
+                    val orderItems = cartItems.map {
+                        hashMapOf(
+                            "productId" to UUID.randomUUID().toString(),
+                            "productName" to it.productName,
+                            "productType" to it.productType,
+                            "productPrice" to it.productPrice,
+                            "quantity" to it.quantity,
+                            "productPhotoUrl" to it.productPhotoUrl
+                        )
+                    }
+
+                    val order = hashMapOf(
+                        "userId" to userId,
+                        "name" to name,
+                        "address" to address,
+                        "phone" to phone,
+                        "city" to city,
+                        "postOffice" to selectedPostOffice,
+                        "orderDate" to System.currentTimeMillis(),
+                        "items" to orderItems,
+                        "totalPrice" to cartItems.sumOf { it.productPrice * it.quantity },
+                        "status" to "unconfirmed"
+                    )
+
+                    db.collection("orders").add(order)
+                        .addOnSuccessListener {
+                            db.runBatch { batch ->
+                                for ((productId, quantity) in itemsToUpdate) {
+                                    val docRef = db.collection("items").document(productId)
+                                    batch.update(docRef, "availableQuantity", com.google.firebase.firestore.FieldValue.increment(-quantity.toLong()))
+                                    batch.update(docRef, "name", com.google.firebase.firestore.FieldValue.serverTimestamp().let {
+                                        val currentQuantity = documents.find { it.id == productId }?.getLong("availableQuantity")?.toInt() ?: 0
+                                        if (currentQuantity - quantity <= 0) "Товар закінчився..." else com.google.firebase.firestore.FieldValue.delete()
+                                    })
+                                }
+                            }.addOnSuccessListener {
+                                clearCart()
+                                progressBar.visibility = View.GONE
+                                Toast.makeText(this, "Замовлення оформлено!", Toast.LENGTH_SHORT).show()
+                                finish()
+                            }.addOnFailureListener { e ->
+                                progressBar.visibility = View.GONE
+                                Toast.makeText(this, "Помилка оновлення кількості: ${e.message}", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                        .addOnFailureListener { e ->
+                            progressBar.visibility = View.GONE
+                            Toast.makeText(this, "Помилка оформлення замовлення: ${e.message}", Toast.LENGTH_SHORT).show()
+                        }
+                } else {
+                    progressBar.visibility = View.GONE
+                }
             }
             .addOnFailureListener { e ->
                 progressBar.visibility = View.GONE
-                Toast.makeText(this, "Помилка оформлення замовлення: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Помилка перевірки доступності: ${e.message}", Toast.LENGTH_SHORT).show()
             }
     }
 

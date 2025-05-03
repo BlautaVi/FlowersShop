@@ -16,19 +16,20 @@ class customer_edit_item : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
     private lateinit var product: ProductItem
-
+    private lateinit var quantityEditText: EditText
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_customer_edit_item)
 
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
-
         product = intent.getParcelableExtra("product") ?: run {
             Toast.makeText(this, "Товар не знайдено", Toast.LENGTH_SHORT).show()
             finish()
             return
         }
+        quantityEditText = findViewById(R.id.customer_enter_quantity)
+        quantityEditText.setText(product.availableQuantity.toString())
 
         val currentUser = auth.currentUser
         if (currentUser == null || currentUser.uid != product.userId) {
@@ -62,9 +63,9 @@ class customer_edit_item : AppCompatActivity() {
             val updatedType = enterType.text.toString().trim()
             val updatedPrice = enterPrice.text.toString().toDoubleOrNull()
             val updatedDesc = enterDesc.text.toString().trim()
-
-            if (updatedName.isEmpty() || updatedType.isEmpty() || updatedPrice == null || updatedDesc.isEmpty()) {
-                Toast.makeText(this, "Заповніть усі поля", Toast.LENGTH_SHORT).show()
+            val updatedQuantity = quantityEditText.text.toString().toIntOrNull() ?: 0
+            if (updatedName.isEmpty() || updatedType.isEmpty() || updatedPrice == null || updatedDesc.isEmpty() || updatedQuantity < 0) {
+                Toast.makeText(this, "Заповніть усі поля коректно, кількість не може бути від’ємною", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -74,7 +75,8 @@ class customer_edit_item : AppCompatActivity() {
                 "price" to updatedPrice,
                 "description" to updatedDesc,
                 "photoUrl" to product.photoUrl,
-                "userId" to product.userId
+                "userId" to product.userId,
+                "availableQuantity" to updatedQuantity
             )
 
             db.collection("items").document(product.id)

@@ -35,6 +35,7 @@ class Customers_item_Add_page : AppCompatActivity() {
     private lateinit var db: FirebaseFirestore
     private lateinit var storage: FirebaseStorage
     private lateinit var accountButton: ImageButton
+    private lateinit var quantityEditText: EditText
     private var selectedImageUri: Uri? = null
     private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
         if (isGranted) {
@@ -87,7 +88,7 @@ class Customers_item_Add_page : AppCompatActivity() {
         addPhotoButton = findViewById(R.id.add_items_photo_C)
         showAllButton = findViewById(R.id.All_cust_items_b)
         accountButton = findViewById(R.id.button2)
-
+        quantityEditText = findViewById(R.id.enter_quantity_c)
         accountButton.setOnClickListener {
             val intent = Intent(this, Customers_acc::class.java)
             startActivity(intent)
@@ -124,9 +125,10 @@ class Customers_item_Add_page : AppCompatActivity() {
         val type = typeEditText.text.toString().trim()
         val price = priceEditText.text.toString().toDoubleOrNull()
         val description = descriptionEditText.text.toString().trim()
+        val quantity = quantityEditText.text.toString().toIntOrNull() ?: 0
 
-        if (name.isEmpty() || type.isEmpty() || price == null || description.isEmpty()) {
-            Toast.makeText(this, "Заповніть усі поля", Toast.LENGTH_SHORT).show()
+        if (name.isEmpty() || type.isEmpty() || price == null || description.isEmpty() || quantity <= 0) {
+            Toast.makeText(this, "Заповніть усі поля коректно, кількість має бути більше 0", Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -137,18 +139,26 @@ class Customers_item_Add_page : AppCompatActivity() {
             storageRef.putFile(selectedImageUri!!)
                 .addOnSuccessListener {
                     storageRef.downloadUrl.addOnSuccessListener { uri ->
-                        saveProductToFirestore(productId, name, type, price, description, uri.toString())
+                        saveProductToFirestore(productId, name, type, price, description, uri.toString(), quantity)
                     }
                 }
                 .addOnFailureListener { e ->
                     Toast.makeText(this, "Помилка завантаження фото: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
         } else {
-            saveProductToFirestore(productId, name, type, price, description, "")
+            saveProductToFirestore(productId, name, type, price, description, "", quantity)
         }
     }
 
-    private fun saveProductToFirestore(productId: String, name: String, type: String, price: Double, description: String, photoUrl: String) {
+    private fun saveProductToFirestore(
+        productId: String,
+        name: String,
+        type: String,
+        price: Double,
+        description: String,
+        photoUrl: String,
+        quantity: Int
+    ) {
         val product = hashMapOf(
             "id" to productId,
             "name" to name,
@@ -156,7 +166,8 @@ class Customers_item_Add_page : AppCompatActivity() {
             "price" to price,
             "description" to description,
             "userId" to auth.currentUser!!.uid,
-            "photoUrl" to photoUrl
+            "photoUrl" to photoUrl,
+            "availableQuantity" to quantity
         )
 
         db.collection("items")

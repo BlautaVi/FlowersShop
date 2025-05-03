@@ -23,7 +23,8 @@ class ActivityManagerEditItem : AppCompatActivity() {
     private lateinit var enterDesc: EditText
     private lateinit var changeButton: Button
     private lateinit var deleteButton: Button
-
+    private lateinit var product: ProductItem
+    private lateinit var quantityEditText: EditText
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -41,15 +42,19 @@ class ActivityManagerEditItem : AppCompatActivity() {
         enterDesc = findViewById(R.id.man_enter_decs)
         changeButton = findViewById(R.id.man_change_b)
         deleteButton = findViewById(R.id.man_delete_b)
+        product = intent.getParcelableExtra<ProductItem>("product") ?: run {
+            Toast.makeText(this, "Товар не знайдено", Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
+        quantityEditText = findViewById(R.id.man_enter_quantity)
+        quantityEditText.setText(product.availableQuantity.toString())
         val ShowAllButton = findViewById<Button>(R.id.man_show_all_items_b)
-        val product = intent.getParcelableExtra<ProductItem>("product")
-
         if (product == null) {
             Toast.makeText(this, "Товар не знайдено", Toast.LENGTH_SHORT).show()
             finish()
             return
         }
-
         Glide.with(this)
             .load(product.photoUrl)
             .placeholder(R.drawable.icon)
@@ -64,9 +69,10 @@ class ActivityManagerEditItem : AppCompatActivity() {
             val updatedType = enterType.text.toString()
             val updatedPriceStr = enterPrice.text.toString()
             val updatedDesc = enterDesc.text.toString()
+            val updatedQuantity = quantityEditText.text.toString().toIntOrNull() ?: 0
 
-            if (updatedName.isEmpty() || updatedType.isEmpty() || updatedPriceStr.isEmpty() || updatedDesc.isEmpty()) {
-                Toast.makeText(this, "Заповніть усі поля", Toast.LENGTH_SHORT).show()
+            if (updatedName.isEmpty() || updatedType.isEmpty() || updatedPriceStr.isEmpty() || updatedDesc.isEmpty() || updatedQuantity < 0) {
+                Toast.makeText(this, "Заповніть усі поля коректно, кількість не може бути від’ємною", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -82,7 +88,8 @@ class ActivityManagerEditItem : AppCompatActivity() {
                 "price" to updatedPrice,
                 "description" to updatedDesc,
                 "photoUrl" to product.photoUrl,
-                "userId" to product.userId
+                "userId" to product.userId,
+                "availableQuantity" to updatedQuantity
             )
 
             FirebaseFirestore.getInstance().collection("items").document(product.id)
