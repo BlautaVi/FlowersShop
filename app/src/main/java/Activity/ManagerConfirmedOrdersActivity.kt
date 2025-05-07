@@ -1,4 +1,4 @@
-package com.example.flowersshop
+package Activity
 
 import android.content.Intent
 import android.os.Bundle

@@ -1,4 +1,4 @@
-package com.example.flowersshop
+package Activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,13 +10,14 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.flowersshop.models.ProductAdapter
+import Adapters.ProductAdapter
 import com.example.flowersshop.models.ProductItem
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.example.flowersshop.R
 
-class customers_items_main_page : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class CustomersItemsMainPageActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var productAdapter: ProductAdapter
@@ -42,7 +43,7 @@ class customers_items_main_page : AppCompatActivity(), NavigationView.OnNavigati
         productAdapter = ProductAdapter(
             productList,
             onItemClick = { product ->
-                val intent = Intent(this, customer_edit_item::class.java).apply {
+                val intent = Intent(this, CustomerEditItemActivity::class.java).apply {
                     putExtra("product", product)
                 }
                 startActivity(intent)
@@ -68,13 +69,13 @@ class customers_items_main_page : AppCompatActivity(), NavigationView.OnNavigati
 
         val toAcc = findViewById<ImageButton>(R.id.buttonA)
         toAcc.setOnClickListener {
-            val intent = Intent(this, Customers_acc::class.java)
+            val intent = Intent(this, CustomerAccActivity::class.java)
             startActivity(intent)
         }
 
         val addItem = findViewById<ImageButton>(R.id.button_Add)
         addItem.setOnClickListener {
-            val intent = Intent(this, Customers_item_Add_page::class.java)
+            val intent = Intent(this, CustomersItemAddPageActivity::class.java)
             startActivity(intent)
         }
         loadCategoriesAndProducts()

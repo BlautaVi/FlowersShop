@@ -1,5 +1,6 @@
 package com.example.flowersshop
 
+import Activity.MainActivity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -22,7 +23,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
-class Item_page : AppCompatActivity() {
+class ItemPageActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
 
@@ -39,7 +40,7 @@ class Item_page : AppCompatActivity() {
         db = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
         val backBtn = findViewById<ImageButton>(R.id.back_b_confirmed)
-        backBtn.setOnClickListener() {
+        backBtn.setOnClickListener {
             finish()
         }
         val productId = intent.getStringExtra("productId") ?: return finish()
@@ -61,17 +62,17 @@ class Item_page : AppCompatActivity() {
                                 addToCart(product)
                             }
                         } else {
-                            Toast.makeText(this@Item_page, "Помилка завантаження товару", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this@ItemPageActivity, "Помилка завантаження товару", Toast.LENGTH_SHORT).show()
                             finish()
                         }
                     } else {
-                        Toast.makeText(this@Item_page, "Товар не знайдено", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@ItemPageActivity, "Товар не знайдено", Toast.LENGTH_SHORT).show()
                         finish()
                     }
                 }
             } catch (e: Exception) {
                 runOnUiThread {
-                    Toast.makeText(this@Item_page, "Помилка: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@ItemPageActivity, "Помилка: ${e.message}", Toast.LENGTH_SHORT).show()
                     finish()
                 }
             }
@@ -83,11 +84,13 @@ class Item_page : AppCompatActivity() {
         val nameText = findViewById<TextView>(R.id.Name_l)
         val typeText = findViewById<TextView>(R.id.Type_l)
         val priceText = findViewById<TextView>(R.id.Price_l)
+        val quantityText = findViewById<TextView>(R.id.Quantity_l)
         val descText = findViewById<TextView>(R.id.description_text)
 
         nameText.text = product.name
         typeText.text = product.type
         priceText.text = "${product.price} грн"
+        quantityText.text = "Наявність: ${product.availableQuantity}"
         descText.text = product.description
 
         if (product.photoUrl.isNotEmpty()) {
@@ -146,11 +149,11 @@ class Item_page : AppCompatActivity() {
                 }
 
                 runOnUiThread {
-                    Toast.makeText(this@Item_page, "Додано до кошика", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@ItemPageActivity, "Додано до кошика", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
                 runOnUiThread {
-                    Toast.makeText(this@Item_page, "Помилка додавання до кошика: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@ItemPageActivity, "Помилка додавання до кошика: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
             }
         }

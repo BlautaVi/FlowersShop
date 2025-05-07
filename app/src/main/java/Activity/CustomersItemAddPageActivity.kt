@@ -1,4 +1,4 @@
-package com.example.flowersshop
+package Activity
 
 import android.Manifest
 import android.content.Intent
@@ -20,8 +20,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import java.util.UUID
+import com.example.flowersshop.R
 
-class Customers_item_Add_page : AppCompatActivity() {
+class CustomersItemAddPageActivity : AppCompatActivity() {
 
     private lateinit var nameEditText: EditText
     private lateinit var typeEditText: EditText
@@ -90,7 +91,7 @@ class Customers_item_Add_page : AppCompatActivity() {
         accountButton = findViewById(R.id.button2)
         quantityEditText = findViewById(R.id.enter_quantity_c)
         accountButton.setOnClickListener {
-            val intent = Intent(this, Customers_acc::class.java)
+            val intent = Intent(this, CustomerAccActivity::class.java)
             startActivity(intent)
         }
 
@@ -103,7 +104,7 @@ class Customers_item_Add_page : AppCompatActivity() {
         }
 
         showAllButton.setOnClickListener {
-            startActivity(Intent(this, main_page::class.java))
+            startActivity(Intent(this, MainPageActivity::class.java))
         }
     }
 

@@ -1,4 +1,4 @@
-package com.example.flowersshop
+package Activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -13,18 +13,18 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.flowersshop.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.regex.Pattern
 
-class Customers_acc : AppCompatActivity() {
+class CustomerAccActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
     private lateinit var nameField: EditText
     private lateinit var addressField: EditText
     private lateinit var phoneField: EditText
     private lateinit var ordersRecyclerView: RecyclerView
-    private val ordersList = mutableListOf<Order>()
     private val PHONE_PATTERN = Pattern.compile("^\\+380\\d{9}$")
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,14 +47,14 @@ class Customers_acc : AppCompatActivity() {
         }
         if (auth.currentUser?.email == "manager@gmail.com") {
             Toast.makeText(this, "Менеджерський акаунт не має профілю", Toast.LENGTH_SHORT).show()
-            startActivity(Intent(this, manager_start_page::class.java))
+            startActivity(Intent(this, ManagerStartPageActivity::class.java))
             finish()
             return
         }
 
         val ownItems = findViewById<Button>(R.id.CustomerItems_b)
         ownItems.setOnClickListener {
-            val intent = Intent(this, customers_items_main_page::class.java)
+            val intent = Intent(this, CustomersItemsMainPageActivity::class.java)
             startActivity(intent)
         }
 

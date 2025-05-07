@@ -20,67 +20,67 @@
         android:theme="@style/Theme.FlowersShop"
         tools:targetApi="31">
         <activity
-            android:name=".manager_sales_analyst"
+            android:name="Activity.manager_sales_analyst"
             android:exported="false" />
         <activity
-            android:name=".ManagerConfirmedOrdersActivity"
+            android:name="Activity.ManagerConfirmedOrdersActivity"
             android:exported="false" />
         <activity
-            android:name=".DialogUnconfirmedOrderDetailsActivity"
+            android:name="Activity.DialogUnconfirmedOrderDetailsActivity"
             android:exported="false" />
         <activity
-            android:name=".customers_items_main_page"
+            android:name="Activity.CustomersItemsMainPageActivity"
             android:exported="false" />
         <activity
-            android:name=".for_guest"
+            android:name="Activity.ForGuestActivity"
             android:exported="false" />
         <activity
-            android:name=".item_product"
+            android:name="Activity.ItemProductActivity"
             android:exported="false" />
         <activity
-            android:name=".manager_add_item"
+            android:name="Activity.ManagerAddItemActivity"
             android:exported="false" />
         <activity
-            android:name=".manager_start_page"
+            android:name="Activity.ManagerStartPageActivity"
             android:exported="false" />
         <activity
-            android:name=".ActivityManagerEditItem"
+            android:name="Activity.ManagerEditItemActivity"
             android:exported="false" />
         <activity
-            android:name=".Ordering_item_c"
+            android:name="Activity.OrderingItemCActivity"
             android:exported="false" />
         <activity
-            android:name=".CustomersOrdersForSalesActivity"
+            android:name="Activity.CustomersOrdersForSalesActivity"
             android:exported="false" />
         <activity
-            android:name=".CustomersOrdersActivity"
+            android:name="Activity.CustomersOrdersActivity"
             android:exported="false" />
         <activity
-            android:name=".Customers_item_Add_page"
+            android:name="Activity.CustomersItemAddPageActivity"
             android:exported="false" />
         <activity
-            android:name=".Item_page"
+            android:name="Activity.ItemPageActivity"
             android:exported="false" />
         <activity
-            android:name=".ManagerUnconfirmedOrdersActivity"
+            android:name="Activity.ManagerUnconfirmedOrdersActivity"
             android:exported="false" />
         <activity
-            android:name=".ManagerOrders"
+            android:name="Activity.ManagerOrders"
             android:exported="false" />
         <activity
-            android:name=".Customers_acc"
+            android:name="Activity.CustomerAccActivity"
             android:exported="false" />
         <activity
-            android:name=".main_page"
+            android:name="Activity.MainPageActivity"
             android:exported="false" />
         <activity
-            android:name=".Registration"
+            android:name="Activity.RegistrationActivity"
             android:exported="false" />
         <activity
-            android:name=".customer_edit_item"
+            android:name="Activity.CustomerEditItemActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name="Activity.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

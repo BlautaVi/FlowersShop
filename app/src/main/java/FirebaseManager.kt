@@ -8,7 +8,6 @@ class FirebaseManager(
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 ) {
     constructor() : this(FirebaseAuth.getInstance(), FirebaseFirestore.getInstance())
-
     fun getCurrentUserId(): String? = auth.currentUser?.uid
 
     fun isManager(): Boolean = auth.currentUser?.email == "manager@gmail.com"
@@ -17,6 +16,7 @@ class FirebaseManager(
         auth.signOut()
         return auth.currentUser == null
     }
+
     fun saveProduct(productId: String, product: Map<String, Any>, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
         db.collection("items").document(productId).set(product)
             .addOnSuccessListener { onSuccess() }
@@ -34,4 +34,6 @@ class FirebaseManager(
             .addOnSuccessListener { onSuccess() }
             .addOnFailureListener { e -> onFailure(e) }
     }
+
+    fun getFirestore(): FirebaseFirestore = db
 }

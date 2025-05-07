@@ -46,7 +46,7 @@
 
         <com.example.flowersshop.CustomBarChartView
             android:id="@+id/custom_bar_chart"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:maxHeight="600dp"

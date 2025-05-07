@@ -1,4 +1,4 @@
-package com.example.flowersshop
+package Activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -11,8 +11,9 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.example.flowersshop.R
 
-class manager_start_page : AppCompatActivity() {
+class ManagerStartPageActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,10 +51,10 @@ class manager_start_page : AppCompatActivity() {
             finish()
         }
         add_item.setOnClickListener {
-            startActivity(Intent(this, manager_add_item::class.java))
+            startActivity(Intent(this, ManagerAddItemActivity::class.java))
         }
         see_items.setOnClickListener {
-            startActivity(Intent(this, main_page::class.java))
+            startActivity(Intent(this, MainPageActivity::class.java))
         }
         unconfirmed_orders.setOnClickListener {
             startActivity(Intent(this, ManagerUnconfirmedOrdersActivity::class.java))

@@ -1,4 +1,4 @@
-package com.example.flowersshop
+package Activity
 
 import android.os.Bundle
 import android.util.Log
@@ -26,14 +26,18 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.bumptech.glide.Glide
 import com.example.flowersshop.models.CartItem
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import org.json.JSONObject
 import java.util.UUID
 import java.util.regex.Pattern
+import com.example.flowersshop.R
 
-class Ordering_item_c : AppCompatActivity() {
+class OrderingItemCActivity : AppCompatActivity() {
     private val auth = FirebaseAuth.getInstance()
     private val db = FirebaseFirestore.getInstance()
     private val userId = auth.currentUser?.uid
@@ -266,7 +270,7 @@ class Ordering_item_c : AppCompatActivity() {
         }
         val db = FirebaseFirestore.getInstance()
         val itemsToUpdate = mutableListOf<Pair<String, Int>>()
-        val tasks = mutableListOf<com.google.android.gms.tasks.Task<DocumentSnapshot>>()
+        val tasks = mutableListOf<Task<DocumentSnapshot>>()
 
         for (cartItem in cartItems) {
             val task = db.collection("items")
@@ -275,7 +279,7 @@ class Ordering_item_c : AppCompatActivity() {
             tasks.add(task)
         }
         progressBar.visibility = View.VISIBLE
-        com.google.android.gms.tasks.Tasks.whenAllSuccess<DocumentSnapshot>(tasks)
+        Tasks.whenAllSuccess<DocumentSnapshot>(tasks)
             .addOnSuccessListener { documents ->
                 var allItemsAvailable = true
 
@@ -328,10 +332,10 @@ class Ordering_item_c : AppCompatActivity() {
                             db.runBatch { batch ->
                                 for ((productId, quantity) in itemsToUpdate) {
                                     val docRef = db.collection("items").document(productId)
-                                    batch.update(docRef, "availableQuantity", com.google.firebase.firestore.FieldValue.increment(-quantity.toLong()))
-                                    batch.update(docRef, "name", com.google.firebase.firestore.FieldValue.serverTimestamp().let {
+                                    batch.update(docRef, "availableQuantity", FieldValue.increment(-quantity.toLong()))
+                                    batch.update(docRef, "name", FieldValue.serverTimestamp().let {
                                         val currentQuantity = documents.find { it.id == productId }?.getLong("availableQuantity")?.toInt() ?: 0
-                                        if (currentQuantity - quantity <= 0) "Товар закінчився..." else com.google.firebase.firestore.FieldValue.delete()
+                                        if (currentQuantity - quantity <= 0) "Товар закінчився..." else FieldValue.delete()
                                     })
                                 }
                             }.addOnSuccessListener {
@@ -366,7 +370,7 @@ class Ordering_item_c : AppCompatActivity() {
         override fun getItemId(position: Int): Long = position.toLong()
 
         override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-            val view = convertView ?: LayoutInflater.from(this@Ordering_item_c)
+            val view = convertView ?: LayoutInflater.from(this@OrderingItemCActivity)
                 .inflate(R.layout.cart_item_simple_layout, parent, false)
             val cartItem = cartItems[position]
 
@@ -383,7 +387,7 @@ class Ordering_item_c : AppCompatActivity() {
             itemQuantity.text = "Кількість: ${cartItem.quantity}"
 
             if (cartItem.productPhotoUrl.isNotEmpty()) {
-                Glide.with(this@Ordering_item_c)
+                Glide.with(this@OrderingItemCActivity)
                     .load(cartItem.productPhotoUrl)
                     .placeholder(R.drawable.icon)
                     .error(R.drawable.icon)

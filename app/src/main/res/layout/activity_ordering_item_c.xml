@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#E1F0FF"
-    tools:context="com.example.flowersshop.Ordering_item_c">
+    tools:context="com.example.flowersshop.OrderingItemCActivity">
 
     <TextView
         android:id="@+id/order_c_l"

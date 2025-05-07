@@ -1,12 +1,7 @@
-package com.example.flowersshop
+package Activity
 
-import android.content.Context
 import android.content.Intent
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
 import android.os.Bundle
-import android.util.AttributeSet
 import android.view.View
 import android.widget.ImageButton
 import android.widget.ProgressBar
@@ -15,7 +10,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.flowersshop.CustomBarChartView
 import com.google.firebase.firestore.FirebaseFirestore
+import com.example.flowersshop.R
 
 class manager_sales_analyst : AppCompatActivity() {
     private lateinit var progressBar: ProgressBar
@@ -32,7 +29,7 @@ class manager_sales_analyst : AppCompatActivity() {
         chartView = findViewById(R.id.custom_bar_chart)
         var back_btn = findViewById<ImageButton>(R.id.back_btn)
         back_btn.setOnClickListener {
-            val intent = Intent(this, manager_start_page::class.java)
+            val intent = Intent(this, ManagerStartPageActivity::class.java)
             finish()
         }
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -80,56 +77,5 @@ class manager_sales_analyst : AppCompatActivity() {
         val topProducts = productSales.entries.sortedByDescending { it.value }.take(5)
         chartView.setData(topProducts)
         chartView.invalidate()
-    }
-}
-
-class CustomBarChartView(context: Context, attrs: AttributeSet? = null) : View(context, attrs) {
-    private val barPaint = Paint().apply {
-        isAntiAlias = true
-        style = Paint.Style.FILL
-    }
-    private val textPaint = Paint().apply {
-        isAntiAlias = true
-        color = Color.BLACK
-        textSize = 40f
-        textAlign = Paint.Align.CENTER
-    }
-    private var data: List<Map.Entry<String, Float>> = emptyList()
-    private val colors = listOf(
-       Color.BLUE
-    )
-
-    fun setData(newData: List<Map.Entry<String, Float>>) {
-        data = newData
-        invalidate()
-    }
-
-    override fun onDraw(canvas: Canvas) {
-        super.onDraw(canvas)
-
-        if (data.isEmpty()) return
-
-        val barWidth = width / (data.size * 2f)
-        val maxValue = data.maxOf { it.value }
-        val scale = (height - 200f) / maxValue
-
-        data.forEachIndexed { index, entry ->
-            barPaint.color = colors[index % colors.size]
-
-            val left = index * 2 * barWidth + barWidth / 2
-            val barHeight = entry.value * scale
-            val top = height - barHeight - 100f
-            val right = left + barWidth
-            val bottom = height - 100f
-
-            canvas.drawRect(left, top, right, bottom, barPaint)
-
-            canvas.save()
-            canvas.rotate(-45f, left + barWidth / 2, height - 50f)
-            canvas.drawText(entry.key.take(10), left + barWidth / 2, height - 50f, textPaint)
-            canvas.restore()
-
-            canvas.drawText(entry.value.toInt().toString(), left + barWidth / 2, top - 20f, textPaint)
-        }
     }
 }

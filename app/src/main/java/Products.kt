@@ -13,4 +13,5 @@ abstract class Products(
     open fun getProductInfo(): String {
         return "Name: $name, Type: $type, Price: $price, Description: $description"
     }
+    fun hasValidPrice(): Boolean = price > 0.0
 }

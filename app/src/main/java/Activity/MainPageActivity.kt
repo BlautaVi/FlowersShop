@@ -1,4 +1,4 @@
-package com.example.flowersshop
+package Activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -14,13 +14,15 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.flowersshop.models.ProductAdapter
+import Adapters.ProductAdapter
+import com.example.flowersshop.ItemPageActivity
 import com.example.flowersshop.models.ProductItem
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.example.flowersshop.R
 
-class main_page : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainPageActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var productAdapter: ProductAdapter
@@ -57,17 +59,17 @@ class main_page : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLi
             productList,
             onItemClick = { product ->
                 if (isManager) {
-                    val intent = Intent(this, ActivityManagerEditItem::class.java).apply {
+                    val intent = Intent(this, ManagerEditItemActivity::class.java).apply {
                         putExtra("product", product)
                     }
                     startActivity(intent)
                 } else if (product.userId == currentUserId) {
-                    val intent = Intent(this, customer_edit_item::class.java).apply {
+                    val intent = Intent(this, CustomerEditItemActivity::class.java).apply {
                         putExtra("product", product)
                     }
                     startActivity(intent)
                 } else {
-                    val intent = Intent(this, Item_page::class.java).apply {
+                    val intent = Intent(this, ItemPageActivity::class.java).apply {
                         putExtra("productId", product.id)
                     }
                     startActivity(intent)
@@ -101,11 +103,11 @@ class main_page : AppCompatActivity(), NavigationView.OnNavigationItemSelectedLi
             accBtn.visibility = View.VISIBLE
             orderBtn.visibility = View.VISIBLE
             accBtn.setOnClickListener {
-                val intent = Intent(this, Customers_acc::class.java)
+                val intent = Intent(this, CustomerAccActivity::class.java)
                 startActivity(intent)
             }
             orderBtn.setOnClickListener {
-                val intent = Intent(this, Ordering_item_c::class.java)
+                val intent = Intent(this, OrderingItemCActivity::class.java)
                 startActivity(intent)
             }
         }

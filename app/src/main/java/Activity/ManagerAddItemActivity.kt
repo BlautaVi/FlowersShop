@@ -1,4 +1,4 @@
-package com.example.flowersshop
+package Activity
 
 import android.Manifest
 import android.content.Intent
@@ -20,8 +20,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import java.util.UUID
+import com.example.flowersshop.R
 
-class manager_add_item : AppCompatActivity() {
+class ManagerAddItemActivity : AppCompatActivity() {
 
     private lateinit var nameEditText: EditText
     private lateinit var typeEditText: EditText
@@ -88,7 +89,7 @@ class manager_add_item : AppCompatActivity() {
         }
 
         showAllButton.setOnClickListener {
-            val intent = Intent(this, main_page::class.java)
+            val intent = Intent(this, MainPageActivity::class.java)
             startActivity(intent)
         }
     }

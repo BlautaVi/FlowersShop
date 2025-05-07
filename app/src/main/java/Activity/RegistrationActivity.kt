@@ -1,4 +1,4 @@
-package com.example.flowersshop
+package Activity
 
 import android.content.ContentValues.TAG
 import android.content.Intent
@@ -16,8 +16,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore
 import android.util.Patterns
 import java.util.regex.Pattern
-
-class Registration : AppCompatActivity() {
+import com.example.flowersshop.R
+class RegistrationActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var email: EditText
     private lateinit var password: EditText
@@ -85,7 +85,7 @@ class Registration : AppCompatActivity() {
                         .document(userId)
                         .set(user)
                         .addOnSuccessListener {
-                            startActivity(Intent(this, main_page::class.java))
+                            startActivity(Intent(this, MainPageActivity::class.java))
                             finish()
                         }
                         .addOnFailureListener { e ->

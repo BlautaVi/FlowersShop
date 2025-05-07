@@ -1,5 +1,6 @@
-package com.example.flowersshop
+package Activity
 
+import Adapters.OrderAdapter
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,11 +15,14 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.flowersshop.Order
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import kotlin.text.get
+import com.example.flowersshop.R
 
 class CustomersOrdersForSalesActivity : AppCompatActivity() {
 

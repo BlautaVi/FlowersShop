@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#E1F0FF"
-    tools:context="com.example.flowersshop.customer_edit_item">
+    tools:context="com.example.flowersshop.CustomerEditItemActivity">
 
     <EditText
         android:id="@+id/customer_enter_quantity"

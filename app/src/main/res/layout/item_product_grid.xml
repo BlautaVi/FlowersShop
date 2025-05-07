@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="290dp"
     android:background="#E1F0FF">
@@ -52,12 +53,25 @@
         android:id="@+id/productPrice"
         android:layout_width="99dp"
         android:layout_height="31dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="13dp"
+        android:layout_marginEnd="24dp"
         android:fontFamily="@font/cormorant_infant_light"
         android:text="Ціна"
         android:textColor="#EF969E"
         android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="@+id/imageView9"
+        app:layout_constraintTop_toBottomOf="@+id/productQuantity" />
+
+    <TextView
+        android:id="@+id/productQuantity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="24dp"
+        android:fontFamily="@font/cormorant_infant_light"
+        android:text="Наявність: 0"
+        android:textColor="#EF969E"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="@+id/imageView9"
         app:layout_constraintTop_toTopOf="@+id/imageView9" />
 
@@ -72,7 +86,7 @@
         android:scaleType="fitCenter"
         android:src="@drawable/edit"
         app:layout_constraintEnd_toEndOf="@+id/imageView9"
-        app:layout_constraintTop_toBottomOf="@+id/productPrice"
+        app:layout_constraintTop_toBottomOf="@+id/productQuantity"
         app:tint="#4F65DC"
         android:visibility="gone"/>
 
@@ -80,8 +94,8 @@
         android:id="@+id/addToCart_b"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginTop="168dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="184dp"
+        android:layout_marginEnd="24dp"
         android:background="@null"
         android:contentDescription="@string/add_to_cart_button_description"
         android:fontFamily="@font/cormorant_infant_light"

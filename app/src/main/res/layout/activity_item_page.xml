@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#E1F0FF"
-    tools:context="com.example.flowersshop.Item_page">
+    tools:context="Activity.ItemPageActivity">
 
     <ImageView
         android:id="@+id/imageView11"
@@ -87,11 +87,26 @@
         app:layout_constraintTop_toBottomOf="@+id/Name_l" />
 
     <TextView
+        android:id="@+id/Quantity_l"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="5dp"
+        android:fontFamily="@font/cormorant_sc_light"
+        android:paddingEnd="10dp"
+        android:text="Наявність: 0"
+        android:textAlignment="viewEnd"
+        android:textColor="#900407"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="@+id/imageView11"
+        app:layout_constraintTop_toTopOf="@+id/imageView11" />
+
+    <TextView
         android:id="@+id/Desc_l"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="172dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="108dp"
         android:layout_marginEnd="173dp"
         android:fontFamily="@font/cormorant_sc_light"
         android:text="Опис:"
@@ -100,7 +115,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Price_l" />
+        app:layout_constraintTop_toBottomOf="@+id/Quantity_l" />
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollView4"

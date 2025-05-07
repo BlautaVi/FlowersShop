@@ -1,15 +1,15 @@
-package com.example.flowersshop.models
+package Adapters
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.flowersshop.R
+import com.example.flowersshop.models.ProductItem
 import com.google.firebase.auth.FirebaseAuth
 
 class ProductAdapter(
@@ -25,10 +25,12 @@ class ProductAdapter(
         private const val VIEW_TYPE_GRID = 0
         private const val VIEW_TYPE_LIST = 1
     }
+
     fun toggleViewType() {
         isListView = !isListView
         notifyDataSetChanged()
     }
+
     override fun getItemViewType(position: Int): Int {
         return if (isListView) VIEW_TYPE_LIST else VIEW_TYPE_GRID
     }
@@ -36,6 +38,7 @@ class ProductAdapter(
     class ProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val nameTextView: TextView = itemView.findViewById(R.id.productName)
         val priceTextView: TextView = itemView.findViewById(R.id.productPrice)
+        val quantityTextView: TextView? = itemView.findViewById(R.id.productQuantity)
         val productImage: ImageView = itemView.findViewById(R.id.productImage)
         val editButton: ImageButton? = itemView.findViewById(R.id.edit_button)
         val addToCartButton: ImageButton? = itemView.findViewById(R.id.addToCart_b)
@@ -52,8 +55,11 @@ class ProductAdapter(
         val product = productList[position]
         holder.itemView.tag = product
 
-        holder.nameTextView.text = if (product.availableQuantity <= 0) "Товар закінчився..." else product.name
+        holder.nameTextView.text = if (!product.isAvailable()) "Товар закінчився..." else product.name
         holder.priceTextView.text = "${product.price} грн"
+        holder.quantityTextView?.let {
+            it.text = "Наявність: ${product.availableQuantity}"
+        }
 
         if (product.photoUrl.isNotEmpty()) {
             Glide.with(holder.itemView.context)
@@ -66,6 +72,7 @@ class ProductAdapter(
         holder.itemView.setOnClickListener {
             onItemClick(product)
         }
+
         if (holder.editButton != null && holder.addToCartButton != null) {
             if (product.userId == currentUserId) {
                 holder.editButton.visibility = View.VISIBLE
@@ -73,7 +80,7 @@ class ProductAdapter(
                 holder.editButton.setOnClickListener { onItemClick(product) }
             } else {
                 holder.editButton.visibility = View.GONE
-                if (product.availableQuantity <= 0) {
+                if (!product.isAvailable()) {
                     holder.addToCartButton.visibility = View.GONE
                 } else {
                     holder.addToCartButton.visibility = View.VISIBLE

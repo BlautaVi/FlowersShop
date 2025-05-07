@@ -1,4 +1,4 @@
-package com.example.flowersshop
+package Activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -17,6 +17,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.firestore.firestore
 import java.net.UnknownHostException
 import java.util.concurrent.TimeoutException
+import com.example.flowersshop.R
 
 class MainActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
@@ -49,9 +50,9 @@ class MainActivity : AppCompatActivity() {
                     if (task.isSuccessful) {
                         Toast.makeText(this, "Вхід успішний!", Toast.LENGTH_SHORT).show()
                         val intent = if (email == "manager@gmail.com") {
-                            Intent(this, manager_start_page::class.java)
+                            Intent(this, ManagerStartPageActivity::class.java)
                         } else {
-                            Intent(this, main_page::class.java)
+                            Intent(this, MainPageActivity::class.java)
                         }
                         startActivity(intent)
                         finish()
@@ -80,7 +81,7 @@ class MainActivity : AppCompatActivity() {
                                 .addOnSuccessListener { documents ->
                                     if (documents.isEmpty) {
                                         Toast.makeText(this, "Користувача з таким email не знайдено", Toast.LENGTH_SHORT).show()
-                                        val intent = Intent(this, Registration::class.java)
+                                        val intent = Intent(this, RegistrationActivity::class.java)
                                         intent.putExtra("email", email)
                                         startActivity(intent)
                                     } else {
@@ -112,7 +113,7 @@ class MainActivity : AppCompatActivity() {
                 }
         }
         guestBtn.setOnClickListener {
-            startActivity(Intent(this, for_guest::class.java))
+            startActivity(Intent(this, ForGuestActivity::class.java))
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->

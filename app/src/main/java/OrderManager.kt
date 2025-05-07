@@ -1,6 +1,6 @@
 package com.example.flowersshop
 
-import android.os.Bundle
+import Adapters.OrderAdapter
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -8,72 +8,30 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.GoogleApiAvailability
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
-class CustomersOrdersActivity : AppCompatActivity() {
-
-    private val auth = FirebaseAuth.getInstance()
-    private val db = FirebaseFirestore.getInstance()
-    private val userId = auth.currentUser?.uid
-    private lateinit var ordersRecyclerView: RecyclerView
-    private val ordersList = mutableListOf<Order>()
+class OrderManager(
+    private val auth: FirebaseAuth,
+    private val db: FirebaseFirestore,
+    private val context: AppCompatActivity,
+    private val ordersList: MutableList<Order>
+) {
     private lateinit var adapter: OrderAdapter
-    private var isManager = false
+    fun isManager(): Boolean = auth.currentUser?.email == "manager@gmail.com"
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_customers_orders)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
-
-
-        isManager = auth.currentUser?.email == "manager@gmail.com"
-        findViewById<TextView>(R.id.your_orders_l).text = if (isManager) "Всі замовлення" else "Ваші замовлення"
-
-        ordersRecyclerView = findViewById(R.id.orders_recycler_view)
-        ordersRecyclerView.layoutManager = LinearLayoutManager(this)
-        ordersRecyclerView.setHasFixedSize(true)
-
-        adapter = OrderAdapter(ordersList, showUserId = isManager) { order ->
-            if (isManager) {
-                if (order.status == "unconfirmed") {
-                    showUnconfirmedOrderDetails(order)
-                } else {
-                    showConfirmedOrderDetails(order)
-                }
-            } else {
-                showOrderDetailsDialog(order)
-            }
-        }
-        ordersRecyclerView.adapter = adapter
-
-        loadOrders()
-
-        findViewById<ImageButton>(R.id.back_b_confirmed).setOnClickListener {
-            finish()
-        }
+    fun setupOrderAdapter(recyclerView: RecyclerView, onOrderClick: (Order) -> Unit) {
+        adapter = OrderAdapter(ordersList, isManager(), onOrderClick)
+        recyclerView.adapter = adapter
     }
 
-    private fun loadOrders() {
+    fun loadOrders() {
+        val userId = auth.currentUser?.uid
         if (userId != null) {
-            val query = if (isManager) {
+            val query = if (isManager()) {
                 db.collection("orders").get()
             } else {
                 db.collection("orders")
@@ -87,8 +45,8 @@ class CustomersOrdersActivity : AppCompatActivity() {
                 ordersList.clear()
                 if (documents.isEmpty) {
                     Toast.makeText(
-                        this,
-                        if (isManager) "Немає замовлень" else "У вас немає підтверджених замовлень",
+                        context,
+                        if (isManager()) "Немає замовлень" else "У вас немає підтверджених замовлень",
                         Toast.LENGTH_SHORT
                     ).show()
                     adapter.notifyDataSetChanged()
@@ -105,25 +63,72 @@ class CustomersOrdersActivity : AppCompatActivity() {
                 }
                 adapter.notifyDataSetChanged()
             }.addOnFailureListener { e ->
-                Toast.makeText(this, "Помилка завантаження: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Помилка завантаження: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         } else {
-            Toast.makeText(this, "Користувач не автентифікований", Toast.LENGTH_SHORT).show()
-            finish()
+            Toast.makeText(context, "Користувач не автентифікований", Toast.LENGTH_SHORT).show()
+            context.finish()
         }
     }
 
-    private fun showOrderDetailsDialog(order: Order) {
-        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_order_details, null)
+    fun loadOrdersWithUserItems(userId: String, onComplete: (List<Order>) -> Unit) {
+        db.collection("items")
+            .whereEqualTo("userId", userId)
+            .get()
+            .addOnSuccessListener { userItemsSnapshot ->
+                val userProductIds = mutableSetOf<String>()
+                for (doc in userItemsSnapshot) {
+                    val itemId = doc.getString("productId")
+                    if (itemId != null) userProductIds.add(itemId)
+                }
+
+                db.collection("orders")
+                    .whereEqualTo("status", "confirmed")
+                    .get()
+                    .addOnSuccessListener { ordersSnapshot ->
+                        val confirmedOrders = mutableListOf<Order>()
+                        for (document in ordersSnapshot) {
+                            val orderId = document.id
+                            val orderUserId = document.getString("userId") ?: "невідомий_користувач"
+                            val orderDateMillis = document.getLong("orderDate") ?: 0L
+                            val totalPrice = document.getDouble("totalPrice") ?: 0.0
+                            val items = document.get("items") as? List<Map<String, Any>> ?: emptyList()
+                            val status = document.getString("status") ?: "непідтверджено"
+                            var itemFound = false
+
+                            for (item in items) {
+                                val productId = item["productId"] as? String
+                                if (productId != null && userProductIds.contains(productId)) {
+                                    confirmedOrders.add(Order(orderId, orderUserId, orderDateMillis, totalPrice, items, status))
+                                    itemFound = true
+                                    break
+                                }
+                            }
+                            if (!itemFound) {
+                                Log.d("CustomersOrdersForSales", "Замовлення $orderId не містить товарів користувача")
+                            }
+                        }
+                        onComplete(confirmedOrders)
+                    }
+                    .addOnFailureListener { e ->
+                        Toast.makeText(context, "Помилка завантаження підтверджених замовлень: ${e.message}", Toast.LENGTH_SHORT).show()
+                        onComplete(emptyList())
+                    }
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(context, "Помилка завантаження товарів користувача: ${e.message}", Toast.LENGTH_SHORT).show()
+                onComplete(emptyList())
+            }
+    }
+
+    fun showOrderDetailsDialog(order: Order) {
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_order_details, null)
         val detailsTextView = dialogView.findViewById<TextView>(R.id.order_details_text)
         val deleteButton = dialogView.findViewById<Button>(R.id.delete_order_button)
         deleteButton.visibility = View.GONE
 
-        val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
-        val orderDate = dateFormat.format(Date(order.orderDateMillis))
-
         val detailsBuilder = StringBuilder()
-        detailsBuilder.append("Дата замовлення: $orderDate\n")
+        detailsBuilder.append("Дата замовлення: ${order.getFormattedOrderDate()}\n")
         detailsBuilder.append("Загальна сума: ${order.totalPrice} грн\n\n")
         detailsBuilder.append("Товари:\n")
 
@@ -137,7 +142,7 @@ class CustomersOrdersActivity : AppCompatActivity() {
 
         detailsTextView.text = detailsBuilder.toString()
 
-        val dialog = AlertDialog.Builder(this)
+        val dialog = AlertDialog.Builder(context)
             .setView(dialogView)
             .setTitle("Деталі замовлення")
             .setNegativeButton("Закрити") { dialog, _ -> dialog.dismiss() }
@@ -145,19 +150,15 @@ class CustomersOrdersActivity : AppCompatActivity() {
         dialog.show()
     }
 
-    private fun showUnconfirmedOrderDetails(order: Order) {
-        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_unconfirmed_order_details, null)
-
+    fun showUnconfirmedOrderDetails(order: Order) {
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_unconfirmed_order_details, null)
         val detailsTextView = dialogView.findViewById<TextView>(R.id.order_details_text)
         val confirmButton = dialogView.findViewById<Button>(R.id.confirm_order_button)
         val cancelButton = dialogView.findViewById<Button>(R.id.cancel_order_button)
 
-        val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
-        val orderDate = dateFormat.format(Date(order.orderDateMillis))
-
         val detailsBuilder = StringBuilder()
         detailsBuilder.append("Користувач ID: ${order.userId}\n")
-        detailsBuilder.append("Дата замовлення: $orderDate\n")
+        detailsBuilder.append("Дата замовлення: ${order.getFormattedOrderDate()}\n")
         detailsBuilder.append("Загальна сума: ${order.totalPrice} грн\n\n")
         detailsBuilder.append("Товари:\n")
 
@@ -171,7 +172,7 @@ class CustomersOrdersActivity : AppCompatActivity() {
 
         detailsTextView.text = detailsBuilder.toString()
 
-        val dialog = AlertDialog.Builder(this)
+        val dialog = AlertDialog.Builder(context)
             .setView(dialogView)
             .setTitle("Деталі замовлення")
             .setNegativeButton("Закрити") { dialog, _ -> dialog.dismiss() }
@@ -190,26 +191,22 @@ class CustomersOrdersActivity : AppCompatActivity() {
         dialog.show()
     }
 
-    private fun showConfirmedOrderDetails(order: Order) {
-        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_unconfirmed_order_details, null)
-
+    fun showConfirmedOrderDetails(order: Order) {
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_unconfirmed_order_details, null)
         val detailsTextView = dialogView.findViewById<TextView>(R.id.order_details_text)
         val confirmButton = dialogView.findViewById<ImageButton>(R.id.confirm_order_button)
         val cancelButton = dialogView.findViewById<ImageButton>(R.id.cancel_order_button)
 
         confirmButton.visibility = View.GONE
-        val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
-        val orderDate = dateFormat.format(Date(order.orderDateMillis))
-
         val detailsBuilder = StringBuilder()
         detailsBuilder.append("Користувач ID: ${order.userId}\n")
-        detailsBuilder.append("Дата: $orderDate\n")
+        detailsBuilder.append("Дата: ${order.getFormattedOrderDate()}\n")
         detailsBuilder.append("Сума: ${order.totalPrice} грн\n\n")
         detailsBuilder.append("Товари:\n")
 
         for (item in order.items) {
             val productName = item["productName"] as? String ?: "Невідомий товар"
-            val productType = item["productType"] as? String ?: "Неввідомий тип"
+            val productType = item["productType"] as? String ?: "Невідомий тип"
             val productPrice = item["productPrice"] as? Double ?: 0.0
             val quantity = (item["quantity"] as? Long)?.toInt() ?: 1
             detailsBuilder.append("- $productName ($productType): $productPrice грн x $quantity\n")
@@ -217,7 +214,7 @@ class CustomersOrdersActivity : AppCompatActivity() {
 
         detailsTextView.text = detailsBuilder.toString()
 
-        val dialog = AlertDialog.Builder(this)
+        val dialog = AlertDialog.Builder(context)
             .setView(dialogView)
             .setTitle("Деталі замовлення")
             .setNegativeButton("Закрити") { dialog, _ -> dialog.dismiss() }
@@ -235,11 +232,11 @@ class CustomersOrdersActivity : AppCompatActivity() {
         db.collection("orders").document(orderId)
             .update("status", status)
             .addOnSuccessListener {
-                Toast.makeText(this, "Замовлення оновлено на '$status'", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Замовлення оновлено на '$status'", Toast.LENGTH_SHORT).show()
                 loadOrders()
             }
             .addOnFailureListener { e ->
-                Toast.makeText(this, "Помилка: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Помилка: ${e.message}", Toast.LENGTH_SHORT).show()
             }
     }
 
@@ -247,11 +244,11 @@ class CustomersOrdersActivity : AppCompatActivity() {
         db.collection("orders").document(orderId)
             .delete()
             .addOnSuccessListener {
-                Toast.makeText(this, "Замовлення видалено", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Замовлення видалено", Toast.LENGTH_SHORT).show()
                 loadOrders()
             }
             .addOnFailureListener { e ->
-                Toast.makeText(this, "Помилка видалення: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Помилка видалення: ${e.message}", Toast.LENGTH_SHORT).show()
             }
     }
 }

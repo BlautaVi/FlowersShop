@@ -1,13 +1,12 @@
-package com.example.flowersshop
+package Adapters
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import com.example.flowersshop.Order
+import com.example.flowersshop.R
 
 class OrderAdapter(
     private val orders: List<Order>,
@@ -19,12 +18,10 @@ class OrderAdapter(
         val orderSummary: TextView = itemView.findViewById(R.id.order_summary)
 
         fun bind(order: Order) {
-            val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
-            val orderDate = dateFormat.format(Date(order.orderDateMillis))
             val summary = if (showUserId) {
-                "Користувач: ${order.userId ?: "Невідомий"} | Замовлення від $orderDate - ${order.totalPrice} грн"
+                "Користувач: ${order.userId ?: "Невідомий"} | Замовлення від ${order.getFormattedOrderDate()} - ${order.totalPrice} грн"
             } else {
-                "Замовлення від $orderDate - ${order.totalPrice} грн"
+                "Замовлення від ${order.getFormattedOrderDate()} - ${order.totalPrice} грн"
             }
             orderSummary.text = summary
             itemView.setOnClickListener { onOrderClick(order) }

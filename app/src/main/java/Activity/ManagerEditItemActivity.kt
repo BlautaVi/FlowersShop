@@ -1,4 +1,4 @@
-package com.example.flowersshop
+package Activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -13,8 +13,9 @@ import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.example.flowersshop.models.ProductItem
 import com.google.firebase.firestore.FirebaseFirestore
+import com.example.flowersshop.R
 
-class ActivityManagerEditItem : AppCompatActivity() {
+class ManagerEditItemActivity : AppCompatActivity() {
 
     private lateinit var itemPhoto: ImageView
     private lateinit var enterName: EditText
@@ -115,7 +116,7 @@ class ActivityManagerEditItem : AppCompatActivity() {
                 }
         }
         ShowAllButton.setOnClickListener{
-            val intent = Intent(this, main_page::class.java)
+            val intent = Intent(this, MainPageActivity::class.java)
             startActivity(intent)
         }
     }
