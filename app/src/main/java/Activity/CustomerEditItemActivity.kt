@@ -14,7 +14,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.example.flowersshop.R
 
-class CustomerEditItemActivity: AppCompatActivity() {
+class CustomerEditItemActivity : AppCompatActivity() {
+
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
     private lateinit var product: ProductItem
@@ -55,9 +56,7 @@ class CustomerEditItemActivity: AppCompatActivity() {
         val deleteButton = findViewById<Button>(R.id.customer_delete_b)
         val backBtn = findViewById<ImageButton>(R.id.back_b_confirmed)
 
-        backBtn.setOnClickListener {
-            finish()
-        }
+        backBtn.setOnClickListener { finish() }
 
         Glide.with(this)
             .load(product.photoUrl)
@@ -76,13 +75,7 @@ class CustomerEditItemActivity: AppCompatActivity() {
             val updatedDesc = enterDesc.text.toString().trim()
             val updatedQuantity = quantityEditText.text.toString().toIntOrNull() ?: 0
 
-            productEditor.updateProduct(
-                updatedName,
-                updatedType,
-                updatedPrice,
-                updatedDesc,
-                updatedQuantity
-            ) {
+            productEditor.updateProduct(updatedName, updatedType, updatedPrice, updatedDesc, updatedQuantity) {
                 finish()
             }
         }

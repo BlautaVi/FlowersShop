@@ -2,6 +2,7 @@ package com.example.flowersshop
 import android.widget.Toast
 import com.example.flowersshop.models.ProductItem
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.tasks.await
 
 class ProductManager(private val db: FirebaseFirestore) {
     fun loadUserProducts(userId: String, onComplete: (List<ProductItem>) -> Unit) {
@@ -24,6 +25,19 @@ class ProductManager(private val db: FirebaseFirestore) {
                 Toast.makeText(db.app.applicationContext, "Помилка: \${e.message}", Toast.LENGTH_SHORT).show()
                 onComplete(emptyList())
             }
+    }
+    suspend fun loadProductDetails(productId: String): ProductItem? {
+        return try {
+            val document = db.collection("items").document(productId).get().await()
+            if (document.exists()) {
+                document.toObject(ProductItem::class.java)?.copy(id = document.id)
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            Toast.makeText(db.app.applicationContext, "Помилка: ${e.message}", Toast.LENGTH_SHORT).show()
+            null
+        }
     }
     fun loadAllProducts(onComplete: (List<ProductItem>) -> Unit) {
         db.collection("items")

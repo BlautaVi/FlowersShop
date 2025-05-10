@@ -37,18 +37,12 @@ class ManagerAddItemActivity : AppCompatActivity() {
     private var selectedImageUri: Uri? = null
     private lateinit var quantityEditText: EditText
     private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-        if (isGranted) {
-            openGallery()
-        } else {
-            Toast.makeText(this, "Дозвіл на доступ до галереї не надано", Toast.LENGTH_SHORT).show()
-        }
+        if (isGranted) openGallery() else Toast.makeText(this, "Дозвіл на доступ до галереї не надано", Toast.LENGTH_SHORT).show()
     }
     private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let {
             selectedImageUri = it
-            Glide.with(this)
-                .load(it)
-                .into(itemImage)
+            Glide.with(this).load(it).into(itemImage)
         }
     }
 
@@ -81,25 +75,14 @@ class ManagerAddItemActivity : AppCompatActivity() {
         showAllButton = findViewById(R.id.man_show_all_items_b)
         addPhotoButton = findViewById(R.id.add_photo_btn)
         quantityEditText = findViewById(R.id.enter_quantity_c)
-        addButton.setOnClickListener {
-            saveProduct()
-        }
-        addPhotoButton.setOnClickListener {
-            requestStoragePermission()
-        }
 
-        showAllButton.setOnClickListener {
-            val intent = Intent(this, MainPageActivity::class.java)
-            startActivity(intent)
-        }
+        addButton.setOnClickListener { saveProduct() }
+        addPhotoButton.setOnClickListener { requestStoragePermission() }
+        showAllButton.setOnClickListener { startActivity(Intent(this, MainPageActivity::class.java)) }
     }
 
     private fun requestStoragePermission() {
-        val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            Manifest.permission.READ_MEDIA_IMAGES
-        } else {
-            Manifest.permission.READ_EXTERNAL_STORAGE
-        }
+        val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) Manifest.permission.READ_MEDIA_IMAGES else Manifest.permission.READ_EXTERNAL_STORAGE
         requestPermissionLauncher.launch(permission)
     }
 
@@ -110,10 +93,11 @@ class ManagerAddItemActivity : AppCompatActivity() {
     private fun saveProduct() {
         val name = nameEditText.text.toString().trim()
         val type = typeEditText.text.toString().trim()
-        val price = priceEditText.text.toString().toDoubleOrNull()
+        val price = priceEditText.text.toString().toDoubleOrNull() ?: return Toast.makeText(this, "Ціна має бути числом", Toast.LENGTH_SHORT).show()
         val description = descriptionEditText.text.toString().trim()
         val quantity = quantityEditText.text.toString().toIntOrNull() ?: 0
-        if (name.isEmpty() || type.isEmpty() || price == null || description.isEmpty()|| quantity <= 0) {
+
+        if (name.isEmpty() || type.isEmpty() || description.isEmpty() || quantity <= 0) {
             Toast.makeText(this, "Заповніть усі поля", Toast.LENGTH_SHORT).show()
             return
         }
@@ -123,29 +107,19 @@ class ManagerAddItemActivity : AppCompatActivity() {
 
         if (selectedImageUri != null) {
             val storageRef = storage.reference.child("items/$productId.jpg")
-            storageRef.putFile(selectedImageUri!!)
-                .addOnSuccessListener {
-                    storageRef.downloadUrl.addOnSuccessListener { uri ->
-                        saveProductToFirestore(productId, name, type, price, description, userId, uri.toString(), quantity)                    }
+            storageRef.putFile(selectedImageUri!!).addOnSuccessListener {
+                storageRef.downloadUrl.addOnSuccessListener { uri ->
+                    saveProductToFirestore(productId, name, type, price, description, userId, uri.toString(), quantity)
                 }
-                .addOnFailureListener { e ->
-                    Toast.makeText(this, "Помилка завантаження фото: ${e.message}", Toast.LENGTH_SHORT).show()
-                }
+            }.addOnFailureListener { e ->
+                Toast.makeText(this, "Помилка завантаження фото: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
         } else {
             saveProductToFirestore(productId, name, type, price, description, userId, "", quantity)
         }
     }
 
-    private fun saveProductToFirestore(
-        productId: String,
-        name: String,
-        type: String,
-        price: Double,
-        description: String,
-        userId: String,
-        photoUrl: String,
-        quantity: Int
-    ) {
+    private fun saveProductToFirestore(productId: String, name: String, type: String, price: Double, description: String, userId: String, photoUrl: String, quantity: Int) {
         val product = hashMapOf(
             "id" to productId,
             "name" to name,
@@ -156,16 +130,11 @@ class ManagerAddItemActivity : AppCompatActivity() {
             "photoUrl" to photoUrl,
             "availableQuantity" to quantity
         )
-
-        db.collection("items")
-            .document(productId)
-            .set(product)
-            .addOnSuccessListener {
-                Toast.makeText(this, "Товар додано", Toast.LENGTH_SHORT).show()
-                finish()
-            }
-            .addOnFailureListener { e ->
-                Toast.makeText(this, "Помилка: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
+        db.collection("items").document(productId).set(product).addOnSuccessListener {
+            Toast.makeText(this, "Товар додано", Toast.LENGTH_SHORT).show()
+            finish()
+        }.addOnFailureListener { e ->
+            Toast.makeText(this, "Помилка: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
     }
 }

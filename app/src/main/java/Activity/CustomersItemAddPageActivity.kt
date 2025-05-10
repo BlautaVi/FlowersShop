@@ -39,18 +39,12 @@ class CustomersItemAddPageActivity : AppCompatActivity() {
     private lateinit var quantityEditText: EditText
     private var selectedImageUri: Uri? = null
     private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-        if (isGranted) {
-            openGallery()
-        } else {
-            Toast.makeText(this, "Дозвіл на доступ до галереї не надано", Toast.LENGTH_SHORT).show()
-        }
+        if (isGranted) openGallery() else Toast.makeText(this, "Дозвіл на доступ до галереї не надано", Toast.LENGTH_SHORT).show()
     }
     private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let {
             selectedImageUri = it
-            Glide.with(this)
-                .load(it)
-                .into(itemImage)
+            Glide.with(this).load(it).into(itemImage)
         }
     }
 
@@ -90,30 +84,15 @@ class CustomersItemAddPageActivity : AppCompatActivity() {
         showAllButton = findViewById(R.id.All_cust_items_b)
         accountButton = findViewById(R.id.button2)
         quantityEditText = findViewById(R.id.enter_quantity_c)
-        accountButton.setOnClickListener {
-            val intent = Intent(this, CustomerAccActivity::class.java)
-            startActivity(intent)
-        }
 
-        addButton.setOnClickListener {
-            saveProduct()
-        }
-
-        addPhotoButton.setOnClickListener {
-            requestStoragePermission()
-        }
-
-        showAllButton.setOnClickListener {
-            startActivity(Intent(this, MainPageActivity::class.java))
-        }
+        accountButton.setOnClickListener { startActivity(Intent(this, CustomerAccActivity::class.java)) }
+        addButton.setOnClickListener { saveProduct() }
+        addPhotoButton.setOnClickListener { requestStoragePermission() }
+        showAllButton.setOnClickListener { startActivity(Intent(this, MainPageActivity::class.java)) }
     }
 
     private fun requestStoragePermission() {
-        val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            Manifest.permission.READ_MEDIA_IMAGES
-        } else {
-            Manifest.permission.READ_EXTERNAL_STORAGE
-        }
+        val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) Manifest.permission.READ_MEDIA_IMAGES else Manifest.permission.READ_EXTERNAL_STORAGE
         requestPermissionLauncher.launch(permission)
     }
 
@@ -124,62 +103,48 @@ class CustomersItemAddPageActivity : AppCompatActivity() {
     private fun saveProduct() {
         val name = nameEditText.text.toString().trim()
         val type = typeEditText.text.toString().trim()
-        val price = priceEditText.text.toString().toDoubleOrNull()
+        val price = priceEditText.text.toString().toDoubleOrNull() ?: return Toast.makeText(this, "Ціна має бути числом", Toast.LENGTH_SHORT).show()
         val description = descriptionEditText.text.toString().trim()
         val quantity = quantityEditText.text.toString().toIntOrNull() ?: 0
 
-        if (name.isEmpty() || type.isEmpty() || price == null || description.isEmpty() || quantity <= 0) {
+        if (name.isEmpty() || type.isEmpty() || description.isEmpty() || quantity <= 0) {
             Toast.makeText(this, "Заповніть усі поля коректно, кількість має бути більше 0", Toast.LENGTH_SHORT).show()
             return
         }
 
         val productId = UUID.randomUUID().toString()
+        val userId = auth.currentUser!!.uid
 
         if (selectedImageUri != null) {
             val storageRef = storage.reference.child("items/$productId.jpg")
-            storageRef.putFile(selectedImageUri!!)
-                .addOnSuccessListener {
-                    storageRef.downloadUrl.addOnSuccessListener { uri ->
-                        saveProductToFirestore(productId, name, type, price, description, uri.toString(), quantity)
-                    }
+            storageRef.putFile(selectedImageUri!!).addOnSuccessListener {
+                storageRef.downloadUrl.addOnSuccessListener { uri ->
+                    saveProductToFirestore(productId, name, type, price, description, userId, uri.toString(), quantity)
                 }
-                .addOnFailureListener { e ->
-                    Toast.makeText(this, "Помилка завантаження фото: ${e.message}", Toast.LENGTH_SHORT).show()
-                }
+            }.addOnFailureListener { e ->
+                Toast.makeText(this, "Помилка завантаження фото: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
         } else {
-            saveProductToFirestore(productId, name, type, price, description, "", quantity)
+            saveProductToFirestore(productId, name, type, price, description, userId, "", quantity)
         }
     }
 
-    private fun saveProductToFirestore(
-        productId: String,
-        name: String,
-        type: String,
-        price: Double,
-        description: String,
-        photoUrl: String,
-        quantity: Int
-    ) {
+    private fun saveProductToFirestore(productId: String, name: String, type: String, price: Double, description: String, userId: String, photoUrl: String, quantity: Int) {
         val product = hashMapOf(
             "id" to productId,
             "name" to name,
             "type" to type,
             "price" to price,
             "description" to description,
-            "userId" to auth.currentUser!!.uid,
+            "userId" to userId,
             "photoUrl" to photoUrl,
             "availableQuantity" to quantity
         )
-
-        db.collection("items")
-            .document(productId)
-            .set(product)
-            .addOnSuccessListener {
-                Toast.makeText(this, "Товар додано", Toast.LENGTH_SHORT).show()
-                finish()
-            }
-            .addOnFailureListener { e ->
-                Toast.makeText(this, "Помилка: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
+        db.collection("items").document(productId).set(product).addOnSuccessListener {
+            Toast.makeText(this, "Товар додано", Toast.LENGTH_SHORT).show()
+            finish()
+        }.addOnFailureListener { e ->
+            Toast.makeText(this, "Помилка: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
     }
 }

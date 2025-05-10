@@ -13,6 +13,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 class OrderManager(
     private val auth: FirebaseAuth,
@@ -21,7 +25,9 @@ class OrderManager(
     private val ordersList: MutableList<Order>
 ) {
     private lateinit var adapter: OrderAdapter
+
     fun isManager(): Boolean = auth.currentUser?.email == "manager@gmail.com"
+
     fun setupOrderAdapter(recyclerView: RecyclerView, onOrderClick: (Order) -> Unit) {
         adapter = OrderAdapter(ordersList, isManager(), onOrderClick)
         recyclerView.adapter = adapter
@@ -67,6 +73,35 @@ class OrderManager(
         } else {
             Toast.makeText(context, "Користувач не автентифікований", Toast.LENGTH_SHORT).show()
             context.finish()
+        }
+    }
+
+    fun loadUnconfirmedOrders() {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val documents = db.collection("orders")
+                    .whereEqualTo("status", "unconfirmed")
+                    .get()
+                    .await()
+
+                context.runOnUiThread {
+                    ordersList.clear()
+                    for (document in documents) {
+                        val orderId = document.id
+                        val userId = document.getString("userId")
+                        val orderDateMillis = document.getLong("orderDate") ?: 0L
+                        val totalPrice = document.getDouble("totalPrice") ?: 0.0
+                        val items = document.get("items") as? List<Map<String, Any>> ?: emptyList()
+                        val status = document.getString("status") ?: "unconfirmed"
+                        ordersList.add(Order(orderId, userId, orderDateMillis, totalPrice, items, status))
+                    }
+                    adapter.notifyDataSetChanged()
+                }
+            } catch (e: Exception) {
+                context.runOnUiThread {
+                    Toast.makeText(context, "Помилка завантаження: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
@@ -123,7 +158,7 @@ class OrderManager(
     fun showOrderDetailsDialog(order: Order) {
         val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_order_details, null)
         val detailsTextView = dialogView.findViewById<TextView>(R.id.order_details_text)
-        val deleteButton = dialogView.findViewById< ImageButton>(R.id.delete_order_button)
+        val deleteButton = dialogView.findViewById<ImageButton>(R.id.delete_order_button)
         deleteButton.visibility = View.GONE
 
         val detailsBuilder = StringBuilder()

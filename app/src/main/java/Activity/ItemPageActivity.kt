@@ -1,9 +1,7 @@
 package Activity
 
-import Activity.MainActivity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -15,8 +13,9 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.example.flowersshop.R
+import com.example.flowersshop.ProductManager
 import com.example.flowersshop.models.ProductItem
+import com.example.flowersshop.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
@@ -25,8 +24,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 class ItemPageActivity : AppCompatActivity() {
+
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
+    private val productManager = ProductManager(FirebaseFirestore.getInstance())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,9 +42,7 @@ class ItemPageActivity : AppCompatActivity() {
         db = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
         val backBtn = findViewById<ImageButton>(R.id.back_b_confirmed)
-        backBtn.setOnClickListener {
-            finish()
-        }
+        backBtn.setOnClickListener { finish() }
         val productId = intent.getStringExtra("productId") ?: return finish()
         loadProductDetails(productId)
     }
@@ -51,21 +50,11 @@ class ItemPageActivity : AppCompatActivity() {
     private fun loadProductDetails(productId: String) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val document = db.collection("items").document(productId)
-                    .get()
-                    .await()
+                val product = productManager.loadProductDetails(productId)
                 runOnUiThread {
-                    if (document.exists()) {
-                        val product = document.toObject(ProductItem::class.java)?.copy(id = document.id)
-                        if (product != null) {
-                            setupProductView(product)
-                            findViewById<Button>(R.id.addToCart_b)?.setOnClickListener {
-                                addToCart(product)
-                            }
-                        } else {
-                            Toast.makeText(this@ItemPageActivity, "Помилка завантаження товару", Toast.LENGTH_SHORT).show()
-                            finish()
-                        }
+                    if (product != null) {
+                        setupProductView(product)
+                        findViewById<Button>(R.id.addToCart_b)?.setOnClickListener { addToCart(product) }
                     } else {
                         Toast.makeText(this@ItemPageActivity, "Товар не знайдено", Toast.LENGTH_SHORT).show()
                         finish()
@@ -120,6 +109,7 @@ class ItemPageActivity : AppCompatActivity() {
         }
         CoroutineScope(Dispatchers.IO).launch {
             try {
+                val db = FirebaseFirestore.getInstance()
                 val existingItem = db.collection("cart")
                     .whereEqualTo("userId", userId)
                     .whereEqualTo("productId", product.id)
@@ -142,10 +132,6 @@ class ItemPageActivity : AppCompatActivity() {
                         "productPhotoUrl" to product.photoUrl,
                         "quantity" to 1
                     )
-                    Log.d("Item_page", "Creating new cart item: $cartItem")
-                    if (userId != cartItem["userId"]) {
-                        Log.e("Item_page", "Mismatch: auth.currentUser.uid=$userId, cartItem.userId=${cartItem["userId"]}")
-                    }
                     db.collection("cart").add(cartItem).await()
                 }
 

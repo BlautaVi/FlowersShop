@@ -113,7 +113,7 @@ class NovaPoshtaService(
         requestQueue.add(request)
     }
 
-    private fun setEmptySpinner() {
+    fun setEmptySpinner() {
         val adapter = ArrayAdapter.createFromResource(
             context,
             R.array.empty_post_offices,

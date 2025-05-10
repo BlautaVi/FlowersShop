@@ -11,11 +11,12 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import Adapters.ProductAdapter
+import com.example.flowersshop.ProductManager
 import com.example.flowersshop.models.ProductItem
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import com.example.flowersshop.R
+import com.google.firebase.firestore.FirebaseFirestore
 
 class CustomersItemsMainPageActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -28,6 +29,7 @@ class CustomersItemsMainPageActivity : AppCompatActivity(), NavigationView.OnNav
     private lateinit var navigationView: NavigationView
     private val categories = mutableListOf<String>()
     private var isListView = false
+    private val productManager = ProductManager(FirebaseFirestore.getInstance())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,69 +65,53 @@ class CustomersItemsMainPageActivity : AppCompatActivity(), NavigationView.OnNav
 
         val ordersButton = findViewById<ImageButton>(R.id.orders_btn)
         ordersButton.setOnClickListener {
-            val intent = Intent(this, CustomersOrdersForSalesActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, CustomersOrdersForSalesActivity::class.java))
         }
 
         val toAcc = findViewById<ImageButton>(R.id.buttonA)
         toAcc.setOnClickListener {
-            val intent = Intent(this, CustomerAccActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, CustomerAccActivity::class.java))
         }
 
         val addItem = findViewById<ImageButton>(R.id.button_Add)
         addItem.setOnClickListener {
-            val intent = Intent(this, CustomersItemAddPageActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, CustomersItemAddPageActivity::class.java))
         }
+
         loadCategoriesAndProducts()
     }
 
     private fun loadCategoriesAndProducts() {
-        val currentUser = FirebaseAuth.getInstance().currentUser
-        val userId = currentUser?.uid ?: return
+        val userId = currentUserId ?: return
 
-        val db = FirebaseFirestore.getInstance()
-        db.collection("items")
-            .whereEqualTo("userId", userId)
-            .get()
-            .addOnSuccessListener { result ->
-                allProducts.clear()
-                productList.clear()
-                val categorySet = mutableSetOf<String>()
+        productManager.loadUserProducts(userId) { products ->
+            allProducts.clear()
+            productList.clear()
+            val categorySet = mutableSetOf<String>()
 
-                for (document in result) {
-                    try {
-                        val product = document.toObject(ProductItem::class.java).copy(id = document.id)
-                        allProducts.add(product)
-                        productList.add(product)
-                        categorySet.add(product.type)
-                    } catch (e: Exception) {
-                        Toast.makeText(this, "Помилка: ${document.id}", Toast.LENGTH_SHORT).show()
-                    }
-                }
-                categories.clear()
-                categories.addAll(categorySet.sorted())
-                val menu = navigationView.menu
-                menu.clear()
-                menu.add(0, R.id.nav_all, 0, "Усі категорії").setOnMenuItemClickListener {
-                    filterProducts(null)
+            allProducts.addAll(products)
+            productList.addAll(products)
+            products.forEach { categorySet.add(it.type) }
+
+            categories.clear()
+            categories.addAll(categorySet.sorted())
+            val menu = navigationView.menu
+            menu.clear()
+            menu.add(0, R.id.nav_all, 0, "Усі категорії").setOnMenuItemClickListener {
+                filterProducts(null)
+                drawerLayout.closeDrawer(GravityCompat.START)
+                true
+            }
+            categories.forEachIndexed { index, category ->
+                menu.add(0, index + 1, 0, category).setOnMenuItemClickListener {
+                    filterProducts(category)
                     drawerLayout.closeDrawer(GravityCompat.START)
                     true
                 }
-                categories.forEachIndexed { index, category ->
-                    menu.add(0, index + 1, 0, category).setOnMenuItemClickListener {
-                        filterProducts(category)
-                        drawerLayout.closeDrawer(GravityCompat.START)
-                        true
-                    }
-                }
+            }
 
-                productAdapter.notifyDataSetChanged()
-            }
-            .addOnFailureListener { e ->
-                Toast.makeText(this, "Помилка: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
+            productAdapter.notifyDataSetChanged()
+        }
     }
 
     private fun filterProducts(category: String?) {

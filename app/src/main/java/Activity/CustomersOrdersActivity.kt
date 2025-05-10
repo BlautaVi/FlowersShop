@@ -41,24 +41,14 @@ class CustomersOrdersActivity : AppCompatActivity() {
         ordersRecyclerView.setHasFixedSize(true)
 
         orderManager.setupOrderAdapter(ordersRecyclerView) { order ->
-            showOrderDetails(order)
+            orderManager.showOrderDetailsDialog(order)
         }
 
         findViewById<TextView>(R.id.your_orders_l).text = "Ваші замовлення"
 
         val backButton = findViewById<ImageButton>(R.id.back_b_confirmed)
-        backButton.setOnClickListener {
-            finish()
-        }
+        backButton.setOnClickListener { finish() }
 
-        loadCustomerOrders()
-    }
-
-    private fun loadCustomerOrders() {
         orderManager.loadOrders()
-    }
-
-    private fun showOrderDetails(order: Order) {
-        orderManager.showOrderDetailsDialog(order)
     }
 }

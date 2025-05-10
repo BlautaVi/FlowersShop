@@ -1,7 +1,6 @@
 package Activity
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,9 +19,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.android.volley.Request
 import com.android.volley.RequestQueue
-import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.bumptech.glide.Glide
 import com.example.flowersshop.models.CartItem
@@ -32,12 +29,12 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import org.json.JSONObject
 import java.util.UUID
 import java.util.regex.Pattern
 import com.example.flowersshop.R
 import com.example.flowersshop.CartItemsAdapter
 import com.example.flowersshop.CartManager
+import com.example.flowersshop.NovaPoshtaService
 
 class OrderingItemCActivity : AppCompatActivity() {
     private val auth = FirebaseAuth.getInstance()
@@ -58,6 +55,7 @@ class OrderingItemCActivity : AppCompatActivity() {
     private val cartItems = mutableListOf<CartItem>()
     private lateinit var cartAdapter: CartItemsAdapter
     private lateinit var cartManager: CartManager
+    private lateinit var novaPoshtaService: NovaPoshtaService
     private val PHONE_PATTERN = Pattern.compile("^\\+380\\d{9}\$")
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,8 +67,10 @@ class OrderingItemCActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
         val backBtn = findViewById<ImageButton>(R.id.back_b_confirmed)
         backBtn.setOnClickListener { finish() }
+
         postOfficeSpinner = findViewById(R.id.spinner)
         nameText = findViewById(R.id.name_text)
         addressText = findViewById(R.id.address_text)
@@ -83,11 +83,11 @@ class OrderingItemCActivity : AppCompatActivity() {
         totalPriceText = findViewById(R.id.total_price_text)
         requestQueue = Volley.newRequestQueue(this)
 
-        cartManager = CartManager(db, userId, cartItems, null, totalPriceText)
+        novaPoshtaService = NovaPoshtaService(requestQueue, novaPoshtaApiKey, progressBar, this, postOfficeSpinner)
 
+        cartManager = CartManager(db, userId, cartItems, null, totalPriceText)
         cartAdapter = CartItemsAdapter(this, cartItems, cartManager)
         itemsListView.adapter = cartAdapter
-
         cartManager = CartManager(db, userId, cartItems, cartAdapter, totalPriceText)
 
         if (userId != null) {
@@ -97,13 +97,14 @@ class OrderingItemCActivity : AppCompatActivity() {
             Toast.makeText(this, "Користувач не автентифікований", Toast.LENGTH_SHORT).show()
             finish()
         }
+
         changeCityButton.setOnClickListener {
             val newCity = extractCityFromAddress(addressText.text.toString().trim())
             if (newCity.isEmpty()) {
                 Toast.makeText(this, "Введіть місто", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            loadWarehouses(newCity)
+            novaPoshtaService.loadWarehouses(newCity)
         }
 
         confirmOrderButton.setOnClickListener {
@@ -127,19 +128,19 @@ class OrderingItemCActivity : AppCompatActivity() {
                     phoneText.setText(phone)
                     val city = extractCityFromAddress(address)
                     if (city.isNotEmpty()) {
-                        loadWarehouses(city)
+                        novaPoshtaService.loadWarehouses(city)
                     } else {
                         Toast.makeText(this, "Не вдалося визначити місто з адреси", Toast.LENGTH_SHORT).show()
-                        setEmptySpinner()
+                        novaPoshtaService.setEmptySpinner()
                     }
                 } else {
                     Toast.makeText(this, "Дані користувача не знайдено", Toast.LENGTH_SHORT).show()
-                    setEmptySpinner()
+                    novaPoshtaService.setEmptySpinner()
                 }
             }
             .addOnFailureListener { e ->
                 Toast.makeText(this, "Помилка при завантаженні профілю: ${e.message}", Toast.LENGTH_SHORT).show()
-                setEmptySpinner()
+                novaPoshtaService.setEmptySpinner()
             }
     }
 
@@ -267,114 +268,6 @@ class OrderingItemCActivity : AppCompatActivity() {
                     !part.matches(Regex(".*\\d+.*"))
         } ?: parts.lastOrNull() ?: ""
         return cityPart.replace(Regex("^(м\\.|с\\.)\\s*", RegexOption.IGNORE_CASE), "").trim()
-    }
-
-    private fun setEmptySpinner() {
-        val adapter = ArrayAdapter.createFromResource(
-            this,
-            R.array.empty_post_offices,
-            android.R.layout.simple_spinner_item
-        )
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        postOfficeSpinner.adapter = adapter
-        postOfficeSpinner.isEnabled = false
-    }
-
-    private fun getCityRef(cityName: String, callback: (String?) -> Unit) {
-        val requestBody = JSONObject().apply {
-            put("apiKey", novaPoshtaApiKey)
-            put("modelName", "Address")
-            put("calledMethod", "searchSettlements")
-            put("methodProperties", JSONObject().apply {
-                put("CityName", cityName)
-                put("Limit", 1)
-            })
-        }
-
-        val request = JsonObjectRequest(
-            Request.Method.POST, "https://api.novaposhta.ua/v2.0/json/", requestBody,
-            { response ->
-                try {
-                    val dataArray = response.getJSONArray("data")
-                    if (dataArray.length() > 0) {
-                        val firstData = dataArray.getJSONObject(0)
-                        val settlements = firstData.getJSONArray("Addresses")
-                        if (settlements.length() > 0) {
-                            val deliveryCity = settlements.getJSONObject(0).getString("DeliveryCity")
-                            callback(deliveryCity)
-                        } else {
-                            callback(null)
-                        }
-                    } else {
-                        callback(null)
-                    }
-                } catch (e: Exception) {
-                    callback(null)
-                }
-            },
-            { error ->
-                callback(null)
-            })
-
-        requestQueue.add(request)
-    }
-
-    private fun getWarehouses(cityRef: String, callback: (List<String>) -> Unit) {
-        val requestBody = JSONObject().apply {
-            put("apiKey", novaPoshtaApiKey)
-            put("modelName", "AddressGeneral")
-            put("calledMethod", "getWarehouses")
-            put("methodProperties", JSONObject().apply {
-                put("CityRef", cityRef)
-                put("Limit", 50)
-            })
-        }
-
-        val request = JsonObjectRequest(
-            Request.Method.POST, "https://api.novaposhta.ua/v2.0/json/", requestBody,
-            { response ->
-                try {
-                    val data = response.getJSONArray("data")
-                    val warehouses = mutableListOf<String>()
-                    for (i in 0 until data.length()) {
-                        val warehouse = data.getJSONObject(i).getString("Description")
-                        warehouses.add(warehouse)
-                    }
-                    warehouses.sortBy { it.split("№").getOrNull(1)?.toIntOrNull() ?: 0 }
-                    callback(warehouses)
-                } catch (e: Exception) {
-                    callback(emptyList())
-                }
-            },
-            { error ->
-                callback(emptyList())
-            })
-
-        requestQueue.add(request)
-    }
-
-    private fun loadWarehouses(city: String) {
-        progressBar.visibility = View.VISIBLE
-        getCityRef(city) { cityRef ->
-            if (cityRef != null) {
-                getWarehouses(cityRef) { warehouses ->
-                    progressBar.visibility = View.GONE
-                    if (warehouses.isNotEmpty()) {
-                        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, warehouses)
-                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                        postOfficeSpinner.adapter = adapter
-                        postOfficeSpinner.isEnabled = true
-                    } else {
-                        Toast.makeText(this, "Відділення не знайдено", Toast.LENGTH_SHORT).show()
-                        setEmptySpinner()
-                    }
-                }
-            } else {
-                progressBar.visibility = View.GONE
-                Toast.makeText(this, "Не знайдено місто", Toast.LENGTH_SHORT).show()
-                setEmptySpinner()
-            }
-        }
     }
 
     override fun onDestroy() {
