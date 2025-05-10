@@ -26,15 +26,12 @@ class CustomerAccActivity : AppCompatActivity() {
     private lateinit var phoneField: EditText
     private lateinit var ordersRecyclerView: RecyclerView
     private val PHONE_PATTERN = Pattern.compile("^\\+380\\d{9}$")
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_customers_acc)
-
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
-
         nameField = findViewById(R.id.name_field)
         addressField = findViewById(R.id.adress_field)
         phoneField = findViewById(R.id.phone_lab)
@@ -51,13 +48,11 @@ class CustomerAccActivity : AppCompatActivity() {
             finish()
             return
         }
-
         val ownItems = findViewById<Button>(R.id.CustomerItems_b)
         ownItems.setOnClickListener {
             val intent = Intent(this, CustomersItemsMainPageActivity::class.java)
             startActivity(intent)
         }
-
         val ordersButton = findViewById<Button>(R.id.your_orders_button)
         ordersButton.setOnClickListener {
             val intent = Intent(this, CustomersOrdersActivity::class.java)
@@ -79,29 +74,24 @@ class CustomerAccActivity : AppCompatActivity() {
                     Toast.makeText(this, "Помилка при завантаженні профілю", Toast.LENGTH_SHORT).show()
                 }
         }
-
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
         val changeButton = findViewById<ImageButton>(R.id.change_b)
         changeButton.setOnClickListener {
             val newName = nameField.text.toString().trim()
             val newAddress = addressField.text.toString().trim()
             val newPhone = phoneField.text.toString().trim()
-
             if (newName.isEmpty() || newAddress.isEmpty() || newPhone.isEmpty()) {
                 Toast.makeText(this, "Заповніть усі поля", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-
             if (!PHONE_PATTERN.matcher(newPhone).matches()) {
                 Toast.makeText(this, "Номер телефону має бути у форматі +380xxxxxxxxx", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-
             if (userId != null) {
                 val updatedUser = hashMapOf(
                     "name" to newName,
@@ -124,7 +114,6 @@ class CustomerAccActivity : AppCompatActivity() {
                 finish()
             }
         }
-
         val exitAccButton = findViewById<ImageButton>(R.id.exitAcc_b)
         exitAccButton.setOnClickListener {
             auth.signOut()
@@ -139,13 +128,11 @@ class CustomerAccActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
-
         val deleteAccButton = findViewById<ImageButton>(R.id.deleteAcc_b)
         deleteAccButton.setOnClickListener {
             Toast.makeText(this, "Видаляємо ваш акаунт...", Toast.LENGTH_SHORT).show()
             val user = auth.currentUser
             val userId = user?.uid
-
             if (userId != null) {
                 db.collection("users").document(userId)
                     .delete()

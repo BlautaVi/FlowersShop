@@ -22,7 +22,6 @@ class OrderManager(
 ) {
     private lateinit var adapter: OrderAdapter
     fun isManager(): Boolean = auth.currentUser?.email == "manager@gmail.com"
-
     fun setupOrderAdapter(recyclerView: RecyclerView, onOrderClick: (Order) -> Unit) {
         adapter = OrderAdapter(ordersList, isManager(), onOrderClick)
         recyclerView.adapter = adapter
@@ -124,7 +123,7 @@ class OrderManager(
     fun showOrderDetailsDialog(order: Order) {
         val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_order_details, null)
         val detailsTextView = dialogView.findViewById<TextView>(R.id.order_details_text)
-        val deleteButton = dialogView.findViewById<Button>(R.id.delete_order_button)
+        val deleteButton = dialogView.findViewById< ImageButton>(R.id.delete_order_button)
         deleteButton.visibility = View.GONE
 
         val detailsBuilder = StringBuilder()

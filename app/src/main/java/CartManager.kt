@@ -1,16 +1,14 @@
 package com.example.flowersshop
-
 import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
 import com.example.flowersshop.models.CartItem
 import com.google.firebase.firestore.FirebaseFirestore
-
 class CartManager(
     private val db: FirebaseFirestore,
     private val userId: String?,
     private val cartItems: MutableList<CartItem>,
-    private val cartAdapter: CartItemsAdapter,
+    private val cartAdapter: CartItemsAdapter?,
     private val totalPriceText: TextView?
 ) {
     fun loadCartItems() {
@@ -34,9 +32,9 @@ class CartManager(
                     cartItems.add(cartItem)
                     Log.d("CartItemLoad", "Loaded item: \${cartItem.productName}, ID: \${cartItem.id}, Quantity: \${cartItem.quantity}, ProductId: \${cartItem.productId}")
                 }
-                cartAdapter.notifyDataSetChanged()
+                cartAdapter?.notifyDataSetChanged()
                 updateTotalPrice()
-                Log.d("CartLoad", "Loaded \${cartItems.size} unique items")
+                Log.d("CartLoad", "Loaded ${cartItems.size} unique items")
             }
             .addOnFailureListener {
                 Log.e("CartLoad", "Error loading cart items: \${it.message}")
@@ -55,7 +53,7 @@ class CartManager(
                     val index = cartItems.indexOf(cartItem)
                     if (index != -1) {
                         cartItems[index] = updatedItem
-                        cartAdapter.notifyDataSetChanged()
+                        cartAdapter?.notifyDataSetChanged()
                         updateTotalPrice()
                         Log.d("CartUpdate", "Quantity reduced for ${cartItem.productName} to ${updatedItem.quantity}")
                         Toast.makeText(db.app.applicationContext, "Кількість товару зменшено", Toast.LENGTH_SHORT).show()
@@ -71,7 +69,7 @@ class CartManager(
                 .delete()
                 .addOnSuccessListener {
                     cartItems.remove(cartItem)
-                    cartAdapter.notifyDataSetChanged()
+                    cartAdapter?.notifyDataSetChanged()
                     updateTotalPrice()
                     Log.d("CartUpdate", "Item ${cartItem.productName} removed from cart")
                     Toast.makeText(db.app.applicationContext, "Товар видалено з кошика", Toast.LENGTH_SHORT).show()
@@ -82,7 +80,6 @@ class CartManager(
                 }
         }
     }
-
     fun clearCart() {
         if (userId == null) return
         db.collection("cart")
@@ -91,18 +88,17 @@ class CartManager(
             .addOnSuccessListener { documents ->
                 if (documents.isEmpty) {
                     cartItems.clear()
-                    cartAdapter.notifyDataSetChanged()
+                    cartAdapter?.notifyDataSetChanged()
                     updateTotalPrice()
                     return@addOnSuccessListener
                 }
-
                 db.runBatch { batch ->
                     for (document in documents) {
                         batch.delete(document.reference)
                     }
                 }.addOnSuccessListener {
                     cartItems.clear()
-                    cartAdapter.notifyDataSetChanged()
+                    cartAdapter?.notifyDataSetChanged()
                     updateTotalPrice()
                 }.addOnFailureListener { e ->
                     Toast.makeText(db.app.applicationContext, "Помилка очищення кошика: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -112,8 +108,7 @@ class CartManager(
                 Toast.makeText(db.app.applicationContext, "Помилка завантаження кошика: ${e.message}", Toast.LENGTH_SHORT).show()
             }
     }
-
-    private fun updateTotalPrice() {
+    fun updateTotalPrice() {
         val total = cartItems.sumOf { it.productPrice * it.quantity }
         totalPriceText?.text = "Загальна сума: $total грн"
     }

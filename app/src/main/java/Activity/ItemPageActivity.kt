@@ -1,4 +1,4 @@
-package com.example.flowersshop
+package Activity
 
 import Activity.MainActivity
 import android.content.Intent
@@ -15,6 +15,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.example.flowersshop.R
 import com.example.flowersshop.models.ProductItem
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore

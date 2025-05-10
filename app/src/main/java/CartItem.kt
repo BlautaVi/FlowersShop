@@ -13,10 +13,8 @@ data class CartItem(
     val quantity: Int = 1
 ) : Parcelable {
     fun getTotalCost(): Double = productPrice * quantity
-
     fun decreaseQuantity(): CartItem {
         return copy(quantity = quantity - 1)
     }
-
     fun isEmpty(): Boolean = quantity <= 0
 }

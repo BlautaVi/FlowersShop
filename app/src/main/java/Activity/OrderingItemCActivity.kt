@@ -36,6 +36,8 @@ import org.json.JSONObject
 import java.util.UUID
 import java.util.regex.Pattern
 import com.example.flowersshop.R
+import com.example.flowersshop.CartItemsAdapter
+import com.example.flowersshop.CartManager
 
 class OrderingItemCActivity : AppCompatActivity() {
     private val auth = FirebaseAuth.getInstance()
@@ -55,7 +57,8 @@ class OrderingItemCActivity : AppCompatActivity() {
     private lateinit var totalPriceText: TextView
     private val cartItems = mutableListOf<CartItem>()
     private lateinit var cartAdapter: CartItemsAdapter
-    private val PHONE_PATTERN = Pattern.compile("^\\+380\\d{9}$")
+    private lateinit var cartManager: CartManager
+    private val PHONE_PATTERN = Pattern.compile("^\\+380\\d{9}\$")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,9 +70,7 @@ class OrderingItemCActivity : AppCompatActivity() {
             insets
         }
         val backBtn = findViewById<ImageButton>(R.id.back_b_confirmed)
-        backBtn.setOnClickListener() {
-            finish()
-        }
+        backBtn.setOnClickListener { finish() }
         postOfficeSpinner = findViewById(R.id.spinner)
         nameText = findViewById(R.id.name_text)
         addressText = findViewById(R.id.address_text)
@@ -81,17 +82,21 @@ class OrderingItemCActivity : AppCompatActivity() {
         itemsListView = findViewById(R.id.items_for_order_c_list)
         totalPriceText = findViewById(R.id.total_price_text)
         requestQueue = Volley.newRequestQueue(this)
-        cartAdapter = CartItemsAdapter()
+
+        cartManager = CartManager(db, userId, cartItems, null, totalPriceText)
+
+        cartAdapter = CartItemsAdapter(this, cartItems, cartManager)
         itemsListView.adapter = cartAdapter
+
+        cartManager = CartManager(db, userId, cartItems, cartAdapter, totalPriceText)
 
         if (userId != null) {
             loadUserData()
-            loadCartItems()
+            cartManager.loadCartItems()
         } else {
             Toast.makeText(this, "Користувач не автентифікований", Toast.LENGTH_SHORT).show()
             finish()
         }
-
         changeCityButton.setOnClickListener {
             val newCity = extractCityFromAddress(addressText.text.toString().trim())
             if (newCity.isEmpty()) {
@@ -138,112 +143,6 @@ class OrderingItemCActivity : AppCompatActivity() {
             }
     }
 
-    private fun loadCartItems() {
-        if (userId == null) return
-        db.collection("cart")
-            .whereEqualTo("userId", userId)
-            .get()
-            .addOnSuccessListener { documents ->
-                cartItems.clear()
-                for (document in documents) {
-                    val cartItem = CartItem(
-                        id = document.id,
-                        userId = document.getString("userId") ?: "",
-                        productId = document.getString("productId") ?: "",
-                        productName = document.getString("productName") ?: "",
-                        productType = document.getString("productType") ?: "",
-                        productPrice = document.getDouble("productPrice") ?: 0.0,
-                        productPhotoUrl = document.getString("productPhotoUrl") ?: "",
-                        quantity = document.getLong("quantity")?.toInt() ?: 1
-                    )
-                    cartItems.add(cartItem)
-                    Log.d("CartItemLoad", "Loaded item: ${cartItem.productName}, ID: ${cartItem.id}, Quantity: ${cartItem.quantity}, ProductId: ${cartItem.productId}")
-                }
-                cartAdapter.notifyDataSetChanged()
-                updateTotalPrice()
-                Log.d("CartLoad", "Loaded ${cartItems.size} unique items")
-            }
-            .addOnFailureListener {
-                Log.e("CartLoad", "Error loading cart items: ${it.message}")
-                Toast.makeText(this, "Помилка завантаження товарів: ${it.message}", Toast.LENGTH_SHORT).show()
-            }
-    }
-
-    private fun updateTotalPrice() {
-        val total = cartItems.sumOf { it.productPrice * it.quantity }
-        totalPriceText.text = "Загальна сума: $total грн"
-    }
-
-    private fun clearCart() {
-        if (userId == null) return
-
-        db.collection("cart")
-            .whereEqualTo("userId", userId)
-            .get()
-            .addOnSuccessListener { documents ->
-                if (documents.isEmpty) {
-                    cartItems.clear()
-                    cartAdapter.notifyDataSetChanged()
-                    updateTotalPrice()
-                    return@addOnSuccessListener
-                }
-
-                db.runBatch { batch ->
-                    for (document in documents) {
-                        batch.delete(document.reference)
-                    }
-                }.addOnSuccessListener {
-                    cartItems.clear()
-                    cartAdapter.notifyDataSetChanged()
-                    updateTotalPrice()
-                }.addOnFailureListener { e ->
-                    Toast.makeText(this, "Помилка очищення кошика: ${e.message}", Toast.LENGTH_SHORT).show()
-                }
-            }
-            .addOnFailureListener { e ->
-                Toast.makeText(this, "Помилка завантаження кошика: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
-    }
-
-    private fun removeCartItem(cartItem: CartItem) {
-        if (userId == null) return
-        val currentQuantity = cartItem.quantity
-        if (currentQuantity > 1) {
-            val updatedItem = cartItem.copy(quantity = currentQuantity - 1)
-            db.collection("cart")
-                .document(cartItem.id)
-                .set(updatedItem)
-                .addOnSuccessListener {
-                    val index = cartItems.indexOf(cartItem)
-                    if (index != -1) {
-                        cartItems[index] = updatedItem
-                        cartAdapter.notifyDataSetChanged()
-                        updateTotalPrice()
-                        Log.d("CartUpdate", "Quantity reduced for ${cartItem.productName} to ${updatedItem.quantity}")
-                        Toast.makeText(this, "Кількість товару зменшено", Toast.LENGTH_SHORT).show()
-                    }
-                }
-                .addOnFailureListener { e ->
-                    Log.e("CartUpdate", "Error updating quantity: ${e.message}")
-                    Toast.makeText(this, "Помилка оновлення кількості: ${e.message}", Toast.LENGTH_SHORT).show()
-                }
-        } else {
-            db.collection("cart")
-                .document(cartItem.id)
-                .delete()
-                .addOnSuccessListener {
-                    cartItems.remove(cartItem)
-                    cartAdapter.notifyDataSetChanged()
-                    updateTotalPrice()
-                    Log.d("CartUpdate", "Item ${cartItem.productName} removed from cart")
-                    Toast.makeText(this, "Товар видалено з кошика", Toast.LENGTH_SHORT).show()
-                }
-                .addOnFailureListener { e ->
-                    Log.e("CartUpdate", "Error deleting item: ${e.message}")
-                    Toast.makeText(this, "Помилка видалення товару: ${e.message}", Toast.LENGTH_SHORT).show()
-                }
-        }
-    }
     private fun handleOrderConfirmation() {
         val selectedPostOffice = postOfficeSpinner.selectedItem?.toString()
         if (selectedPostOffice.isNullOrEmpty() || selectedPostOffice == "Відділення не знайдено") {
@@ -268,21 +167,18 @@ class OrderingItemCActivity : AppCompatActivity() {
             Toast.makeText(this, "Кошик порожній", Toast.LENGTH_SHORT).show()
             return
         }
-        val db = FirebaseFirestore.getInstance()
+
         val itemsToUpdate = mutableListOf<Pair<String, Int>>()
         val tasks = mutableListOf<Task<DocumentSnapshot>>()
 
         for (cartItem in cartItems) {
-            val task = db.collection("items")
-                .document(cartItem.productId)
-                .get()
+            val task = db.collection("items").document(cartItem.productId).get()
             tasks.add(task)
         }
         progressBar.visibility = View.VISIBLE
         Tasks.whenAllSuccess<DocumentSnapshot>(tasks)
             .addOnSuccessListener { documents ->
                 var allItemsAvailable = true
-
                 for (i in documents.indices) {
                     val document = documents[i]
                     val cartItem = cartItems[i]
@@ -339,7 +235,7 @@ class OrderingItemCActivity : AppCompatActivity() {
                                     })
                                 }
                             }.addOnSuccessListener {
-                                clearCart()
+                                cartManager.clearCart()
                                 progressBar.visibility = View.GONE
                                 Toast.makeText(this, "Замовлення оформлено!", Toast.LENGTH_SHORT).show()
                                 finish()
@@ -360,49 +256,6 @@ class OrderingItemCActivity : AppCompatActivity() {
                 progressBar.visibility = View.GONE
                 Toast.makeText(this, "Помилка перевірки доступності: ${e.message}", Toast.LENGTH_SHORT).show()
             }
-    }
-
-    inner class CartItemsAdapter : BaseAdapter() {
-        override fun getCount(): Int = cartItems.size
-
-        override fun getItem(position: Int): Any = cartItems[position]
-
-        override fun getItemId(position: Int): Long = position.toLong()
-
-        override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-            val view = convertView ?: LayoutInflater.from(this@OrderingItemCActivity)
-                .inflate(R.layout.cart_item_simple_layout, parent, false)
-            val cartItem = cartItems[position]
-
-            val itemImage = view.findViewById<ImageView>(R.id.cart_item_image)
-            val itemType = view.findViewById<TextView>(R.id.cart_item_type)
-            val itemName = view.findViewById<TextView>(R.id.cart_item_name)
-            val itemPrice = view.findViewById<TextView>(R.id.cart_item_price)
-            val itemQuantity = view.findViewById<TextView>(R.id.cart_item_quantity)
-            val deleteButton = view.findViewById<ImageButton>(R.id.delete_cart_item_button)
-
-            itemType.text = "Вид: ${cartItem.productType}"
-            itemName.text = cartItem.productName
-            itemPrice.text = "Ціна: ${cartItem.productPrice} грн"
-            itemQuantity.text = "Кількість: ${cartItem.quantity}"
-
-            if (cartItem.productPhotoUrl.isNotEmpty()) {
-                Glide.with(this@OrderingItemCActivity)
-                    .load(cartItem.productPhotoUrl)
-                    .placeholder(R.drawable.icon)
-                    .error(R.drawable.icon)
-                    .into(itemImage)
-            } else {
-                itemImage.setImageResource(R.drawable.icon)
-                Log.w("CartItemPhoto", "Photo URL is empty for product: ${cartItem.productName}")
-            }
-
-            deleteButton.setOnClickListener {
-                removeCartItem(cartItem)
-            }
-
-            return view
-        }
     }
 
     private fun extractCityFromAddress(address: String): String {
