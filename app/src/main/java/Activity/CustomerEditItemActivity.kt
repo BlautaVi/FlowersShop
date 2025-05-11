@@ -8,6 +8,8 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import com.example.flowersshop.ProductEditor
 import com.example.flowersshop.models.ProductItem
 import com.google.firebase.auth.FirebaseAuth
@@ -60,7 +62,8 @@ class CustomerEditItemActivity : AppCompatActivity() {
 
         Glide.with(this)
             .load(product.photoUrl)
-            .placeholder(R.drawable.icon)
+            .placeholder(R.drawable.rounded_image_background)
+            .apply(RequestOptions().transform(RoundedCorners(32)))
             .into(itemPhoto)
 
         enterName.setText(product.name)

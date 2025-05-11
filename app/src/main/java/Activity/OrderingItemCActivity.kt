@@ -82,9 +82,7 @@ class OrderingItemCActivity : AppCompatActivity() {
         itemsListView = findViewById(R.id.items_for_order_c_list)
         totalPriceText = findViewById(R.id.total_price_text)
         requestQueue = Volley.newRequestQueue(this)
-
         novaPoshtaService = NovaPoshtaService(requestQueue, novaPoshtaApiKey, progressBar, this, postOfficeSpinner)
-
         cartManager = CartManager(db, userId, cartItems, null, totalPriceText)
         cartAdapter = CartItemsAdapter(this, cartItems, cartManager)
         itemsListView.adapter = cartAdapter

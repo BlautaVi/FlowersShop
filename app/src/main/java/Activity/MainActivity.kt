@@ -45,6 +45,10 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Заповніть усі поля", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+            if (!email.contains("@") || !email.contains(".")) {
+                Toast.makeText(this, "Введіть коректний email", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
             auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {

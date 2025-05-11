@@ -35,7 +35,7 @@ class CartItemsAdapter(
         if (cartItem.productPhotoUrl.isNotEmpty()) {
             Glide.with(context)
                 .load(cartItem.productPhotoUrl)
-                .placeholder(R.drawable.icon)
+                .placeholder(R.drawable.rounded_image_background)
                 .error(R.drawable.icon)
                 .into(itemImage)
         } else {

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#E1F0FF"
-    tools:context="com.example.flowersshop.CustomerEditItemActivity">
+    tools:context="Activity.CustomerEditItemActivity">
 
     <EditText
         android:id="@+id/customer_enter_quantity"
@@ -44,6 +44,7 @@
         android:layout_height="180dp"
         android:layout_marginTop="90dp"
         android:background="@drawable/rounded_image_background"
+        android:clipToPadding="true"
         android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

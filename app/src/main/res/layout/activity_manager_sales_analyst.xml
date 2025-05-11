@@ -4,66 +4,72 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#E1F0FF">
+    android:background="#F4F9FF">
 
     <ImageButton
         android:id="@+id/back_btn"
-        android:layout_width="60dp"
-        android:layout_height="61dp"
-        android:layout_marginTop="5dp"
-        android:backgroundTint="#E1F0FF"
-        android:scaleType="fitCenter"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@android:color/transparent"
+        android:scaleType="centerInside"
         android:src="@drawable/previous"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="#25469B" />
+        app:tint="#1A237E" />
+
     <TextView
         android:id="@+id/analytics_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="32dp"
         android:fontFamily="@font/cormorant_sc_light"
         android:text="Аналітика продажів"
-        android:textColor="#001180"
-        android:textSize="28sp"
+        android:textColor="#1A237E"
+        android:textSize="26sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.401"
+        app:layout_constraintStart_toEndOf="@id/back_btn"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ScrollView
+    <androidx.cardview.widget.CardView
+        android:id="@+id/chart_container"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:layout_marginTop="60dp"
+        android:background="@android:color/white"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="6dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/analytics_title"
-        app:layout_constraintVertical_bias="1.0">
+        app:layout_constraintTop_toBottomOf="@id/analytics_title">
 
-        <com.example.flowersshop.CustomBarChartView
-            android:id="@+id/custom_bar_chart"
-            android:layout_width="wrap_content"
+        <ScrollView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:maxHeight="600dp"
-            android:minHeight="400dp" />
+            android:padding="16dp">
 
-    </ScrollView>
+            <com.example.flowersshop.CustomBarChartView
+                android:id="@+id/custom_bar_chart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxHeight="600dp"
+                android:minHeight="400dp" />
+        </ScrollView>
+    </androidx.cardview.widget.CardView>
 
     <ProgressBar
         android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#80000000"
-        android:padding="16dp"
         android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

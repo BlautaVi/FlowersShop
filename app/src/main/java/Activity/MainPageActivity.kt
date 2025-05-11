@@ -46,7 +46,7 @@ class MainPageActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
+        onResume();
         val currentUser = FirebaseAuth.getInstance().currentUser
         isManager = currentUser?.email == "manager@gmail.com"
 
@@ -195,6 +195,10 @@ class MainPageActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                     }
             }
         }
+    }
+    override fun onResume() {
+        super.onResume()
+        loadCategoriesAndProducts()
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
