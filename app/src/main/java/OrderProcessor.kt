@@ -18,7 +18,8 @@ class OrderProcessor(
     private val progressBar: ProgressBar,
     private val cartAdapter: CartItemsAdapter
 ) {
-    private val PHONE_PATTERN = Pattern.compile("^\\+380d{9}\$")
+    private val PHONE_PATTERN = Pattern.compile("^\\+380\\d{9}\$")
+
     fun handleOrderConfirmation(postOffice: String?, name: String, address: String, phone: String) {
         if (postOffice.isNullOrEmpty() || postOffice == "Відділення не знайдено") {
             Toast.makeText(context, "Виберіть дійсне відділення", Toast.LENGTH_SHORT).show()
@@ -151,7 +152,7 @@ class OrderProcessor(
             }
     }
 
-    private fun extractCityFromAddress(address: String): String {
+    fun extractCityFromAddress(address: String): String {
         if (address.isEmpty()) return ""
         val parts = address.split(",").map { it.trim() }
         val cityPart = parts.find { part ->

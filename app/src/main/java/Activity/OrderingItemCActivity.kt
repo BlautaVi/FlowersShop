@@ -1,15 +1,10 @@
 package Activity
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.BaseAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
-import android.widget.ImageView
 import android.widget.ListView
 import android.widget.ProgressBar
 import android.widget.Spinner
@@ -21,20 +16,13 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.Volley
-import com.bumptech.glide.Glide
-import com.example.flowersshop.models.CartItem
-import com.google.android.gms.tasks.Task
-import com.google.android.gms.tasks.Tasks
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.FirebaseFirestore
-import java.util.UUID
-import java.util.regex.Pattern
 import com.example.flowersshop.R
 import com.example.flowersshop.CartItemsAdapter
 import com.example.flowersshop.CartManager
 import com.example.flowersshop.NovaPoshtaService
+import com.example.flowersshop.OrderProcessor
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class OrderingItemCActivity : AppCompatActivity() {
     private val auth = FirebaseAuth.getInstance()
@@ -52,11 +40,11 @@ class OrderingItemCActivity : AppCompatActivity() {
     private lateinit var progressBar: ProgressBar
     private lateinit var itemsListView: ListView
     private lateinit var totalPriceText: TextView
-    private val cartItems = mutableListOf<CartItem>()
+    private val cartItems = mutableListOf<com.example.flowersshop.models.CartItem>()
     private lateinit var cartAdapter: CartItemsAdapter
     private lateinit var cartManager: CartManager
     private lateinit var novaPoshtaService: NovaPoshtaService
-    private val PHONE_PATTERN = Pattern.compile("^\\+380\\d{9}\$")
+    private lateinit var orderProcessor: OrderProcessor
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,6 +75,7 @@ class OrderingItemCActivity : AppCompatActivity() {
         cartAdapter = CartItemsAdapter(this, cartItems, cartManager)
         itemsListView.adapter = cartAdapter
         cartManager = CartManager(db, userId, cartItems, cartAdapter, totalPriceText)
+        orderProcessor = OrderProcessor(db, userId, cartItems, this, progressBar, cartAdapter)
 
         if (userId != null) {
             loadUserData()
@@ -97,7 +86,7 @@ class OrderingItemCActivity : AppCompatActivity() {
         }
 
         changeCityButton.setOnClickListener {
-            val newCity = extractCityFromAddress(addressText.text.toString().trim())
+            val newCity = orderProcessor.extractCityFromAddress(addressText.text.toString().trim())
             if (newCity.isEmpty()) {
                 Toast.makeText(this, "Введіть місто", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -124,7 +113,7 @@ class OrderingItemCActivity : AppCompatActivity() {
                     nameText.setText(name)
                     addressText.setText(address)
                     phoneText.setText(phone)
-                    val city = extractCityFromAddress(address)
+                    val city = orderProcessor.extractCityFromAddress(address)
                     if (city.isNotEmpty()) {
                         novaPoshtaService.loadWarehouses(city)
                     } else {
@@ -144,128 +133,10 @@ class OrderingItemCActivity : AppCompatActivity() {
 
     private fun handleOrderConfirmation() {
         val selectedPostOffice = postOfficeSpinner.selectedItem?.toString()
-        if (selectedPostOffice.isNullOrEmpty() || selectedPostOffice == "Відділення не знайдено") {
-            Toast.makeText(this, "Виберіть дійсне відділення", Toast.LENGTH_SHORT).show()
-            return
-        }
-
         val name = nameText.text.toString().trim()
         val address = addressText.text.toString().trim()
         val phone = phoneText.text.toString().trim()
-        val city = extractCityFromAddress(address)
-
-        if (name.isEmpty() || address.isEmpty() || phone.isEmpty() || city.isEmpty()) {
-            Toast.makeText(this, "Заповніть усі поля", Toast.LENGTH_SHORT).show()
-            return
-        }
-        if (!PHONE_PATTERN.matcher(phone).matches()) {
-            Toast.makeText(this, "Номер телефону має бути у форматі +380xxxxxxxxx", Toast.LENGTH_SHORT).show()
-            return
-        }
-        if (cartItems.isEmpty()) {
-            Toast.makeText(this, "Кошик порожній", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        val itemsToUpdate = mutableListOf<Pair<String, Int>>()
-        val tasks = mutableListOf<Task<DocumentSnapshot>>()
-
-        for (cartItem in cartItems) {
-            val task = db.collection("items").document(cartItem.productId).get()
-            tasks.add(task)
-        }
-        progressBar.visibility = View.VISIBLE
-        Tasks.whenAllSuccess<DocumentSnapshot>(tasks)
-            .addOnSuccessListener { documents ->
-                var allItemsAvailable = true
-                for (i in documents.indices) {
-                    val document = documents[i]
-                    val cartItem = cartItems[i]
-                    if (document.exists()) {
-                        val availableQuantity = document.getLong("availableQuantity")?.toInt() ?: 0
-                        if (availableQuantity < cartItem.quantity) {
-                            allItemsAvailable = false
-                            Toast.makeText(this, "Недостатньо товару: ${cartItem.productName}", Toast.LENGTH_SHORT).show()
-                            break
-                        } else {
-                            itemsToUpdate.add(Pair(cartItem.productId, cartItem.quantity))
-                        }
-                    } else {
-                        allItemsAvailable = false
-                        Toast.makeText(this, "Товар не знайдено: ${cartItem.productName}", Toast.LENGTH_SHORT).show()
-                        break
-                    }
-                }
-
-                if (allItemsAvailable && itemsToUpdate.size == cartItems.size) {
-                    val orderItems = cartItems.map {
-                        hashMapOf(
-                            "productId" to UUID.randomUUID().toString(),
-                            "productName" to it.productName,
-                            "productType" to it.productType,
-                            "productPrice" to it.productPrice,
-                            "quantity" to it.quantity,
-                            "productPhotoUrl" to it.productPhotoUrl
-                        )
-                    }
-
-                    val order = hashMapOf(
-                        "userId" to userId,
-                        "name" to name,
-                        "address" to address,
-                        "phone" to phone,
-                        "city" to city,
-                        "postOffice" to selectedPostOffice,
-                        "orderDate" to System.currentTimeMillis(),
-                        "items" to orderItems,
-                        "totalPrice" to cartItems.sumOf { it.productPrice * it.quantity },
-                        "status" to "unconfirmed"
-                    )
-
-                    db.collection("orders").add(order)
-                        .addOnSuccessListener {
-                            db.runBatch { batch ->
-                                for ((productId, quantity) in itemsToUpdate) {
-                                    val docRef = db.collection("items").document(productId)
-                                    batch.update(docRef, "availableQuantity", FieldValue.increment(-quantity.toLong()))
-                                    batch.update(docRef, "name", FieldValue.serverTimestamp().let {
-                                        val currentQuantity = documents.find { it.id == productId }?.getLong("availableQuantity")?.toInt() ?: 0
-                                        if (currentQuantity - quantity <= 0) "Товар закінчився..." else FieldValue.delete()
-                                    })
-                                }
-                            }.addOnSuccessListener {
-                                cartManager.clearCart()
-                                progressBar.visibility = View.GONE
-                                Toast.makeText(this, "Замовлення оформлено!", Toast.LENGTH_SHORT).show()
-                                finish()
-                            }.addOnFailureListener { e ->
-                                progressBar.visibility = View.GONE
-                                Toast.makeText(this, "Помилка оновлення кількості: ${e.message}", Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                        .addOnFailureListener { e ->
-                            progressBar.visibility = View.GONE
-                            Toast.makeText(this, "Помилка оформлення замовлення: ${e.message}", Toast.LENGTH_SHORT).show()
-                        }
-                } else {
-                    progressBar.visibility = View.GONE
-                }
-            }
-            .addOnFailureListener { e ->
-                progressBar.visibility = View.GONE
-                Toast.makeText(this, "Помилка перевірки доступності: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
-    }
-
-    private fun extractCityFromAddress(address: String): String {
-        if (address.isEmpty()) return ""
-        val parts = address.split(",").map { it.trim() }
-        val cityPart = parts.find { part ->
-            !part.contains("вул.", ignoreCase = true) &&
-                    !part.contains("просп.", ignoreCase = true) &&
-                    !part.matches(Regex(".*\\d+.*"))
-        } ?: parts.lastOrNull() ?: ""
-        return cityPart.replace(Regex("^(м\\.|с\\.)\\s*", RegexOption.IGNORE_CASE), "").trim()
+        orderProcessor.handleOrderConfirmation(selectedPostOffice, name, address, phone)
     }
 
     override fun onDestroy() {
