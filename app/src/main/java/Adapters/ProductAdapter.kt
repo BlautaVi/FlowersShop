@@ -55,7 +55,7 @@ class ProductAdapter(
         val product = productList[position]
         holder.itemView.tag = product
 
-        holder.nameTextView.text = if (!product.isAvailable()) "Товар закінчився..." else product.name
+        holder.nameTextView.text = if (!product.isAvailable()) "Товар закінчився...." else product.name
         holder.priceTextView.text = "${product.price} грн"
         holder.quantityTextView?.let {
             it.text = "Наявність: ${product.availableQuantity}"
